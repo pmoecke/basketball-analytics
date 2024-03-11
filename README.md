@@ -3,10 +3,10 @@
 [[_TOC_]]
 
 ## Team Members
-Fredrik Nyström
-Patrick Möcke
-Dario Tenore
-Yanik Künzi
+1. Fredrik Nyström
+2. Patrick Möcke
+3. Dario Tenore
+4. Yanik Künzi
 
 ## Project Description 
 Describe here your project in detail and define your goals.
