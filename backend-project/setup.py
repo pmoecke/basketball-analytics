@@ -9,7 +9,7 @@ def read(fname):
 setup(
     name="dummy_server",
     version="0.0.1",
-    description="Backend for the dummy project of the XAI-IML 2023 course.",
+    description="Backend for the dummy project of the XAI-IML 2024 course.",
     long_description=read("README.md"),
     classifiers=[
         "Intended Audience :: Developers",
