@@ -15,7 +15,6 @@ setup(
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Development Status :: 4 - Beta",
     ],
     entry_points={
@@ -25,10 +24,10 @@ setup(
     },
     install_requires=[
         "Flask>=2.0.0",
-        "flask-restful>=0.3.9,<0.4",
-        "flask-cors>=3.0.10,<3.1",
-        "pandas>=1.4.1,<1.5",
-        "scikit-learn>=1.0.2,<1.1",
+        "flask-restful>=0.3.9",
+        "flask-cors>=3.0.10",
+        "pandas>=1.4.1",
+        "scikit-learn>=1.0.2",
         "psutil>=5.9.0"
     ],
     packages=find_packages(where="src", include=["dummy_server*"]),
