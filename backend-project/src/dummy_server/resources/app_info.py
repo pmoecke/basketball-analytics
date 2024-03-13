@@ -3,6 +3,8 @@ import sys
 import psutil
 import json
 
+from flask_restful import Resource
+
 class Environment(Resource):
 
     def get(self):
@@ -11,7 +13,7 @@ class Environment(Resource):
             "job-id": os.environ['JOB_ID'],
             "commit-id": os.environ['COMMIT_ID'],
             "python": sys.version,
-            "cpus": os-cpu_count(),
+            "cpus": os.cpu_count(),
             "memory-total": psutil.virtual_memory().total,
             "memory-used": psutil.virtual_memory().used
         }
