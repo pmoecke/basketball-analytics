@@ -1,7 +1,6 @@
 import os
 import sys
 import psutil
-import json
 
 from flask_restful import Resource
 
@@ -17,4 +16,4 @@ class Environment(Resource):
             "memory-total": psutil.virtual_memory().total,
             "memory-used": psutil.virtual_memory().used
         }
-        return json.dumps(appInfo)
+        return appInfo
