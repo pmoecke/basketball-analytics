@@ -14,7 +14,7 @@ class DataChoiceComponent extends React.Component<{ onChoiceMade: any }, { text:
     return (
       <div>
         <label htmlFor="data-choice">
-          Which dataset do you want to use? (moons, blobs, circles)
+          Which dataset do you want to use? (moons, blobs, circles, bubbles)
         </label>
         <input
           id="data-choice"
