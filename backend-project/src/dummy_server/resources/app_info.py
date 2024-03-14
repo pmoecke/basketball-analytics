@@ -17,3 +17,12 @@ class Environment(Resource):
             "memory-used": psutil.virtual_memory().used
         }
         return appInfo
+
+# class Dragons(Resource):
+
+#     def get(self):
+#         dragons = {
+#             "numberOfDragons": 5,
+#             "color": "red"
+#         }
+#         return dragons
