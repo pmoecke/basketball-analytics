@@ -4,22 +4,27 @@
 
 ## Team Members
 1. Fredrik Nyström
-2. Patrick Möcke
-3. Dario Tenore
-4. Yanik Künzi
+1. Patrick Möcke
+1. Dario Tenore
+1. Yanik Künzi
 
 ## Project Description 
-Describe here your project in detail and define your goals.
+You can see our pitch video [here](https://polybox.ethz.ch/index.php/s/ALvekl35WUd7mhX)
+As of now, signing new players relies on a lot of manual labor like watching tape and searching through overwhelmingly large and complex datasets. Furthermore, the scout’s intuition often plays a key role in deciding which players are signed.
+The goal of our project is to allow basketball coaches and scouts to enhance their decision-making process using a data-driven approach. Additionally, we support them using machine learning and visualization techniques, which allow them to navigate these high-dimensional datasets more efficiently.
+
+In particular, we want to figure out if such a system can capture the scout’s mental model.
+
 
 ### Users
-List your projects target Users.
+The target group of our project consists of general managers, coaches, and scouts of the Spanish basketball team Obradoiro SAD. Our goal is to simplify and improve the decision-making process when signing new players by presenting the data in an organized manner and allowing the user to interact with it through sorting, filtering, searching, and head-to-head comparisons between players.
+Our hope is that this tool can give users a competitive edge by improving their scouting process.
 
 ### Datasets
-Add here all used datasets.\
-Document here where to find the data and how to download it. 
+We will work with boxscore data from the two most recent seasons. To make this high-dimensional dataset easier to visualize and work with, we will train a machine-learning model to project the data into a lower-dimensional space while trying to conform to the scout’s mental model.
 
 ### Tasks
-Define all the tasks you want your dashboard solve.
+TODO: Define all the tasks you want your dashboard solve.
 
 - - -
 ## Folder Structure

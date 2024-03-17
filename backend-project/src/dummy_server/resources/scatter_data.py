@@ -15,7 +15,7 @@ class DatasetResource(Resource):
         # process the data, e.g. find the clusters
         kmeans = KMeans(n_clusters=2, n_init=10, random_state=0).fit(data)
         labels = kmeans.labels_.tolist()
-        
+
         # Add cluster to data
         data["cluster"] = labels
 
