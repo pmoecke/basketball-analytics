@@ -10,6 +10,7 @@
 
 ## Project Description 
 You can see our pitch video [here](https://polybox.ethz.ch/index.php/s/ALvekl35WUd7mhX)
+
 As of now, signing new players relies on a lot of manual labor like watching tape and searching through overwhelmingly large and complex datasets. Furthermore, the scout’s intuition often plays a key role in deciding which players are signed.
 The goal of our project is to allow basketball coaches and scouts to enhance their decision-making process using a data-driven approach. Additionally, we support them using machine learning and visualization techniques, which allow them to navigate these high-dimensional datasets more efficiently.
 
@@ -120,20 +121,15 @@ To run the frontend
 If all the steps have been successfully executed a new browser window witht he dummy project loaded will open automatically.
 
 ## Milestones
-Document here the major milestones of your code and future planned steps.\
-- [x] Week 1
-  - [x] Completed Sub-task: [#20984ec2](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/commit/20984ec2197fa8dcdc50f19723e5aa234b9588a3)
-  - [x] Completed Sub-task: ...
+Document here the major milestones of your code and future planned steps. Create a list of subtasks here and open an issue in git for each subtask and link the corresponding issue. Create a merge request (with corresponding branch) from each issue. Finally accept the merge request once issue is resolved. Once you complete a task, link the corresponding merge commit. Take a look at [Issues and Branches](https://www.youtube.com/watch?v=DSuSBuVYpys) for more details. 
 
-- [ ] Week 2
-  - [ ] Sub-task: [#2](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/issues/2)
-  - [ ] Sub-task: ...
+- [ ] Week 6
+  - [ ] Sub-task: [Script to read data from excel to database](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/1)
+  - [ ] Sub-task: [Create own dummy react component](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/2)
+  - [ ] Sub-task: [Use figma and export test css files](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/3)
+- [ ] Week 7
 
-Create a list subtask.\
-Open an issue for each subtask. Once you create a subtask, link the corresponding issue.\
-Create a merge request (with corresponding branch) from each issue.\
-Finally accept the merge request once issue is resolved. Once you complete a task, link the corresponding merge commit.\
-Take a look at [Issues and Branches](https://www.youtube.com/watch?v=DSuSBuVYpys) for more details. 
+
 
 This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.  
 
@@ -141,17 +137,16 @@ This will help you have a clearer overview of what you are currently doing, trac
 Write here a short summary with weekly progress, including challanges and open questions.\
 We will use this to understand what your struggles and where did the weekly effort go to.
 
-## Versioning
-Create stable versions of your code each week by using gitlab tags.\
-Take a look at [Gitlab Tags](https://docs.gitlab.com/ee/topics/git/tags.html) for more details. 
+#### W6
 
-Then list here the weekly tags. \
-We will evaluate your code every week, based on the corresponding version.
+
+## Versioning
+Create stable versions of your code each week by using gitlab tags. Take a look at [Gitlab Tags](https://docs.gitlab.com/ee/topics/git/tags.html) for more details and naming conventions at [Name your tag](https://git-scm.com/docs/git-check-ref-format).
+
+We will evaluate your code every week, based on the corresponding version. Then list weekly tags here.
 
 Tags:
-- Week 1: [Week 1 Tag](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/tags/stable-readme)
-- Week 2: ..
-- Week 3: ..
-- ...
+- Week 5: [v0.0.1](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/tags/v0.0.1)
+- Week 6: 
 
 
