@@ -30,7 +30,7 @@ docker build . -t backend
 ```
 docker ps -a
 ```
-If it has more than 1GB you have to implement the external 
+If it has more than 0.5GB you have to implement the external 
 storage feature. Please check moodle and the branch of the repository called 
 ```add-more-storage```
 
