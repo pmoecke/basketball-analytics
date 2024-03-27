@@ -1,0 +1,18 @@
+ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+.player-search {
+    width: 300px;
+}
+
+.player-list {
+    color: orange;
+
+}
+
+.player-row {
+    font-size: 24px;
+    text-color: green;
+}
