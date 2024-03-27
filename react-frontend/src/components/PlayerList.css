@@ -1,18 +1,42 @@
 ul {
     list-style-type: none;
     padding-inline-start: 0;
+    padding-left: 0!important;
 }
 
-.player-search {
-    width: 300px;
+a {
+    color: #F5F5F5 !important;
+    text-decoration: none!important;
 }
 
 .player-list {
     color: orange;
-
+    height: 70vh; /* Adjust based on your header/nav size */
+    overflow-y: auto; /* Enables vertical scrolling */
+    -webkit-overflow-scrolling: touch; /* For momentum scrolling on iOS devices */
 }
 
 .player-row {
     font-size: 24px;
-    text-color: green;
+    color: white;
+    border: solid;
+    border-color: black;
+    border-radius: 10px;
+    border-width: 2px;
+    margin-bottom: 10px;
+    margin-right: 6px;
+    padding: 6px;
+    background-color: black;
+}
+
+.box {
+    border: solid;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.blur-background {
+    filter: blur(10px);
 }
