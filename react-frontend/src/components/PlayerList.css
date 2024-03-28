@@ -27,6 +27,12 @@ a {
     margin-right: 6px;
     padding: 6px;
     background-color: black;
+    cursor: pointer;
+}
+
+.player-row:hover {
+    border-color: #1e1e1e;
+    background-color: #1e1e1e;
 }
 
 .box {
