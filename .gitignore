@@ -4,7 +4,9 @@ node_modules
 *.config
 clips
 
-backend-project/data/*
+backend-project/data/Data/*
+backend-project/data/Data.zip
+!backend-project/data/Data/Data-Import.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
