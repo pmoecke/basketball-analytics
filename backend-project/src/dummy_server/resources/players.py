@@ -22,7 +22,6 @@ schema = PlayerQuerySchema()
 
 class Players(Resource):
     def get(self):
-        print(os.path.join(os.environ["DATA_PATH"], "Data", "Players.db"))
         con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Data", "Players.db"))
         cur = con.cursor()
         # Validate arguments
