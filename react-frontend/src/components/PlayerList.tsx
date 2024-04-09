@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import { Player } from "../types/player";
+import PlayerModal from "./PlayerModal";
 import "./PlayerList.css";
-
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 
 const PlayerList: React.FC = () => {
   const [query, setQuery] = useState<string>("");
@@ -12,7 +10,7 @@ const PlayerList: React.FC = () => {
   const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player[] | null>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -83,6 +81,10 @@ const PlayerList: React.FC = () => {
               <li
                 className="player-row"
                 key={`${player.player_id}-${index}`}
+                onClick={() => {
+                  setSelectedPlayer(player); // Set the selected player
+                  setShowModal(true); // Show the modal
+                }}
               >
                 {player["Player name"]},
                 {player["Team name"]},
@@ -91,19 +93,11 @@ const PlayerList: React.FC = () => {
             ))}
           </ul>
         </div>
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedPlayer}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <PlayerModal
+          selectedPlayer={selectedPlayer}
+          showModal={showModal}
+          handleClose={() => setShowModal(false)}
+        />
       </div>
     </div>
   );
