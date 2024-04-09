@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Link } from "react-router-dom";
 import { Player } from "../types/player";
-import { players } from "../data/players";
 import "./PlayerList.css";
 
 import Modal from "react-bootstrap/Modal";
@@ -10,41 +8,42 @@ import Button from "react-bootstrap/Button";
 
 const PlayerList: React.FC = () => {
   const [query, setQuery] = useState<string>("");
-  const [filteredPlayers, setFilteredPlayers] = useState<Player[]>(players);
+  const [players, setPlayers] = useState<Player[]>([]); // This will hold the data fetched from the API
+  const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player[] | null>(null);
 
-  const PlayerModal = ({
-    player,
-    onClose,
-  }: {
-    player: Player;
-    onClose: () => void;
-  }) => {
-    if (!player) return null;
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/players/");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log(typeof(data))
+        console.log(data[0])
+        console.log(data[1])
+        setPlayers(data);
+        setFilteredPlayers(data);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    };
 
-    return (
-      <div className="modal-backdrop">
-        <div className="modal-content">
-          <h2>{player.name}</h2>
-          <p>Team: {player.team}</p>
-          <p>Position: {player.position}</p>
-          <button onClick={onClose}>Close</button>
-        </div>
-      </div>
-    );
-  };
+    fetchPlayers();
+  }, []);
 
   useEffect(() => {
     let sortedAndFiltered = players.filter((player) =>
-      player.name.toLowerCase().includes(query)
+      player["Player name"].toLowerCase().includes(query)
     );
 
     if (sortOrder === "asc") {
-      sortedAndFiltered.sort((a, b) => a.name.localeCompare(b.name));
+      sortedAndFiltered.sort((a, b) => a["Player name"].localeCompare(b["Player name"]));
     } else if (sortOrder === "desc") {
-      sortedAndFiltered.sort((a, b) => b.name.localeCompare(a.name));
+      sortedAndFiltered.sort((a, b) => b["Player name"].localeCompare(a["Player name"]));
     }
 
     setFilteredPlayers(sortedAndFiltered);
@@ -80,27 +79,24 @@ const PlayerList: React.FC = () => {
             onChange={handleSearch}
           />
           <ul className="player-list">
-            {filteredPlayers.map((player) => (
+            {filteredPlayers.map((player, index) => (
               <li
                 className="player-row"
-                key={player.id}
-                onClick={() => {
-                  setSelectedPlayer(player);
-                  setShowModal(true);
-                }}
+                key={`${player.player_id}-${index}`}
               >
-                {player.name}
+                {player["Player name"]},
+                {player["Team name"]},
+                {player.Points}
               </li>
             ))}
           </ul>
         </div>
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>{selectedPlayer?.name}</Modal.Title>
+            <Modal.Title>{selectedPlayer}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Team: {selectedPlayer?.team}</p>
-            <p>Position: {selectedPlayer?.position}</p>
+            
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
