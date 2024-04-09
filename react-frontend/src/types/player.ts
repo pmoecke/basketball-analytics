@@ -1,6 +1,7 @@
 export interface Player {
-    id: number;
-    name: string;
-    team: string;
-    position: string;
-  }
+  player_id: number;
+  team_id: number;
+  Points: number;
+  "Player name": string;
+  "Team name":string;
+}

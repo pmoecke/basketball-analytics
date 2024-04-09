@@ -21,6 +21,11 @@ Once the package has been installed, you can run the server by running the `star
 ## Running it with docker container locally
 **This step is mandatory before running the CI/CD pipeline in Gitlab (it will save you
 a lot of time debugging)**
+
+### Add new dependencies
+
+Go to the setup.py file and add new packages to the install_requires array
+
 ### Building
 Simply build the image with 
 ```
