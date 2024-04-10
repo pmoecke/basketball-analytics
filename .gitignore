@@ -6,8 +6,8 @@ clips
 
 backend-project/data/Data/*
 backend-project/data/Data.zip
-!backend-project/data/Data/Data-Import.py
-!backend-project/data/Data/Players.db
+!backend-project/data/Data-Import.py
+!backend-project/data/Players.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
