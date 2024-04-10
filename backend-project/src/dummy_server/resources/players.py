@@ -10,12 +10,6 @@ class PlayerQuerySchema(Schema):
     team_ids = fields.List(fields.Int(), required=False)
     league_ids = fields.List(fields.Int(), required=False)
 
-    # @validates_schema
-    # def require_one(self, data, **kwargs):
-    #     if "player_ids" in data or "league_ids" in data or "team_ids" in data:
-    #         return
-    #     raise ValidationError("At least one type of id must be provided")
-
 
 schema = PlayerQuerySchema()
 
