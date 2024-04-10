@@ -22,7 +22,7 @@ schema = PlayerQuerySchema()
 
 class Players(Resource):
     def get(self):
-        con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Data", "Players.db"))
+        con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
         cur = con.cursor()
         # Validate arguments
         err = schema.validate(request.args.to_dict(flat=False))
@@ -36,15 +36,20 @@ class Players(Resource):
                 "INNER JOIN League l ON l.l_id = s.league_id " + \
                 "INNER JOIN Team t ON t.t_id = s.team_id WHERE 1 = 1 "
 
+        params = {}
         if "player_ids" in args:
-            query += f"AND p.p_id in ({', '.join([str(id) for id in args['player_ids']])}) "
+            query += "AND p.p_id in (:pids) "
+            params["pids"] = ', '.join([str(id) for id in args['player_ids']])
         if "league_ids" in args:
-            query += f"AND l.l_id in ({', '.join([str(id) for id in args['league_ids']])}) "
+            query += "AND l.l_id in (:lids) "
+            params["lids"] = ', '.join([str(id) for id in args['league_ids']])
         if "team_ids" in args:
-            query += f"AND t.t_id in ({', '.join([str(id) for id in args['team_ids']])}) "
+            query += "AND t.t_id in (:tids) "
+            params["tids"] = ', '.join([str(id) for id in args['team_ids']])
 
         query += ";"
-        cur.execute(query)
+        print(query)
+        cur.execute(query, params)
         zipped = [zip(cur.description, row) for row in cur.fetchall()]
         res = [{col: value for (col, *_), value in row} for row in zipped]
         return res
