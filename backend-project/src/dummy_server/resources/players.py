@@ -25,7 +25,7 @@ class Players(Resource):
         args = schema.dump(request.args.to_dict(flat=False))
 
         # Fetch data from database
-        query = "SELECT s.*, p.name as 'Player name', t.name as 'Team name', l.name as 'League' from Stats s " + \
+        query = "SELECT s.*, p.name as 'player-name', t.name as 'team-name', l.name as 'league' from Stats s " + \
                 "INNER JOIN Player p ON p.p_id = s.player_id " + \
                 "INNER JOIN League l ON l.l_id = s.league_id " + \
                 "INNER JOIN Team t ON t.t_id = s.team_id WHERE 1 = 1 "
