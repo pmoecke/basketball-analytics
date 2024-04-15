@@ -7,17 +7,24 @@ import re
 from tqdm import tqdm
 
 
+def clean_name(name: str) -> str:
+    return name.lower() \
+            .replace("'s", "") \
+            .replace(",", "") \
+            .replace(" ", "-")
+
+
 def load_data() -> tuple[pd.DataFrame, [str]]:
     # Extract League and Season information from filename
     regex = r".+\. (.+) \- (\d{4}-\d{4}).xls$"
     frames = []
     s = 0
-    for file in os.listdir("."):
+    for file in os.listdir("Data"):
         filename = os.fsdecode(file)
         m = re.match(regex, filename)
         if m is not None:
             s += 1
-            xl = pd.ExcelFile(filename)
+            xl = pd.ExcelFile(os.path.join("Data", filename))
             # Select the right sheet
             df = xl.parse("Box score")
             # Add information contained in filename
@@ -32,10 +39,13 @@ def load_data() -> tuple[pd.DataFrame, [str]]:
     df = df.replace("-", "0")
     df = df.rename(columns={"Unnamed: 0": "Jersey number", "Unnamed: 1": "Player name", "Unnamed: 2": "Team name"})
 
+    clean_col_names = {col: clean_name(col) for col in df.columns}
+    df = df.rename(columns=clean_col_names)
+
     # Find inconsistent rows and drop them
-    grouped = df.groupby(["Player name", "Team name", "League", "Season"]).count()
-    inconsistent_players = [player for player, *_ in grouped[grouped["Games played"] > 1].index]
-    df = df.drop(df[df["Player name"].isin(inconsistent_players)].index)
+    grouped = df.groupby(["player-name", "team-name", "league", "season"]).count()
+    inconsistent_players = [player for player, *_ in grouped[grouped["games-played"] > 1].index]
+    df = df.drop(df[df["player-name"].isin(inconsistent_players)].index)
 
     # Remove percentage sign so the data can be stored as an int into the database
     percentages = [col for col in df.columns if ('%' in col) or ("percentage" in col)]
@@ -46,6 +56,8 @@ def load_data() -> tuple[pd.DataFrame, [str]]:
 
 
 def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str]):
+    con = sqlite3.connect("Players.db")
+    cur = con.cursor()
     con.execute("DROP TABLE IF EXISTS Player;")
     con.execute("DROP TABLE IF EXISTS League;")
     con.execute("DROP TABLE IF EXISTS Team;")
@@ -55,49 +67,50 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str])
     con.execute("CREATE TABLE Team (t_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     # Associate each non-real column with a datatype
     non_real_columns = { p: "INTEGER" for p in percentages }
-    non_real_columns["Season"] = "TEXT"
+    non_real_columns["season"] = "TEXT"
     # TODO: Change dtype
-    non_real_columns["Minutes"] = "TEXT"
-    non_real_columns["Jersey number"] = "INTEGER"
-    non_real_columns["Games played"] = "INTEGER"
-    non_real_columns["Number of player's possessions"] = "INTEGER"
-    non_real_columns["Team points with player"] = "INTEGER"
-    non_real_columns["Offensive rating"] = "INTEGER"
-    non_real_columns["Opponent possessions played"] = "INTEGER"
-    non_real_columns["Opponent's points with player"] = "INTEGER"
-    non_real_columns["Defensive rating"] = "INTEGER"
+    non_real_columns["minutes"] = "TEXT"
+    non_real_columns["jersey-number"] = "INTEGER"
+    non_real_columns["games-played"] = "INTEGER"
+    non_real_columns["number-of-player-possessions"] = "INTEGER"
+    non_real_columns["team-points-with-player"] = "INTEGER"
+    non_real_columns["offensive-rating"] = "INTEGER"
+    non_real_columns["opponent-possessions-played"] = "INTEGER"
+    non_real_columns["opponent-points-with-player"] = "INTEGER"
+    non_real_columns["defensive-rating"] = "INTEGER"
 
     # Combine real and non-real columns
-    cols = [f"\"{colname}\" REAL" for colname in df.drop(columns=["League", "Player name", "Team name"]).columns if colname not in non_real_columns]
+    cols = [f"\"{colname}\" REAL" for colname in df.drop(columns=["league", "player-name", "team-name"]).columns if colname not in non_real_columns]
     cols += [f"\"{colname}\" {dtype}" for colname, dtype in non_real_columns.items()]
 
     # Create stats table with all columns and correct datatypes
     col_str = "player_id INTEGER, team_id INTEGER, league_id INTEGER, " + ", ".join(cols).replace("'s", "")
-    con.execute(f"CREATE TABLE Stats ({col_str}, PRIMARY KEY (Season, player_id, team_id, league_id));")
+    con.execute(f"CREATE TABLE Stats ({col_str}, PRIMARY KEY (season, player_id, team_id, league_id));")
 
 
 def insert_data(con: sqlite3.Connection, df: pd.DataFrame):
     cur = con.cursor()
     # Insert team, league and player data
-    teams = [f"'{name}'" for name in df["Team name"].str.replace("'", "''").unique()]
-    players = [f"'{name}'" for name in df["Player name"].str.replace("'", "''").unique()]
-    leagues = [f"'{name}'" for name in df["League"].str.replace("'", "''").unique()]
+    teams = [f"'{name}'" for name in df["team-name"].str.replace("'", "''").unique()]
+    players = [f"'{name}'" for name in df["player-name"].str.replace("'", "''").unique()]
+    leagues = [f"'{name}'" for name in df["league"].str.replace("'", "''").unique()]
+
     cur.execute(f"INSERT INTO Player(name) VALUES({'), ('.join(players)});")
     cur.execute(f"INSERT INTO Team(name) VALUES({'), ('.join(teams)});")
     cur.execute(f"INSERT INTO League(name) VALUES({'), ('.join(leagues)});")
 
     # Insert stat data
-    df_cols = [col.replace("'s", "") for col in df.drop(columns=["League", "Player name", "Team name", "Season", "Minutes"]).columns]
-    cols = "\"player_id\", \"team_id\", \"league_id\", \"Season\", \"Minutes\", \"" + "\", \"".join(df_cols) + "\""
+    df_cols = [col for col in df.drop(columns=["league", "player-name", "team-name", "season", "minutes"]).columns]
+    cols = "\"player_id\", \"team_id\", \"league_id\", \"season\", \"minutes\", \"" + "\", \"".join(df_cols) + "\""
     for index, row in tqdm(df.iterrows()):
-        player_name = row['Player name'].replace("'", "''")
-        team_name = row['Team name'].replace("'", "''")
-        league_name = row['League'].replace("'", "''")
+        player_name = row['player-name'].replace("'", "''")
+        team_name = row['team-name'].replace("'", "''")
+        league_name = row['league'].replace("'", "''")
         pid = cur.execute(f"select p_id from Player where name = '{player_name}'").fetchone()[0]
         tid = cur.execute(f"select t_id from Team where name = '{team_name}'").fetchone()[0]
         lid = cur.execute(f"select l_id from League where name = '{league_name}'").fetchone()[0]
-        vals = [str(val) for val in row.drop(["League", "Player name", "Team name", "Season", "Minutes"]).values]
-        cur.execute(f"INSERT INTO Stats ({cols}) VALUES ({pid}, {tid}, {lid}, '{row['Season']}', '{row['Minutes']}', {', '.join(vals)});")
+        vals = [str(val) for val in row.drop(["league", "player-name", "team-name", "season", "minutes"]).values]
+        cur.execute(f"INSERT INTO Stats ({cols}) VALUES ({pid}, {tid}, {lid}, '{row['season']}', '{row['minutes']}', {', '.join(vals)});")
 
 
 if __name__ == "__main__":
@@ -107,4 +120,3 @@ if __name__ == "__main__":
     insert_data(con, df)
     con.commit()
     con.close()
-
