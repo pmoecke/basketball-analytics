@@ -1,9 +1,9 @@
-from . import scatter_data
-from . import app_info
 from . import players
+from . import leagues
+from . import teams
 
 __all__ = [
-    "scatter_data",
-    "app_info",
     "players"
+    "leagues"
+    "teams"
 ]

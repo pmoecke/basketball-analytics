@@ -1,2 +1,1 @@
 - Create requirements.txt
-- Sanitize input for sql (prepare/execute)
