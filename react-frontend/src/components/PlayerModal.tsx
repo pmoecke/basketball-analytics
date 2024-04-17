@@ -18,9 +18,10 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ selectedPlayer, showModal, ha
       <Modal.Body>
         {selectedPlayer && (
           <>
+            <p>Player id: {selectedPlayer.player_id}</p>
+            <p>Player name: {selectedPlayer["Player name"]}</p>
+            <p>League: {selectedPlayer.League}</p>
             <p>Team: {selectedPlayer["Team name"]}</p>
-            <p>Points: {selectedPlayer.Points}</p>
-            {/* Include other player details as needed */}
           </>
         )}
       </Modal.Body>
