@@ -1,7 +1,8 @@
 export interface Player {
   player_id: number;
-  team_id: number;
-  Points: number;
   "Player name": string;
-  "Team name":string;
+  League: string;
+  "Team name": string;
 }
+
+export type PlayerArray = Player[];

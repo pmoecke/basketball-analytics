@@ -1,83 +1,63 @@
 import React, { useState, useEffect } from "react";
 
-import { Player } from "../types/player";
+import { Player, PlayerArray } from "../types/player";
 import PlayerModal from "./PlayerModal";
 import "./PlayerList.css";
+import { playerStats } from "../router/data"
+
+import Filter from './Filter';
+import Order from './Order';
 
 const PlayerList: React.FC = () => {
-  const [query, setQuery] = useState<string>("");
-  const [players, setPlayers] = useState<Player[]>([]); // This will hold the data fetched from the API
-  const [filteredPlayers, setFilteredPlayers] = useState<Player[]>([]);
+  
+  const [players, setPlayers] = useState<PlayerArray>([]);
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
+  const [playerName, setPlayerName] = useState<string>("");
+  const [league, setLeague] = useState<string>("");
+  const [team, setTeam] = useState<string>("");
+  const leagueOptions = [
+    { value: 'Basket League', label: 'Basket League' },
+    { value: 'LEB Oro', label: 'LEB Oro' },
+  ];
+  const teamOptions = [
+    { value: 'Larisa BC', label: 'Larisa BC' },
+    { value: 'Olympiacos BC', label: 'Olympiacos BC' }
+  ];
+
   useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/players/");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(typeof(data))
-        console.log(data[0])
-        console.log(data[1])
-        setPlayers(data);
-        setFilteredPlayers(data);
-      } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+    playerStats({ league, team, playerName }).then(exampleData => {  // Assuming playerStats can now accept an object with multiple parameters
+      if (exampleData !== undefined) {
+        setPlayers(exampleData);
       }
-    };
-
-    fetchPlayers();
-  }, []);
-
-  useEffect(() => {
-    let sortedAndFiltered = players.filter((player) =>
-      player["Player name"].toLowerCase().includes(query)
-    );
-
-    if (sortOrder === "asc") {
-      sortedAndFiltered.sort((a, b) => a["Player name"].localeCompare(b["Player name"]));
-    } else if (sortOrder === "desc") {
-      sortedAndFiltered.sort((a, b) => b["Player name"].localeCompare(a["Player name"]));
-    }
-
-    setFilteredPlayers(sortedAndFiltered);
-  }, [sortOrder, query]);
+    });
+  }, [league, team, playerName]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.toLowerCase();
-    setQuery(value);
+    setPlayerName(value);
   };
 
   return (
     <div className="container">
       <div className={`row justify-content-evenly ${showModal ? 'blur-background' : ''}`}>
         <div className="filter col-md-3 box">
-          <div className="mb-3">
-            <select
-              className="form-select"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="">Default Order</option>
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
+            <Filter label="League" value={league} onChange={setLeague} options={leagueOptions} />
+            <Filter label="Team" value={team} onChange={setTeam} options={teamOptions} />
+            <Order sortOrder={sortOrder} setSortOrder={setSortOrder} />
           </div>
-        </div>
         <div className="player-search col-md-8 box">
           <input
             className="form-control search mb-3"
             type="text"
             placeholder="Search for players..."
-            value={query}
+            value={playerName}
             onChange={handleSearch}
           />
           <ul className="player-list">
-            {filteredPlayers.map((player, index) => (
+            {players.map((player, index) => (
               <li
                 className="player-row"
                 key={`${player.player_id}-${index}`}
@@ -86,9 +66,7 @@ const PlayerList: React.FC = () => {
                   setShowModal(true); // Show the modal
                 }}
               >
-                {player["Player name"]},
-                {player["Team name"]},
-                {player.Points}
+                {player.player_id}, {player["Player name"]}, {player["Team name"]}, {player.League}
               </li>
             ))}
           </ul>
