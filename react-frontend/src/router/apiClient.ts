@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 export const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/`:"http://localhost:8000/api/"
-
+console.log("BASE_URL:", {BASE_URL})
 const axiosClient = axios.create({
   baseURL: BASE_URL,
   headers: {
