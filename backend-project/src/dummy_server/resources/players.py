@@ -6,9 +6,7 @@ import sqlite3
 
 
 class PlayerQuerySchema(Schema):
-    player_ids = fields.List(fields.Int(), required=False)
-    team_ids = fields.List(fields.Int(), required=False)
-    league_ids = fields.List(fields.Int(), required=False)
+    player_name = fields.String(required=False)
 
 
 schema = PlayerQuerySchema()
@@ -19,31 +17,22 @@ class Players(Resource):
         con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
         cur = con.cursor()
         # Validate arguments
-        err = schema.validate(request.args.to_dict(flat=False))
+        err = schema.validate(request.args.to_dict())
         if err:
             abort(400, str(err))
-        args = schema.dump(request.args.to_dict(flat=False))
+        args = schema.dump(request.args.to_dict())
+        print(args)
 
         # Fetch data from database
-        query = "SELECT s.*, p.name as 'player-name', t.name as 'team-name', l.name as 'league' from Stats s " + \
-                "INNER JOIN Player p ON p.p_id = s.player_id " + \
-                "INNER JOIN League l ON l.l_id = s.league_id " + \
-                "INNER JOIN Team t ON t.t_id = s.team_id WHERE 1 = 1 "
+        query = "SELECT * FROM Player WHERE 1=1 "
 
-        params = {}
-        if "player_ids" in args:
-            query += "AND p.p_id in (:pids) "
-            params["pids"] = ', '.join([str(id) for id in args['player_ids']])
-        if "league_ids" in args:
-            query += "AND l.l_id in (:lids) "
-            params["lids"] = ', '.join([str(id) for id in args['league_ids']])
-        if "team_ids" in args:
-            query += "AND t.t_id in (:tids) "
-            params["tids"] = ', '.join([str(id) for id in args['team_ids']])
+        if "player_name" in args:
+            query += "AND name LIKE :player_name "
+            args["player_name"] = "%" + args["player_name"] + "%"
 
         query += ";"
-        print(query)
-        cur.execute(query, params)
+        print(query, args)
+        cur.execute(query, args)
         zipped = [zip(cur.description, row) for row in cur.fetchall()]
         res = [{col: value for (col, *_), value in row} for row in zipped]
         return res
