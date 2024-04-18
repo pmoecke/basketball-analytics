@@ -28,8 +28,10 @@ const PlayerList: React.FC = () => {
   ];
 
   useEffect(() => {
-    playerStats({ league, team, playerName }).then(exampleData => {  // Assuming playerStats can now accept an object with multiple parameters
+    playerStats({ league, team, playerName }).then(exampleData => { 
       if (exampleData !== undefined) {
+        console.log(exampleData[0])
+        console.log(exampleData)
         setPlayers(exampleData);
       }
     });
