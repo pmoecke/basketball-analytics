@@ -27,8 +27,8 @@ class Teams(Resource):
         cur = con.cursor()
 
         # Fetch data from database
-        query = "SELECT DISTINCT(t.t_id), t.name FROM Team t " + \
-                "INNER JOIN Stats s on s.team_id = t.t_id " + \
+        query = "SELECT DISTINCT(t.team_id), t.name FROM Team t " + \
+                "INNER JOIN Stats s on s.team_id = t.team_id " + \
                 "WHERE 1 = 1 "
 
         if "player_id" in args:
@@ -38,7 +38,7 @@ class Teams(Resource):
         if "season" in args:
             query += "AND s.season = :season "
 
-        query += "ORDER BY t.t_id;"
+        query += "ORDER BY t.team_id;"
         print(query, args)
         cur.execute(query, args)
 

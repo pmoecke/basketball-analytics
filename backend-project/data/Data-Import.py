@@ -62,9 +62,9 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str])
     con.execute("DROP TABLE IF EXISTS League;")
     con.execute("DROP TABLE IF EXISTS Team;")
     con.execute("DROP TABLE IF EXISTS Stats;")
-    con.execute("CREATE TABLE Player (p_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
-    con.execute("CREATE TABLE League (l_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
-    con.execute("CREATE TABLE Team (t_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
+    con.execute("CREATE TABLE Player (player_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
+    con.execute("CREATE TABLE League (league_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
+    con.execute("CREATE TABLE Team (team_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     # Associate each non-real column with a datatype
     non_real_columns = { p: "INTEGER" for p in percentages }
     non_real_columns["season"] = "TEXT"
@@ -106,9 +106,9 @@ def insert_data(con: sqlite3.Connection, df: pd.DataFrame):
         player_name = row['player_name'].replace("'", "''")
         team_name = row['team_name'].replace("'", "''")
         league_name = row['league'].replace("'", "''")
-        pid = cur.execute(f"select p_id from Player where name = '{player_name}'").fetchone()[0]
-        tid = cur.execute(f"select t_id from Team where name = '{team_name}'").fetchone()[0]
-        lid = cur.execute(f"select l_id from League where name = '{league_name}'").fetchone()[0]
+        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()[0]
+        tid = cur.execute(f"select team_id from Team where name = '{team_name}'").fetchone()[0]
+        lid = cur.execute(f"select league_id from League where name = '{league_name}'").fetchone()[0]
         vals = [str(val) for val in row.drop(["league", "player_name", "team_name", "season", "minutes"]).values]
         cur.execute(f"INSERT INTO Stats ({cols}) VALUES ({pid}, {tid}, {lid}, '{row['season']}', '{row['minutes']}', {', '.join(vals)});")
 
