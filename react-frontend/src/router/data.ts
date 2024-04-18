@@ -1,17 +1,17 @@
 import { PlayerArray } from '../types/player';
 import axiosClient from './apiClient'
 
-interface PlayerStatsParams {
-    league?: string;
-    team?: string;
-    playerName?: string;
+export interface PlayerStatsParams {
+    league_id?: number;
+    team_id?: number;
+    player_id?: number;
   }
   
   export function playerStats(params: PlayerStatsParams): Promise<PlayerArray | undefined> {
-    const url = `players`; // Endpoint relative to the BASE_URL
+    const url = `stats`; // Endpoint relative to the BASE_URL
     console.log(params)
     // Use axiosClient with the existing parameters object (url, { params })
-    return axiosClient.get<PlayerArray>(url)
+    return axiosClient.get<PlayerArray>(url, { params })
       .then(response => {
         if (response.status !== 204) {
           return response.data;
@@ -20,6 +20,27 @@ interface PlayerStatsParams {
       })
       .catch(error => {
         console.error('Error fetching player stats:', error);
+        throw error;
+      });
+  }
+
+  export interface getPlayerIdParams {
+    player_name?: string;
+  }
+
+  export function getPlayerId(params: getPlayerIdParams): Promise<number[]| undefined> {
+    const url = `players`;
+    console.log(params)
+    // Use axiosClient with the existing parameters object (url, { params })
+    return axiosClient.get<number[]>(url, { params })
+      .then(response => {
+        if (response.status !== 204) {
+          return response.data;
+        }
+        return undefined;
+      })
+      .catch(error => {
+        console.error('Error fetching player ids:', error);
         throw error;
       });
   }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Player, PlayerArray } from "../types/player";
 import PlayerModal from "./PlayerModal";
 import "./PlayerList.css";
-import { playerStats } from "../router/data"
+import { playerStats, PlayerStatsParams, getPlayerId, getPlayerIdParams } from "../router/data"
 
 import Filter from './Filter';
 import Order from './Order';
@@ -15,39 +15,50 @@ const PlayerList: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-  const [playerName, setPlayerName] = useState<string>("");
-  const [league, setLeague] = useState<string>("");
-  const [team, setTeam] = useState<string>("");
+  const [player_id, setPlayerName] = useState<number | null>(null);
+  const [league_id, setLeague] = useState<number | null>(null);
+  const [team_id, setTeam] = useState<number | null>(null);
   const leagueOptions = [
-    { value: 'Basket League', label: 'Basket League' },
-    { value: 'LEB Oro', label: 'LEB Oro' },
+    { value: 1, label: 'Basket League' },
+    { value: 2, label: 'LEB Oro' },
   ];
   const teamOptions = [
-    { value: 'Larisa BC', label: 'Larisa BC' },
-    { value: 'Olympiacos BC', label: 'Olympiacos BC' }
+    { value: 1, label: 'Larisa BC' },
+    { value: 4, label: 'Olympiacos BC' }
   ];
 
   useEffect(() => {
-    playerStats({ league, team, playerName }).then(exampleData => { 
-      if (exampleData !== undefined) {
-        console.log(exampleData[0])
-        console.log(exampleData)
-        setPlayers(exampleData);
+    const params: Partial<PlayerStatsParams> = {}; // Ensuring TypeScript knows what keys might exist on this object
+    if (league_id !== null) params.league_id = league_id;
+    if (team_id !== null) params.team_id = team_id;
+    if (player_id !== null) params.player_id = player_id;
+
+    playerStats(params).then(data => {
+      if (data !== undefined) {
+        console.log(data[0]); // Logging the first item if exists
+        setPlayers(data);
       }
     });
-  }, [league, team, playerName]);
+  }, [league_id, team_id, player_id]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.toLowerCase();
-    setPlayerName(value);
+    const player_name = event.target.value;
+    if (player_name) {
+      getPlayerId({ player_name }).then(ids => {
+        if (ids) {
+          console.log(ids);
+          // Assuming you might want to handle multiple player IDs, handle it accordingly
+        }
+      });
+    }
   };
 
   return (
     <div className="container">
       <div className={`row justify-content-evenly ${showModal ? 'blur-background' : ''}`}>
         <div className="filter col-md-3 box">
-            <Filter label="League" value={league} onChange={setLeague} options={leagueOptions} />
-            <Filter label="Team" value={team} onChange={setTeam} options={teamOptions} />
+            <Filter label="League" value={league_id} onChange={setLeague} options={leagueOptions} />
+            <Filter label="Team" value={team_id} onChange={setTeam} options={teamOptions} />
             <Order sortOrder={sortOrder} setSortOrder={setSortOrder} />
           </div>
         <div className="player-search col-md-8 box">
@@ -55,7 +66,7 @@ const PlayerList: React.FC = () => {
             className="form-control search mb-3"
             type="text"
             placeholder="Search for players..."
-            value={playerName}
+            value=""
             onChange={handleSearch}
           />
           <ul className="player-list">

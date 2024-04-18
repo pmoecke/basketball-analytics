@@ -2,9 +2,9 @@ import React from 'react';
 
 interface FilterProps {
   label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Array<{ value: string; label: string }>;
+  value: number | null;  // Allow value to be number or null
+  onChange: (value: number | null) => void;  // Handler also must accept number or null
+  options: Array<{ value: number; label: string }>;
 }
 
 const Filter: React.FC<FilterProps> = ({ label, value, onChange, options }) => {
@@ -14,8 +14,9 @@ const Filter: React.FC<FilterProps> = ({ label, value, onChange, options }) => {
       <div className="col-md-9">  {/* Changed from col-md-4 to col-md-8 for better spacing */}
         <select
           className="form-select"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={value === null ? "" : value} 
+          onChange={(e) => onChange(e.target.value === "" ? null : +e.target.value)}
+
         >
           <option value="">-------</option>
           {options.map(option => (
