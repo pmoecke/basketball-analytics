@@ -78,7 +78,7 @@ const PlayerDashboard: React.FC = () => {
         setPlayer_id(ids);
       }
     });
-  }, 500), []);
+  }, 300), []);
 
   
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,15 +91,15 @@ const PlayerDashboard: React.FC = () => {
     <div className="container">
       <div className={`row justify-content-evenly ${showModal ? 'blur-background' : ''}`}>
         <div className="col-md-3 box">
-          <h1>Filter</h1>
+          <h1 className="fs-3 white">General Filter</h1>
           <div className="filter">
             <Filter label="League" value={league_id} onChange={setLeague_id} options={leagueOptions} />
             <Filter label="Team" value={team_id} onChange={setTeam_id} options={teamOptions} />
           </div>
-          <h1>Pentagon</h1>
+          <h1 className="fs-3 white">Player Filter</h1>
           <div className="pentagon">
           </div>
-          <h1>Ordering</h1>
+          <h1 className="fs-3 white">Ordering</h1>
           <div className="order">
             <Order sortOrder={sortOrder} setSortOrder={setSortOrder} orderValue={orderValue} setOrderValue={setOrderValue} />
           </div>
