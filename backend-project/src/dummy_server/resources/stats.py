@@ -6,9 +6,11 @@ import sqlite3
 
 
 class StatsQuerySchema(Schema):
-    player_ids = fields.List(fields.Int(), required=False)
-    team_ids = fields.List(fields.Int(), required=False)
-    league_ids = fields.List(fields.Int(), required=False)
+    player_id = fields.List(fields.Int(), required=False)
+    team_id = fields.List(fields.Int(), required=False)
+    league_id = fields.List(fields.Int(), required=False)
+    point_min = fields.Int(required=False)
+    point_max = fields.Int(required=False)
 
 
 schema = StatsQuerySchema()
@@ -19,10 +21,17 @@ class Stats(Resource):
         con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
         cur = con.cursor()
         # Validate arguments
-        err = schema.validate(request.args.to_dict(flat=False))
+        arg_dict = request.args.to_dict(flat=False)
+        # Make sure we have lists where we need lists and single elements
+        # otherwise
+        if "point_min" in arg_dict:
+            arg_dict["point_min"] = arg_dict["point_min"][0]
+        if "point_max" in arg_dict:
+            arg_dict["point_max"] = arg_dict["point_max"][0]
+        err = schema.validate(arg_dict)
         if err:
             abort(400, str(err))
-        args = schema.dump(request.args.to_dict(flat=False))
+        args = schema.dump(arg_dict)
 
         # Fetch data from database
         query = "SELECT s.*, p.name as 'player-name', t.name as 'team-name', l.name as 'league' from Stats s " + \
@@ -31,15 +40,21 @@ class Stats(Resource):
                 "INNER JOIN Team t ON t.team_id = s.team_id WHERE 1 = 1 "
 
         params = {}
-        if "player_ids" in args:
+        if "player_id" in args:
             query += "AND p.player_id in (:pids) "
-            params["pids"] = ', '.join([str(id) for id in args['player_ids']])
-        if "league_ids" in args:
+            params["pids"] = ', '.join([str(id) for id in args['player_id']])
+        if "league_id" in args:
             query += "AND l.league_id in (:lids) "
-            params["lids"] = ', '.join([str(id) for id in args['league_ids']])
-        if "team_ids" in args:
+            params["lids"] = ', '.join([str(id) for id in args['league_id']])
+        if "point_min" in args:
+            query += "AND points >= :point_min "
+            params["point_min"] = args["point_min"]
+        if "point_max" in args:
+            query += "AND points <= :point_max "
+            params["point_max"] = args["point_max"]
+        if "team_id" in args:
             query += "AND t.team_id in (:tids) "
-            params["tids"] = ', '.join([str(id) for id in args['team_ids']])
+            params["tids"] = ', '.join([str(id) for id in args['team_id']])
 
         query += ";"
         print(query)
