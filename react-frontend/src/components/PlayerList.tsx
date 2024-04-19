@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback} from "react";
+import { debounce } from 'lodash';
 
 import { Player, PlayerArray } from "../types/player";
 import PlayerModal from "./PlayerModal";
@@ -15,9 +16,10 @@ const PlayerList: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-  const [player_id, setPlayerName] = useState<number | null>(null);
-  const [league_id, setLeague] = useState<number | null>(null);
-  const [team_id, setTeam] = useState<number | null>(null);
+  const [player_search, setPlayer_search] = useState("");
+  const [player_id, setPlayer_id] = useState<number[] | null>(null);
+  const [league_id, setLeague_id] = useState<number | null>(null);
+  const [team_id, setTeam_id] = useState<number | null>(null);
   const leagueOptions = [
     { value: 1, label: 'Basket League' },
     { value: 2, label: 'LEB Oro' },
@@ -28,45 +30,58 @@ const PlayerList: React.FC = () => {
   ];
 
   useEffect(() => {
-    const params: Partial<PlayerStatsParams> = {}; // Ensuring TypeScript knows what keys might exist on this object
+    const params: Partial<PlayerStatsParams> = {};
     if (league_id !== null) params.league_id = league_id;
     if (team_id !== null) params.team_id = team_id;
     if (player_id !== null) params.player_id = player_id;
-
+    
     playerStats(params).then(data => {
       if (data !== undefined) {
-        console.log(data[0]); // Logging the first item if exists
+        console.log(data[0]);
+        console.log(data); 
         setPlayers(data);
       }
     });
   }, [league_id, team_id, player_id]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const player_name = event.target.value;
-    if (player_name) {
-      getPlayerId({ player_name }).then(ids => {
-        if (ids) {
+  const debouncedSearch = useCallback(debounce((playerName: string) => {
+    getPlayerId({ player_name: playerName }).then(ids => {
+      if (ids) {
           console.log(ids);
-          // Assuming you might want to handle multiple player IDs, handle it accordingly
-        }
-      });
-    }
+          setPlayer_id(ids)
+      }
+    });
+  }, 500), []);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setPlayer_search(value);
+      debouncedSearch(value);
   };
 
   return (
     <div className="container">
       <div className={`row justify-content-evenly ${showModal ? 'blur-background' : ''}`}>
-        <div className="filter col-md-3 box">
-            <Filter label="League" value={league_id} onChange={setLeague} options={leagueOptions} />
-            <Filter label="Team" value={team_id} onChange={setTeam} options={teamOptions} />
+        <div className="col-md-3 box">
+          <h1>Filter</h1>
+          <div className="filter">
+            <Filter label="League" value={league_id} onChange={setLeague_id} options={leagueOptions} />
+            <Filter label="Team" value={team_id} onChange={setTeam_id} options={teamOptions} />
+          </div>
+          <h1>Pentagon</h1>
+          <div className="pentagon">
+          </div>
+          <h1>Order</h1>
+          <div className="order">
             <Order sortOrder={sortOrder} setSortOrder={setSortOrder} />
           </div>
+        </div>
         <div className="player-search col-md-8 box">
           <input
             className="form-control search mb-3"
             type="text"
             placeholder="Search for players..."
-            value=""
+            value={player_search}
             onChange={handleSearch}
           />
           <ul className="player-list">
@@ -79,7 +94,7 @@ const PlayerList: React.FC = () => {
                   setShowModal(true); // Show the modal
                 }}
               >
-                {player.player_id}, {player["Player name"]}, {player["Team name"]}, {player.League}
+                id: {player.player_id}, points: {player.points}
               </li>
             ))}
           </ul>
