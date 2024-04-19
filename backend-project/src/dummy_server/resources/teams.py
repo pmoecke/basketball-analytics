@@ -9,6 +9,7 @@ class TeamQuerySchema(Schema):
     player_id = fields.Int(required=False)
     league_id = fields.Int(required=False)
     season = fields.String(required=False)
+    team_name = fields.String(required=False)
 
 
 schema = TeamQuerySchema()
@@ -37,8 +38,11 @@ class Teams(Resource):
             query += "AND s.league_id = :league_id "
         if "season" in args:
             query += "AND s.season = :season "
+        if "team_name" in args:
+            query += "AND t.name LIKE :team_name "
+            args["team_name"] = "%" + args["team_name"] + "%"
 
-        query += "ORDER BY t.team_id;"
+        query += "ORDER BY t.name;"
         print(query, args)
         cur.execute(query, args)
 
