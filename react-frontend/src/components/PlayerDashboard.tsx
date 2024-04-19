@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback} from "react";
 import { debounce } from 'lodash';
 
 import { Player, PlayerArray } from "../types/player";
+import PlayerList from "./PlayerList";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch"
@@ -10,7 +11,7 @@ import { playerStats, PlayerStatsParams, getPlayerId, getPlayerIdParams } from "
 import Filter from './Filter';
 import Order from './Order';
 
-const PlayerList: React.FC = () => {
+const PlayerDashboard: React.FC = () => {
   // Player data
   const [players, setPlayers] = useState<PlayerArray>([]);
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
@@ -105,20 +106,7 @@ const PlayerList: React.FC = () => {
         </div>
         <div className="player-search col-md-8 box">
           <PlayerSearch player_search={player_search} handleSearch={handleSearch}/>
-          <ul className="player-list">
-            {sortedPlayers.map((player, index) => (
-              <li
-                className="player-row"
-                key={`${player.player_id}-${index}`}
-                onClick={() => {
-                  setSelectedPlayer(player); // Set the selected player
-                  setShowModal(true); // Show the modal
-                }}
-              >
-                id: {player.player_id}, name: {player["player-name"]}, points: {player.points}, jersey_number: {player.jersey_number}
-              </li>
-            ))}
-          </ul>
+          <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
         </div>
         <PlayerModal
           selectedPlayer={selectedPlayer}
@@ -130,4 +118,4 @@ const PlayerList: React.FC = () => {
   );
 };
 
-export default PlayerList;
+export default PlayerDashboard;

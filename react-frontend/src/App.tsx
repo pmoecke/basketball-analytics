@@ -1,7 +1,7 @@
 // App.js or App.tsx
 import React from 'react';
 import './App.css';
-import PlayerList from './components/PlayerDashboard';
+import PlayerDashboard from './components/PlayerDashboard';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,7 +11,7 @@ function App() {
       <div className="App">
         <header className="App-header">B-12 Project</header>
         <Routes>
-          <Route path="/" element={<PlayerList />} />
+          <Route path="/" element={<PlayerDashboard/>} />
         </Routes>
       </div>
     </BrowserRouter>
