@@ -70,22 +70,6 @@ const PlayerDashboard: React.FC = () => {
   }, [players, sortOrder, orderValue]);
   
   // Adds delay in ms when writing a new search so doesnt send several request to API
-  const debouncedSearch = useCallback(debounce((playerName: string) => {
-    getPlayerId({ player_name: playerName }).then(data => {
-      if (data) {
-        const ids = data.map(item => item.player_id);
-        console.log(ids);
-        setPlayer_id(ids);
-      }
-    });
-  }, 300), []);
-
-  
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setPlayer_search(value);
-      debouncedSearch(value);
-  };
 
   return (
     <div className="container">
@@ -105,7 +89,7 @@ const PlayerDashboard: React.FC = () => {
           </div>
         </div>
         <div className="player-search col-md-8 box">
-          <PlayerSearch player_search={player_search} handleSearch={handleSearch}/>
+          <PlayerSearch setPlayerId={setPlayer_id}/>
           <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
         </div>
         <PlayerModal
