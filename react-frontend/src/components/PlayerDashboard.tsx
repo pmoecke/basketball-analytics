@@ -3,7 +3,8 @@ import { debounce } from 'lodash';
 
 import { Player, PlayerArray } from "../types/player";
 import PlayerModal from "./PlayerModal";
-import "./PlayerList.css";
+import "./PlayerDashboard.css";
+import PlayerSearch from "./PlayerSearch"
 import { playerStats, PlayerStatsParams, getPlayerId, getPlayerIdParams } from "../router/data"
 
 import Filter from './Filter';
@@ -69,10 +70,11 @@ const PlayerList: React.FC = () => {
   
   // Adds delay in ms when writing a new search so doesnt send several request to API
   const debouncedSearch = useCallback(debounce((playerName: string) => {
-    getPlayerId({ player_name: playerName }).then(ids => {
-      if (ids) {
-          console.log(ids);
-          setPlayer_id(ids)
+    getPlayerId({ player_name: playerName }).then(data => {
+      if (data) {
+        const ids = data.map(item => item.player_id);
+        console.log(ids);
+        setPlayer_id(ids);
       }
     });
   }, 500), []);
@@ -102,13 +104,7 @@ const PlayerList: React.FC = () => {
           </div>
         </div>
         <div className="player-search col-md-8 box">
-          <input
-            className="form-control search mb-3"
-            type="text"
-            placeholder="Search for players..."
-            value={player_search}
-            onChange={handleSearch}
-          />
+          <PlayerSearch player_search={player_search} handleSearch={handleSearch}/>
           <ul className="player-list">
             {sortedPlayers.map((player, index) => (
               <li
