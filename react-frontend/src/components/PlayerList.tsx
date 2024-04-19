@@ -10,16 +10,21 @@ import Filter from './Filter';
 import Order from './Order';
 
 const PlayerList: React.FC = () => {
-  
+  // Player data
   const [players, setPlayers] = useState<PlayerArray>([]);
-  const [sortOrder, setSortOrder] = useState("");
+  const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
+  // Ordering
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [orderValue, setOrderValue] = useState<keyof Player>("points");
+  // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-
+  // Filtering
   const [player_search, setPlayer_search] = useState("");
-  const [player_id, setPlayer_id] = useState<number[] | null>(null);
+  const [player_id, setPlayer_id] = useState<number[] | null>(null); // Is set by the player name search
   const [league_id, setLeague_id] = useState<number | null>(null);
   const [team_id, setTeam_id] = useState<number | null>(null);
+
   const leagueOptions = [
     { value: 1, label: 'Basket League' },
     { value: 2, label: 'LEB Oro' },
@@ -28,7 +33,7 @@ const PlayerList: React.FC = () => {
     { value: 1, label: 'Larisa BC' },
     { value: 4, label: 'Olympiacos BC' }
   ];
-
+  // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerStatsParams> = {};
     if (league_id !== null) params.league_id = league_id;
@@ -37,13 +42,32 @@ const PlayerList: React.FC = () => {
     
     playerStats(params).then(data => {
       if (data !== undefined) {
-        console.log(data[0]);
         console.log(data); 
         setPlayers(data);
       }
     });
   }, [league_id, team_id, player_id]);
 
+  // Handles ordering of the data
+  useEffect(() => {
+    console.log({orderValue})
+    console.log({sortOrder})
+    let sortedData = [...players];
+    sortedData.sort((a, b) => {
+      const keyA = a[orderValue];
+      const keyB = b[orderValue];
+      if (typeof keyA === "number" && typeof keyB === "number") {
+        return sortOrder === "asc" ? keyA - keyB : keyB - keyA;
+      } else if (typeof keyA === "string" && typeof keyB === "string") {
+        return sortOrder === "asc" ? keyA.localeCompare(keyB) : keyB.localeCompare(keyA);
+      }
+      return 0;
+    });
+    
+    setSortedPlayers(sortedData);
+  }, [players, sortOrder, orderValue]);
+  
+  // Adds delay in ms when writing a new search so doesnt send several request to API
   const debouncedSearch = useCallback(debounce((playerName: string) => {
     getPlayerId({ player_name: playerName }).then(ids => {
       if (ids) {
@@ -53,6 +77,7 @@ const PlayerList: React.FC = () => {
     });
   }, 500), []);
 
+  
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setPlayer_search(value);
@@ -71,9 +96,9 @@ const PlayerList: React.FC = () => {
           <h1>Pentagon</h1>
           <div className="pentagon">
           </div>
-          <h1>Order</h1>
+          <h1>Ordering</h1>
           <div className="order">
-            <Order sortOrder={sortOrder} setSortOrder={setSortOrder} />
+            <Order sortOrder={sortOrder} setSortOrder={setSortOrder} orderValue={orderValue} setOrderValue={setOrderValue} />
           </div>
         </div>
         <div className="player-search col-md-8 box">
@@ -85,7 +110,7 @@ const PlayerList: React.FC = () => {
             onChange={handleSearch}
           />
           <ul className="player-list">
-            {players.map((player, index) => (
+            {sortedPlayers.map((player, index) => (
               <li
                 className="player-row"
                 key={`${player.player_id}-${index}`}
@@ -94,7 +119,7 @@ const PlayerList: React.FC = () => {
                   setShowModal(true); // Show the modal
                 }}
               >
-                id: {player.player_id}, points: {player.points}
+                id: {player.player_id}, name: {player["player-name"]}, points: {player.points}, jersey_number: {player.jersey_number}
               </li>
             ))}
           </ul>
