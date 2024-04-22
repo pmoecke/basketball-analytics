@@ -75,7 +75,7 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                     },
                 },
                 onHover: function(event, chartElement) {
-                    const hoverElement = document.getElementById('myChart') as HTMLCanvasElement;
+                    const hoverElement = document.getElementById('playerChart') as HTMLCanvasElement;
                     if (hoverElement) {
                         hoverElement.style.cursor = chartElement[0] ? 'pointer' : 'default';
                     }
@@ -89,16 +89,16 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
             },
         };
 
-        const chartElement = document.getElementById('myChart') as HTMLCanvasElement;
+        const chartElement = document.getElementById('playerChart') as HTMLCanvasElement;
         if (chartElement) {
             Chart.defaults.font.size = font_size;
-            const myChart = new Chart(chartElement, config);
+            const playerChart = new Chart(chartElement, config);
         }
     }, []);
 
     return (
         <div className="chart-container">
-            <canvas id="myChart"></canvas>
+            <canvas id="playerChart"></canvas>
         </div>
     );
 };

@@ -35,18 +35,35 @@ a {
 }
 
 .player-row:hover {
-    border-color: #1e1e1e;
-    background-color: #1e1e1e;
+    border-color: #313131;
+    background-color: #313131;
 }
 
 .box {
     border: solid;
     border-width: 2px;
-    border-color: black;
+    border-color: #222222;
+    background-color:#222222;
     border-radius: 10px;
     padding: 10px;
 }
 
 .blur-background {
     filter: blur(10px);
+}
+
+.player-modal .modal-dialog {
+    max-width: 600px; /* Set the maximum width you prefer */
+    width: 100%; /* Use 100% of the max-width */
+    margin: auto; /* Center the modal dialog horizontally */
+  }
+
+.player-modal-header {
+    background-color:#222222;   
+    color: white;
+}
+
+.player-modal-body {
+    background-color:#222222;   
+    color: white;
 }

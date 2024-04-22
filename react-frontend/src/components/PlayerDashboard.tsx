@@ -10,6 +10,8 @@ import { playerStats, PlayerStatsParams, getPlayerId, getPlayerIdParams } from "
 
 import Filter from './Filter';
 import Order from './Order';
+import PlayerGraph from "./PlayerGraph";
+import PlayerFilter from "./PlayerFilter";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -82,6 +84,7 @@ const PlayerDashboard: React.FC = () => {
           </div>
           <h1 className="fs-3 white">Player Filter</h1>
           <div className="pentagon">
+              <PlayerFilter/>
           </div>
           <h1 className="fs-3 white">Ordering</h1>
           <div className="order">
