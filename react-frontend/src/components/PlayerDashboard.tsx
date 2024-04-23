@@ -71,6 +71,10 @@ const PlayerDashboard: React.FC = () => {
     setSortedPlayers(sortedData);
   }, [players, sortOrder, orderValue]);
   
+  // Filter graph values
+  const [min] = useState([65, 65, 65, 65, 65]);
+  const [max] = useState([85, 85, 85, 85, 85]);
+
   // Adds delay in ms when writing a new search so doesnt send several request to API
 
   return (
@@ -84,7 +88,7 @@ const PlayerDashboard: React.FC = () => {
           </div>
           <h1 className="fs-3 white">Player Filter</h1>
           <div className="pentagon">
-              <PlayerFilter/>
+              <PlayerFilter min={min} max={max}/>
           </div>
           <h1 className="fs-3 white">Ordering</h1>
           <div className="order">
