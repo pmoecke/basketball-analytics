@@ -25,9 +25,9 @@ const PlayerDashboard: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   // Filtering
   const [player_search, setPlayer_search] = useState("");
-  const [player_id, setPlayer_id] = useState<number[] | null>(null); // Is set by the player name search
-  const [league_id, setLeague_id] = useState<number | null>(null);
-  const [team_id, setTeam_id] = useState<number | null>(null);
+  const [player_name, setPlayer_name] = useState<string | undefined>(undefined); // Is set by the player name search
+  const [league_id, setLeague_id] = useState<number | undefined>(undefined);
+  const [team_id, setTeam_id] = useState<number | undefined>(undefined);
 
   const leagueOptions = [
     { value: 1, label: 'Basket League' },
@@ -40,9 +40,9 @@ const PlayerDashboard: React.FC = () => {
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerStatsParams> = {};
-    if (league_id !== null) params.league_id = league_id;
-    if (team_id !== null) params.team_id = team_id;
-    if (player_id !== null) params.player_id = player_id;
+      params.league_id = league_id;
+      params.team_id = team_id;
+      params.player_name = player_name;
     
     playerStats(params).then(data => {
       if (data !== undefined) {
@@ -50,7 +50,7 @@ const PlayerDashboard: React.FC = () => {
         setPlayers(data);
       }
     });
-  }, [league_id, team_id, player_id]);
+  }, [league_id, team_id, player_name]);
 
   // Handles ordering of the data
   useEffect(() => {
@@ -92,7 +92,7 @@ const PlayerDashboard: React.FC = () => {
           </div>
         </div>
         <div className="player-search col-md-8 box">
-          <PlayerSearch setPlayerId={setPlayer_id}/>
+          <PlayerSearch setPlayer_name={setPlayer_name}/>
           <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
         </div>
         <PlayerModal

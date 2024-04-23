@@ -5,7 +5,7 @@ import axiosClient from './apiClient'
 export interface PlayerStatsParams {
     league_id?: number;
     team_id?: number;
-    player_id?: number[];
+    player_name?: string;
   }
   
   export function playerStats(params: PlayerStatsParams): Promise<PlayerArray | undefined> {

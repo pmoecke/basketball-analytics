@@ -4,21 +4,18 @@ import { debounce } from 'lodash';
 import { getPlayerId } from "../router/data"; // Adjust path as necessary
 
 interface PlayerSearchProps {
-    setPlayerId: (ids: number[] | null) => void;
+    setPlayer_name: (name: string | undefined) => void;
 }
 
-const PlayerSearch: React.FC<PlayerSearchProps> = ({ setPlayerId }) => {
+const PlayerSearch: React.FC<PlayerSearchProps> = ({ setPlayer_name }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const debouncedSearch = useCallback(debounce(async (playerName: string) => {
         if (playerName.trim()) {
-          const ids = await getPlayerId({ player_name: playerName });
-          if (ids) {
-              setPlayerId(ids.map(item => item.player_id));
-          }
+            setPlayer_name(playerName)
         }
-        else{
-          setPlayerId(null);
+        else {
+            setPlayer_name(undefined)
         }
     }, 300), []);
 
