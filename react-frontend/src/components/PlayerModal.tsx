@@ -22,6 +22,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ selectedPlayer, showModal, ha
             <p>Player id: {selectedPlayer.player_id}</p>
             <p>Points: {selectedPlayer.points}</p>
             <p>Jersey number: {selectedPlayer.jersey_number}</p>
+            <p>Offensive rating: {selectedPlayer.offensive_rating}</p>
+            <p>Defensive rating: {selectedPlayer.defensive_rating}</p>
 
             <PlayerGraph player={selectedPlayer}/>
           </>

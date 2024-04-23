@@ -8,6 +8,8 @@ export interface Player {
   "pick-n-pops_%": number;
   points: number;
   jersey_number: number;
+  offensive_rating: number;
+  defensive_rating: number;
 }
 
 export const playerKeys: (keyof Player)[] = [
