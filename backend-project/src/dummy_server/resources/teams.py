@@ -9,6 +9,7 @@ class TeamQuerySchema(Schema):
     player_id = fields.Int(required=False)
     league_id = fields.Int(required=False)
     season = fields.String(required=False)
+    team_name = fields.String(required=False)
 
 
 schema = TeamQuerySchema()
@@ -27,8 +28,8 @@ class Teams(Resource):
         cur = con.cursor()
 
         # Fetch data from database
-        query = "SELECT DISTINCT(t.t_id), t.name FROM Team t " + \
-                "INNER JOIN Stats s on s.team_id = t.t_id " + \
+        query = "SELECT DISTINCT(t.team_id), t.name FROM Team t " + \
+                "INNER JOIN Stats s on s.team_id = t.team_id " + \
                 "WHERE 1 = 1 "
 
         if "player_id" in args:
@@ -37,8 +38,11 @@ class Teams(Resource):
             query += "AND s.league_id = :league_id "
         if "season" in args:
             query += "AND s.season = :season "
+        if "team_name" in args:
+            query += "AND t.name LIKE :team_name "
+            args["team_name"] = "%" + args["team_name"] + "%"
 
-        query += "ORDER BY t.t_id;"
+        query += "ORDER BY t.name;"
         print(query, args)
         cur.execute(query, args)
 
