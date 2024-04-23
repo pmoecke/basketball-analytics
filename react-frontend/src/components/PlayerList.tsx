@@ -1,9 +1,8 @@
 // PlayerList.tsx
 import React from 'react';
-
-// Assuming you have defined these types somewhere else in your project.
-// If not, you need to define them appropriately based on how players are structured.
 import { Player, PlayerArray } from '../types/player';
+// Styling
+import "./PlayerList.css";
 
 interface PlayerListProps {
     players: PlayerArray;
