@@ -6,11 +6,11 @@ import sqlite3
 
 
 class StatsQuerySchema(Schema):
-    player_id = fields.List(fields.Int(), required=False)
     team_id = fields.List(fields.Int(), required=False)
     league_id = fields.List(fields.Int(), required=False)
     point_min = fields.Int(required=False)
     point_max = fields.Int(required=False)
+    player_name = fields.String(required=False)
 
 
 schema = StatsQuerySchema()
@@ -28,6 +28,9 @@ class Stats(Resource):
             arg_dict["point_min"] = arg_dict["point_min"][0]
         if "point_max" in arg_dict:
             arg_dict["point_max"] = arg_dict["point_max"][0]
+        if "player_name" in arg_dict:
+            arg_dict["player_name"] = "%" + arg_dict["player_name"][0] + "%"
+        print(arg_dict)
         err = schema.validate(arg_dict)
         if err:
             abort(400, str(err))
@@ -40,9 +43,6 @@ class Stats(Resource):
                 "INNER JOIN Team t ON t.team_id = s.team_id WHERE 1 = 1 "
 
         params = {}
-        if "player_id" in args:
-            query += "AND p.player_id in (:pids) "
-            params["pids"] = ', '.join([str(id) for id in args['player_id']])
         if "league_id" in args:
             query += "AND l.league_id in (:lids) "
             params["lids"] = ', '.join([str(id) for id in args['league_id']])
@@ -55,6 +55,9 @@ class Stats(Resource):
         if "team_id" in args:
             query += "AND t.team_id in (:tids) "
             params["tids"] = ', '.join([str(id) for id in args['team_id']])
+        if "player_name" in args:
+            query += "AND p.name LIKE :player_name "
+            params["player_name"] = args["player_name"]
 
         query += ";"
         print(query)
