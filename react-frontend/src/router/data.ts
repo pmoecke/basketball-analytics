@@ -1,5 +1,4 @@
 import { PlayerArray } from '../types/player';
-import { PlayerIdNamePair } from '../types/playerIdNamePair';
 import axiosClient from './apiClient'
 
 export interface PlayerStatsParams {
