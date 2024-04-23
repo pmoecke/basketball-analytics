@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback} from "react";
 import { debounce } from 'lodash';
+import { Tab, Tabs } from 'react-bootstrap';
 
 import { Player, PlayerArray } from "../types/player";
 import PlayerList from "./PlayerList";
+import Player2DView from "./Player2DView"
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch"
@@ -73,6 +75,17 @@ const PlayerDashboard: React.FC = () => {
   
   // Adds delay in ms when writing a new search so doesnt send several request to API
 
+  // State to manage active tab
+  const [activeKey, setActiveKey] = useState('list');
+
+  // Function to handle tab selection change
+  const handleSelect = (key: string | null) => {
+    if (key !== null) {
+      setActiveKey(key);
+    }
+  };
+
+
   return (
     <div className="container">
       <div className={`row justify-content-evenly ${showModal ? 'blur-background' : ''}`}>
@@ -93,7 +106,15 @@ const PlayerDashboard: React.FC = () => {
         </div>
         <div className="player-search col-md-8 box">
           <PlayerSearch setPlayer_name={setPlayer_name}/>
-          <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
+          <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
+            <Tab eventKey="list" title="Player List">
+              <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
+            </Tab>
+            <Tab eventKey="view" title="Player 2D View">
+              <Player2DView players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
+            </Tab>
+          </Tabs>
+          <div className="fs-5 text-center white">Results: {players.length}</div>
         </div>
         <PlayerModal
           selectedPlayer={selectedPlayer}
