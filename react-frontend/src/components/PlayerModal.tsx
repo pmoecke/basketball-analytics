@@ -3,6 +3,8 @@ import { Player } from "../types/player";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import PlayerGraph from "./PlayerGraph";
+// Styling
+import "./PlayerModal.css"
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
