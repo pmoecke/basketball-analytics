@@ -25,9 +25,9 @@ const PlayerDashboard: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   // Filtering
   const [player_search, setPlayer_search] = useState("");
-  const [player_name, setPlayer_name] = useState<string | null>(null); // Is set by the player name search
-  const [league_id, setLeague_id] = useState<number | null>(null);
-  const [team_id, setTeam_id] = useState<number | null>(null);
+  const [player_name, setPlayer_name] = useState<string | undefined>(undefined); // Is set by the player name search
+  const [league_id, setLeague_id] = useState<number | undefined>(undefined);
+  const [team_id, setTeam_id] = useState<number | undefined>(undefined);
 
   const leagueOptions = [
     { value: 1, label: 'Basket League' },
@@ -40,9 +40,9 @@ const PlayerDashboard: React.FC = () => {
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerStatsParams> = {};
-    if (league_id !== null) params.league_id = league_id;
-    if (team_id !== null) params.team_id = team_id;
-    if (player_name !== null) params.player_name = player_name;
+      params.league_id = league_id;
+      params.team_id = team_id;
+      params.player_name = player_name;
     
     playerStats(params).then(data => {
       if (data !== undefined) {
