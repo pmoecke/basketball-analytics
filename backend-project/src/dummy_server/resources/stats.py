@@ -43,7 +43,7 @@ class Stats(Resource):
         """
         
         params = {}
-        if "league_id" in args:
+        if "league_id" in args and -1 not in args["league_id"]:
             query += "AND l.league_id in (:lids) "
             params["lids"] = ', '.join([str(id) for id in args['league_id']])
         if "point_min" in args:
@@ -52,7 +52,7 @@ class Stats(Resource):
         if "point_max" in args:
             query += "AND points <= :point_max "
             params["point_max"] = args["point_max"]
-        if "team_id" in args:
+        if "team_id" in args and -1 not in args["team_id"]:
             query += "AND t.team_id in (:tids) "
             params["tids"] = ', '.join([str(id) for id in args['team_id']])
         if "player_name" in args:
