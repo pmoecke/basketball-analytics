@@ -47,6 +47,11 @@ def load_data() -> tuple[pd.DataFrame, [str]]:
     inconsistent_players = [player for player, *_ in grouped[grouped["games_played"] > 1].index]
     df = df.drop(df[df["player_name"].isin(inconsistent_players)].index)
 
+    # Drop columns containing percenteges as we can just recalculate them if needed
+    percentage_cols = list(filter(lambda x: "%" in x, df.columns))
+    percentage_cols
+    df = df.drop(columns=percentage_cols)
+
     # Remove percentage sign so the data can be stored as an int into the database
     percentages = [col for col in df.columns if ('%' in col) or ("percentage" in col)]
     for p in percentages:
