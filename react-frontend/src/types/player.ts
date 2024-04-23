@@ -10,4 +10,9 @@ export interface Player {
   jersey_number: number;
 }
 
+export const playerKeys: (keyof Player)[] = [
+  "player_id", "player-name", "free_throws_%", "transition_attacks_%", 
+  "isolation_%", "drives_%", "pick-n-pops_%", "points", "jersey_number"
+];
+
 export type PlayerArray = Player[];

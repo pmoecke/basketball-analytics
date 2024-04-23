@@ -4,7 +4,6 @@ from marshmallow import Schema, fields
 import os
 import sqlite3
 
-
 class StatsQuerySchema(Schema):
     team_id = fields.List(fields.Int(), required=False)
     league_id = fields.List(fields.Int(), required=False)
@@ -12,9 +11,7 @@ class StatsQuerySchema(Schema):
     point_max = fields.Int(required=False)
     player_name = fields.String(required=False)
 
-
 schema = StatsQuerySchema()
-
 
 class Stats(Resource):
     def get(self):
@@ -36,11 +33,20 @@ class Stats(Resource):
             abort(400, str(err))
         args = schema.dump(arg_dict)
 
-        # Fetch data from database
-        query = "SELECT s.*, p.name as 'player-name', t.name as 'team-name', l.name as 'league' from Stats s " + \
-                "INNER JOIN Player p ON p.player_id = s.player_id " + \
-                "INNER JOIN League l ON l.league_id = s.league_id " + \
-                "INNER JOIN Team t ON t.team_id = s.team_id WHERE 1 = 1 "
+        query = """
+            SELECT s.*, p.name as 'player-name', t.name as 'team-name', l.name as 'league'
+            FROM Stats s
+            INNER JOIN Player p ON p.player_id = s.player_id
+            INNER JOIN League l ON l.league_id = s.league_id
+            INNER JOIN Team t ON t.team_id = s.team_id
+            WHERE 1 = 1
+        """
+        
+        params = []
+        if "player_id" in validated_args:
+            placeholders = ', '.join(['?'] * len(validated_args['player_id']))
+            query += f" AND p.player_id IN ({placeholders})"
+            params.extend(validated_args['player_id'])
 
         params = {}
         if "league_id" in args:
@@ -59,9 +65,7 @@ class Stats(Resource):
             query += "AND p.name LIKE :player_name "
             params["player_name"] = args["player_name"]
 
-        query += ";"
-        print(query)
         cur.execute(query, params)
-        zipped = [zip(cur.description, row) for row in cur.fetchall()]
-        res = [{col: value for (col, *_), value in row} for row in zipped]
-        return res
+        result = [dict(zip([col[0] for col in cur.description], row)) for row in cur.fetchall()]
+        con.close()
+        return result
