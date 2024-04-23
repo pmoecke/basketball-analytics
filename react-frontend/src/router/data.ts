@@ -24,24 +24,3 @@ export interface PlayerStatsParams {
         throw error;
       });
   }
-
-  export interface getPlayerIdParams {
-    player_name?: string;
-  }
-
-  export function getPlayerId(params: getPlayerIdParams): Promise<PlayerIdNamePair[] | undefined> {
-    const url = `players`;
-    console.log(params)
-    // Use axiosClient with the existing parameters object (url, { params })
-    return axiosClient.get<PlayerIdNamePair[]>(url, { params })
-      .then(response => {
-        if (response.status !== 204) {
-          return response.data;
-        }
-        return undefined;
-      })
-      .catch(error => {
-        console.error('Error fetching player ids:', error);
-        throw error;
-      });
-  }
