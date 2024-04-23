@@ -42,12 +42,6 @@ class Stats(Resource):
             WHERE 1 = 1
         """
         
-        params = []
-        if "player_id" in validated_args:
-            placeholders = ', '.join(['?'] * len(validated_args['player_id']))
-            query += f" AND p.player_id IN ({placeholders})"
-            params.extend(validated_args['player_id'])
-
         params = {}
         if "league_id" in args:
             query += "AND l.league_id in (:lids) "
