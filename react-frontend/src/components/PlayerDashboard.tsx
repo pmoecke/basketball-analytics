@@ -93,6 +93,9 @@ const PlayerDashboard: React.FC = () => {
     console.log(comparisonPlayers)
   }, [comparisonPlayers])
 
+  // Filter graph values
+  const [min] = useState([65, 65, 65, 65, 65]);
+  const [max] = useState([85, 85, 85, 85, 85]);
 
   return (
     <div className="container">
