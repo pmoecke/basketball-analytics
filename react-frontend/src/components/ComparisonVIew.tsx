@@ -5,9 +5,10 @@ import { Player } from '../types/player';
 interface ComparisonViewProps {
   comparisonPlayers: PlayerArray;
   togglePlayerForComparison: (player: Player) => void;
+  setShowComparisonModal: (show: boolean) => void;
 }
 
-const ComparisonView: React.FC<ComparisonViewProps> = ({ comparisonPlayers, togglePlayerForComparison }) => {
+const ComparisonView: React.FC<ComparisonViewProps> = ({ comparisonPlayers, togglePlayerForComparison, setShowComparisonModal}) => {
   return (
     <div className="player-comparison col-md-2 box">
         <div className="fs-2 text-center white mb-3">
@@ -26,7 +27,9 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ comparisonPlayers, togg
             </li>
         ))}
         </ul>
-        {comparisonPlayers.length === 2 && <button className="btn text-center btn-primary">Compare</button>}
+        {comparisonPlayers.length === 2 && <button className="btn text-center btn-primary" onClick={() => {
+                        setShowComparisonModal(true);
+                    }}>Compare</button>}
     </div>
     
   );

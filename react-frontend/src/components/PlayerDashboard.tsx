@@ -12,7 +12,8 @@ import { playerStats, PlayerStatsParams } from "../router/data"
 import Filter from './Filter';
 import Order from './Order';
 import PlayerFilter from "./PlayerFilter";
-import ComparisonView from "./ComparisonVIew";
+import ComparisonView from "./ComparisonView";
+import ComparisonModal from "./ComparisonModal";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -25,6 +26,7 @@ const PlayerDashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   // Compare player
+  const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
   // Filtering
   const [player_search, setPlayer_search] = useState("");
@@ -127,12 +129,17 @@ const PlayerDashboard: React.FC = () => {
           </Tabs>
           <div className="fs-5 text-center white mt-3">Results: {players.length}</div>
         </div>
-          <ComparisonView comparisonPlayers={comparisonPlayers} togglePlayerForComparison={togglePlayerForComparison}/>
+          <ComparisonView comparisonPlayers={comparisonPlayers} togglePlayerForComparison={togglePlayerForComparison} setShowComparisonModal={setShowComparisonModal}/>
         </div>
         <PlayerModal
           selectedPlayer={selectedPlayer}
           showModal={showModal}
           handleClose={() => setShowModal(false)}
+        />
+        <ComparisonModal
+          players={comparisonPlayers}
+          showModal={showComparisonModal}
+          handleClose={() => setShowComparisonModal(false)}
         />
     </div>
   );
