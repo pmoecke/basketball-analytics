@@ -1,7 +1,6 @@
 // PlayerSearch.tsx
 import React, { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
-import { getPlayerId } from "../router/data"; // Adjust path as necessary
 
 interface PlayerSearchProps {
     setPlayer_name: (name: string | undefined) => void;

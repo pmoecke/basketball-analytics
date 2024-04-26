@@ -1,0 +1,15 @@
+.player-modal-body {
+    overflow-y: auto;  /* Scroll only when necessary */
+    max-height: calc(90vh - 120px); /* Example calculation considering header and footer heights */
+}
+
+
+.player-modal-header {
+    background-color:#222222;   
+    color: white;
+}
+
+.player-modal-body {
+    background-color:#222222;   
+    color: white;
+}
