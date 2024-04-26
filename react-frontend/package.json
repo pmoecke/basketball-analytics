@@ -52,7 +52,7 @@
   "devDependencies": {
     "@types/lodash": "^4.17.0",
     "@types/react-helmet": "^6.1.11",
-    "chart.js": "^4.4.2",
-    "chartjs-plugin-dragdata": "^2.2.5"
+    "chart.js": "^3.0.0",
+    "chartjs-plugin-dragdata": "^2.0.0"
   }
 }
