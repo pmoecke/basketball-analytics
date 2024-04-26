@@ -13,6 +13,8 @@ export interface Player {
   "assists": number;
   points: number;
   jersey_number: number;
+  offensive_rating: number;
+  defensive_rating: number;
 }
 
 export const playerKeys: (keyof Player)[] = [
