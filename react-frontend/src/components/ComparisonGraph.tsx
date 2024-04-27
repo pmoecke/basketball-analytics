@@ -10,7 +10,9 @@ interface ComparisonGraphProps {
 const ComparisonGraph: React.FC<ComparisonGraphProps> = ({player1, player2}) => {
     useEffect(() => {
         var player1_name = player1['player-name']
-        const multiply = 5;
+
+        const multiply = 10;
+        
         var player1_stats = [
             player1['2-pt_field_goals_attempted']*multiply,
             player1['2-pt_field_goals_made']*multiply,
@@ -80,6 +82,7 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({player1, player2}) => 
                             color: text_color,
                         },
                         pointLabels: {
+                            //display: false,
                             color: text_color,
                             font: {
                                 size: font_size,
@@ -104,10 +107,13 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({player1, player2}) => 
                 },
                 plugins: {
                     legend: {
+                        position: 'bottom',
                         //display: false,
                         //onClick: (e) => e.stopPropagation(),
                     },
                 },
+                maintainAspectRatio: true, // Ensure the aspect ratio is maintained
+                aspectRatio: 1.4, //Width is X times height
             },
         };
 

@@ -9,7 +9,9 @@ interface PlayerGraphProps {
 const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
     useEffect(() => {
         var player1_name = player['player-name']
-        const multiply = 5;
+
+        const multiply = 10;
+
         var player1_stats = [
             player['2-pt_field_goals_attempted']*multiply,
             player['2-pt_field_goals_made']*multiply,
@@ -87,6 +89,8 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         //onClick: (e) => e.stopPropagation(),
                     },
                 },
+                maintainAspectRatio: true, // Ensure the aspect ratio is maintained
+                aspectRatio: 1.4, //Width is X times height
             },
         };
 

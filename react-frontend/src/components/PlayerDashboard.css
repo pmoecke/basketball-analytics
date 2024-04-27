@@ -32,3 +32,7 @@ a {
 .blur-background {
     filter: blur(10px);
 }
+
+html body .container {
+    max-width: 1800px; /* This is more specific than just .container */
+}

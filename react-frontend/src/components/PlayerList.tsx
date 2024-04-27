@@ -37,7 +37,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                             comparisonPlayers.length >= 2 ? 'btn-secondary' : 'btn-success'
                         }`}
                     >
-                        {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Uncompare' : 'Compare'}
+                        {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
                     </button>
                 </li>
             ))}

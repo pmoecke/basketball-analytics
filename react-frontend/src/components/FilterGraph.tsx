@@ -17,7 +17,7 @@ interface PlayerFilterProps {
   max: number[];
 }
 
-const PlayerFilter: React.FC<PlayerFilterProps> = ({min, max}) => {
+const FilterGraph: React.FC<PlayerFilterProps> = ({min, max}) => {
     useEffect(() => {
         const ctx = document.getElementById('filterChart') as HTMLCanvasElement;
         if (ctx) {
@@ -29,22 +29,22 @@ const PlayerFilter: React.FC<PlayerFilterProps> = ({min, max}) => {
                             label: "Maximum",
                             data: max,
                             backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                            borderColor: 'rgb(50, 200, 0)',
-                            pointBackgroundColor: 'rgb(50, 200, 0)',
+                            borderColor: 'rgb(100, 255, 100)',
+                            pointBackgroundColor: 'rgb(100, 255, 100)',
                             pointBorderColor: '#fff',
                             pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(50, 200, 0)',
+                            pointHoverBorderColor: 'rgb(100, 255, 100)',
                             fill: +1,
                         },
                         {
                             label: "Minimum",
                             data: min,
                             backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                            borderColor: 'rgb(200, 50, 0)',
-                            pointBackgroundColor: 'rgb(200, 50, 0)',
+                            borderColor: 'rgb(255, 100, 100)',
+                            pointBackgroundColor: 'rgb(255, 100, 100)',
                             pointBorderColor: '#fff',
                             pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(200, 50, 0)',
+                            pointHoverBorderColor: 'rgb(255, 100, 100)',
                             fill: false,
                         },
                     ],
@@ -132,5 +132,5 @@ const PlayerFilter: React.FC<PlayerFilterProps> = ({min, max}) => {
     );
 };
 
-export default PlayerFilter;
+export default FilterGraph;
  

@@ -16,3 +16,14 @@
     background-color:#222222;   
     color: white;
 }
+
+
+.modal-footer.comparison-modal-footer {
+    background-color: #222222;
+    color: white;
+}
+
+.playerChart {
+    max-height: 500px!important;
+    margin: 0 0;
+  }

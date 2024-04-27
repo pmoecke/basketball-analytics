@@ -3,7 +3,7 @@ import { Player } from "../types/player";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ComparisonGraph from "./ComparisonGraph";
-// Styling
+import TooltipOverlay from "./TooltipOverlay";
 import "./ComparisonModal.css";
 
 interface ComparisonModalProps {
@@ -24,23 +24,26 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     const player2 = players[1];
 
     return (
-      <Modal show={showModal} onHide={handleClose} className="player-modal">
-        <Modal.Header closeButton className="player-modal-header">
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        className="comparison-modal"
+        size="xl"
+      >
+        <Modal.Header closeButton className="comparison-modal-header">
           <Modal.Title>
             {player1["player-name"]} vs {player2["player-name"]}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="player-modal-body">
+        <Modal.Body className="comparison-modal-body">
           <div className="container">
             <div className="row">
-              <div className="col-md-4">
-                <div className="p-3  ">{player1["player-name"]}</div>
+              <div className="col-md-6">
+                <div className="p-3  "><h5>{player1["player-name"]}</h5></div>
               </div>
-              <div className="col-md-4">
-                <div className="p-3  "></div>
-              </div>
-              <div className="col-md-4">
-                <div className="p-3 text-end">{player2["player-name"]}</div>
+              
+              <div className="col-md-6">
+                <div className="p-3 text-end"><h5>{player2["player-name"]}</h5></div>
               </div>
             </div>
 
@@ -49,11 +52,38 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                 <div className="p-3  ">
                   {player1 && (
                     <>
-                      <p>Player id: {player1.player_id}</p>
-                      <p>Points: {player1.points}</p>
-                      <p>Jersey number: {player1.jersey_number}</p>
-                      <p>Offensive rating: {player1.offensive_rating}</p>
-                      <p>Defensive rating: {player1.defensive_rating}</p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="ID used to identify each player uniquely"
+                          placement="right"
+                          children={"ID: "}
+                        />
+                        {player1.player_id}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Number on this player's jersey"
+                          placement="right"
+                          children={"Nr: "}
+                        />
+                        {player1.jersey_number}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Score between 0 and 100 based on player's offensive prowess"
+                          placement="right"
+                          children={"Off: "}
+                        />
+                        {player1.offensive_rating}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Score between 0 and 100 based on player's defensive prowess"
+                          placement="right"
+                          children={"Def: "}
+                        />
+                        {player1.defensive_rating}
+                      </p>
                     </>
                   )}
                 </div>
@@ -64,14 +94,41 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                 </div>
               </div>
               <div className="col-md-2">
-                <div className="p-3  ">
+                <div className="p-3  text-end">
                   {player2 && (
                     <>
-                      <p>Player id: {player2.player_id}</p>
-                      <p>Points: {player2.points}</p>
-                      <p>Jersey number: {player2.jersey_number}</p>
-                      <p>Offensive rating: {player2.offensive_rating}</p>
-                      <p>Defensive rating: {player2.defensive_rating}</p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="ID used to identify each player uniquely"
+                          placement="left"
+                          children={"ID: "}
+                        />
+                        {player2.player_id}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Number on this player's jersey"
+                          placement="left"
+                          children={"Nr: "}
+                        />
+                        {player2.jersey_number}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Score between 0 and 100 based on player's offensive prowess"
+                          placement="left"
+                          children={"Off: "}
+                        />
+                        {player2.offensive_rating}
+                      </p>
+                      <p>
+                        <TooltipOverlay
+                          tooltipText="Score between 0 and 100 based on player's defensive prowess"
+                          placement="left"
+                          children={"Def: "}
+                        />
+                        {player2.defensive_rating}
+                      </p>
                     </>
                   )}
                 </div>
@@ -79,7 +136,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="comparison-modal-footer">
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
