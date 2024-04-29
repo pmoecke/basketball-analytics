@@ -34,7 +34,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                         }}
                         className={`btn ml-3 ${
                             comparisonPlayers.find(p => p.player_id === player.player_id) ? 'btn-danger' : 
-                            comparisonPlayers.length >= 2 ? 'btn-secondary' : 'btn-success'
+                            comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                         }`}
                     >
                         {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}

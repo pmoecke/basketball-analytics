@@ -1,0 +1,24 @@
+.advanced-filter-modal-body {
+  overflow-y: auto; /* Scroll only when necessary */
+  height: calc(
+    90vh - 120px
+  ); /* Example calculation considering header and footer heights */
+  background-color: #222222;
+  color: white;
+}
+
+.advanced-filter-modal-header {
+  background-color: #222222;
+  color: white;
+}
+
+.modal-footer.advanced-filter-modal-footer {
+  background-color: #222222;
+  color: rgb(180, 35, 35);
+}
+
+.rows {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

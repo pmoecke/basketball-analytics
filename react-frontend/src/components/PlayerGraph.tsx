@@ -34,6 +34,8 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                 backgroundColor: player1_color_transparent,
                 borderColor: player1_color,
                 pointBackgroundColor: player1_color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: player1_color,
             }],
         };
@@ -51,8 +53,6 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         radius: 4,
                         hitRadius: 10,
                         hoverRadius: 6,
-                        borderColor: '#fff',
-                        hoverBackgroundColor: '#fff',
                     }
                 },
                 scales: {

@@ -15,3 +15,10 @@
     background-color: #222222;
     color: white;
 }
+
+.space_between {
+    display: flex;
+    justify-content: space-between; /* This will push the content to both edges */
+    align-items: center; /* Aligns items vertically center */
+    width: 100%; /* Ensure the container takes full width */
+}

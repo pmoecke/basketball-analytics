@@ -57,7 +57,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
               />
               {selectedPlayer.offensive_rating}
             </p>
-            <p>
+            <p> 
               <TooltipOverlay
                 tooltipText="Score between 0 and 100 based on player's defensive prowess"
                 placement="left"
@@ -70,11 +70,11 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
           </>
         )}
       </Modal.Body>
+    
       <Modal.Footer className="player-modal-footer">
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
+        
       </Modal.Footer>
+     
     </Modal>
   );
 };

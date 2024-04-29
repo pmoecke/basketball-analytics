@@ -52,7 +52,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                 <div className="p-3  ">
                   {player1 && (
                     <>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="ID used to identify each player uniquely"
                           placement="right"
@@ -60,7 +60,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player1.player_id}
                       </p>
-                      <p>
+                      <p className="space_between"> 
                         <TooltipOverlay
                           tooltipText="Number on this player's jersey"
                           placement="right"
@@ -68,7 +68,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player1.jersey_number}
                       </p>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="Score between 0 and 100 based on player's offensive prowess"
                           placement="right"
@@ -76,7 +76,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player1.offensive_rating}
                       </p>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="Score between 0 and 100 based on player's defensive prowess"
                           placement="right"
@@ -97,7 +97,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                 <div className="p-3  text-end">
                   {player2 && (
                     <>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="ID used to identify each player uniquely"
                           placement="left"
@@ -105,7 +105,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player2.player_id}
                       </p>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="Number on this player's jersey"
                           placement="left"
@@ -113,7 +113,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player2.jersey_number}
                       </p>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="Score between 0 and 100 based on player's offensive prowess"
                           placement="left"
@@ -121,7 +121,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
                         />
                         {player2.offensive_rating}
                       </p>
-                      <p>
+                      <p className="space_between">
                         <TooltipOverlay
                           tooltipText="Score between 0 and 100 based on player's defensive prowess"
                           placement="left"
@@ -137,9 +137,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
           </div>
         </Modal.Body>
         <Modal.Footer className="comparison-modal-footer">
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
+          
         </Modal.Footer>
       </Modal>
     );

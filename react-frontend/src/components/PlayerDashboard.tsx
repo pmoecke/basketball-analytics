@@ -15,6 +15,8 @@ import FilterGraph from "./FilterGraph";
 import ComparisonView from "./ComparisonView";
 import ComparisonModal from "./ComparisonModal";
 
+import AdvancedFilterModal from "./AdvancedFilterModal";
+
 const PlayerDashboard: React.FC = () => {
   // Player data
   const [players, setPlayers] = useState<PlayerArray>([]);
@@ -38,6 +40,9 @@ const PlayerDashboard: React.FC = () => {
 
   // Function to handle tab selection change
   const handleSelect = (key: string | null) => key && setActiveKey(key);
+
+  //Advanced Filtering
+  const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
 
   const leagueOptions = [
     { value: 1, label: "Basket League" },
@@ -108,10 +113,10 @@ const PlayerDashboard: React.FC = () => {
     <div className="container">
       <div
         className={`row justify-content-evenly ${
-          (showModal || showComparisonModal) ? "blur-background" : ""
+          showModal || showComparisonModal || showAdvancedFilterModal ? "blur-background" : ""
         }`}
       >
-        <div className="col-md-3 box">
+        <div className="col-md-3 filter_box">
           <h1 className="fs-3 text-center white">General Filter</h1>
           <div className="filter">
             <Filter
@@ -139,6 +144,19 @@ const PlayerDashboard: React.FC = () => {
               orderValue={orderValue}
               setOrderValue={setOrderValue}
             />
+          </div>
+          <h1 className="fs-3 text-center white">Advanced Filter</h1>
+          <div className="advanced">
+            <button
+              className="btn text-center btn-secondary w-100"
+              onClick={() => {
+                setShowAdvancedFilterModal(true);
+              }}
+              //style={{ backgroundColor: 'grey' }}  // Replace colors as needed
+
+            >
+              Advanced Filter
+            </button>
           </div>
         </div>
         <div className="player-search col-md-6 box">
@@ -180,6 +198,10 @@ const PlayerDashboard: React.FC = () => {
         players={comparisonPlayers}
         showModal={showComparisonModal}
         handleClose={() => setShowComparisonModal(false)}
+      />
+      <AdvancedFilterModal
+        showModal={showAdvancedFilterModal}
+        handleClose={() => setShowAdvancedFilterModal(false)}
       />
     </div>
   );
