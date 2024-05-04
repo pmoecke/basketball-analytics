@@ -111,7 +111,7 @@ const PlayerDashboard: React.FC = () => {
   const [max] = useState([85, 85, 85, 85, 85]);
 
   return (
-    <div className="container">
+    <div className="container m-3">
       <div
         className={`row justify-content-evenly ${
           showModal || showComparisonModal || showAdvancedFilterModal ? "blur-background" : ""
@@ -137,16 +137,6 @@ const PlayerDashboard: React.FC = () => {
           <div className="pentagon">
             <FilterGraph min={min} max={max} />
           </div>
-          <h1 className="fs-3 text-center white">Ordering</h1>
-          <div className="order">
-            <Order
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              orderValue={orderValue}
-              setOrderValue={setOrderValue}
-            />
-          </div>
-          <h1 className="fs-3 text-center white">Advanced Filter</h1>
           <div className="advanced">
             <button
               className="btn text-center btn-secondary w-100"
@@ -161,7 +151,15 @@ const PlayerDashboard: React.FC = () => {
           </div>
         </div>
         <div className="player-search col-md-8 box">
-          <PlayerSearch setPlayer_name={setPlayer_name} />
+          <div className="searchOrder">
+            <PlayerSearch setPlayer_name={setPlayer_name} />
+            <Order
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+              orderValue={orderValue}
+              setOrderValue={setOrderValue}
+            />
+          </div>
           <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
             <Tab eventKey="list" title="Player List">
               <PlayerList

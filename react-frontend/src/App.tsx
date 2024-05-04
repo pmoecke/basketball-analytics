@@ -9,7 +9,6 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <header className="App-header">B-12 Project</header>
         <Routes>
           <Route path="/" element={<PlayerDashboard/>} />
         </Routes>
