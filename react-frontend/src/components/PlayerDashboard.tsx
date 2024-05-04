@@ -118,8 +118,9 @@ const PlayerDashboard: React.FC = () => {
         }`}
       >
         <div className="col-md-3 filter_box">
-          <h1 className="fs-3 text-center white">General Filter</h1>
+          
           <div className="filter">
+            <h1 className="fs-3 text-center white">General Filter</h1>
             <Filter
               label="League"
               value={league_id}
@@ -133,8 +134,8 @@ const PlayerDashboard: React.FC = () => {
               options={teamOptions}
             />
           </div>
-          <h1 className="fs-3 text-center white">Player Filter</h1>
           <div className="pentagon">
+            <h1 className="fs-3 text-center white">Player Filter</h1>
             <FilterGraph min={min} max={max} />
           </div>
           <div className="advanced">
@@ -151,14 +152,19 @@ const PlayerDashboard: React.FC = () => {
           </div>
         </div>
         <div className="player-search col-md-8 box">
-          <div className="searchOrder">
-            <PlayerSearch setPlayer_name={setPlayer_name} />
-            <Order
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              orderValue={orderValue}
-              setOrderValue={setOrderValue}
-            />
+          <div className="row">
+            <div className="col-md-6">
+            <h1 className="fs-3 white">Search</h1>
+              <PlayerSearch setPlayer_name={setPlayer_name} />
+            </div>
+            <div className="col-md-6">
+              <Order
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                orderValue={orderValue}
+                setOrderValue={setOrderValue}
+              />
+            </div>
           </div>
           <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
             <Tab eventKey="list" title="Player List">
@@ -178,11 +184,13 @@ const PlayerDashboard: React.FC = () => {
               />
             </Tab>
           </Tabs>
-          <ComparisonView
-          comparisonPlayers={comparisonPlayers}
-          togglePlayerForComparison={togglePlayerForComparison}
-          setShowComparisonModal={setShowComparisonModal}
-        />
+          {activeKey === 'list' && (
+            <ComparisonView
+              comparisonPlayers={comparisonPlayers}
+              togglePlayerForComparison={togglePlayerForComparison}
+              setShowComparisonModal={setShowComparisonModal}
+            />
+          )}
         </div>
         
       </div>

@@ -26,7 +26,7 @@ const PlayerSearch: React.FC<PlayerSearchProps> = ({ setPlayer_name }) => {
 
     return (
         <input
-            className="form-control search mb-3"
+            className="form-control search"
             type="text"
             placeholder="Search for players..."
             value={searchTerm}

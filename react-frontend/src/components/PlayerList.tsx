@@ -46,6 +46,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                             comparisonPlayers.find(p => p.player_id === player.player_id) ? 'btn-danger' : 
                             comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                         }`}
+                        style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
                     >
                         {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
                     </button>

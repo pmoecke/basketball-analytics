@@ -11,9 +11,9 @@ interface OrderProps {
 const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
   return (
     <div>
-       <div className="my-3 row">
-        <p className='col-md-3 white'>Value:</p>
-        <div className='col-md-9'>
+       <div className="row">
+       <h1 className="fs-3 white">Ordering</h1>
+        <div className='col-md-6'>
           <select
             className="form-select"
             value={orderValue}
@@ -24,10 +24,7 @@ const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setO
             ))}
           </select>
         </div>
-      </div>
-      <div className="my-3 row">
-        <p className='col-md-3 white'>Order:</p>
-        <div className='col-md-9'>
+        <div className='col-md-6'>
           <select
             className="form-select"
             value={sortOrder}
@@ -37,6 +34,9 @@ const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setO
             <option value="desc">Descending</option>
           </select>
         </div>
+      </div>
+      <div className="my-3 row">
+        
       </div>
     </div>
   );
