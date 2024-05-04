@@ -56,7 +56,7 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
                 setShowModal(true);
             })
             .append("title")  // Tooltip showing the player's name on hover
-            .text(d => `${d["player-name"]}\nOff:${d.offensive_rating}\nDef:${d.defensive_rating}`);
+            .text(d => `${d.player_name}\nOff:${d.offensive_rating}\nDef:${d.defensive_rating}`);
 
         // Add Axes
         g.append("g")

@@ -32,18 +32,18 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
       >
         <Modal.Header closeButton className="comparison-modal-header">
           <Modal.Title>
-            {player1["player-name"]} vs {player2["player-name"]}
+            {player1.player_name} vs {player2.player_name}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="comparison-modal-body">
           <div className="container">
             <div className="row">
               <div className="col-md-6">
-                <div className="p-3  "><h5>{player1["player-name"]}</h5></div>
+                <div className="p-3  "><h5>{player1.player_name}</h5></div>
               </div>
               
               <div className="col-md-6">
-                <div className="p-3 text-end"><h5>{player2["player-name"]}</h5></div>
+                <div className="p-3 text-end"><h5>{player2.player_name}</h5></div>
               </div>
             </div>
 

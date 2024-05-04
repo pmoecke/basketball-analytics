@@ -25,7 +25,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     }}
                 >
                     <div className='row-content'>
-                        id: {player.player_id}, name: {player["player-name"]}, points: {player.points}, jersey_number: {player.jersey_number}
+                        id: {player.player_id}, name: {player.player_name}, points: {player.points}, jersey_number: {player.jersey_number}
                     </div>
                     <button 
                         onClick={(e) => {

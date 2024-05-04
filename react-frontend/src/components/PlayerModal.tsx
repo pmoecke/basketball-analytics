@@ -27,7 +27,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
     >
       <Modal.Header closeButton className="player-modal-header">
         <Modal.Title>
-          {selectedPlayer ? selectedPlayer["player-name"] : "Player Details"}
+          {selectedPlayer ? selectedPlayer.player_name : "Player Details"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="player-modal-body">

@@ -22,7 +22,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
             key={player.player_id}
             className="fs-5 player-row white d-flex justify-content-between align-items-center"
           >
-            {player["player-name"]}
+            {player.player_name}
             <button
               className="btn btn-danger btn-sm ml-3"
               onClick={() => togglePlayerForComparison(player)}

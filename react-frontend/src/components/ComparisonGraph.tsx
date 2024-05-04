@@ -12,7 +12,7 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
   player2,
 }) => {
   useEffect(() => {
-    var player1_name = player1["player-name"];
+    var player1_name = player1.player_name;
 
     const multiply = 10;
 
@@ -26,7 +26,7 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
     var player1_color = "rgb(153, 102, 255)";
     var player1_color_transparent = "rgba(153, 102, 255, 0.1)";
 
-    var player2_name = player2["player-name"];
+    var player2_name = player2.player_name;
     var player2_stats = [
       player2["2-pt_field_goals_attempted"] * multiply,
       player2["2-pt_field_goals_made"] * multiply,
