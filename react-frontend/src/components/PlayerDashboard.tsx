@@ -6,7 +6,7 @@ import PlayerList from "./PlayerList";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch"
-import { playerStats, PlayerStatsParams, getPlayerId, getPlayerIdParams } from "../router/data"
+import { playerStats, PlayerStatsParams, playerOverview, PlayerOverviewParams } from "../router/data"
 
 import Filter from './Filter';
 import Order from './Order';
@@ -19,7 +19,7 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] = useState<keyof Player>("points");
+  const [orderValue, setOrderValue] = useState<keyof Player>("effective_field_goal_percentage");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -39,12 +39,12 @@ const PlayerDashboard: React.FC = () => {
   ];
   // Handles general player filtering
   useEffect(() => {
-    const params: Partial<PlayerStatsParams> = {};
+    const params: Partial<PlayerOverviewParams> = {};
       params.league_id = league_id;
       params.team_id = team_id;
       params.player_name = player_name;
     
-    playerStats(params).then(data => {
+    playerOverview(params).then(data => {
       if (data !== undefined) {
         console.log(data); 
         setPlayers(data);
@@ -93,7 +93,7 @@ const PlayerDashboard: React.FC = () => {
         </div>
         <div className="player-search col-md-8 box">
           <PlayerSearch setPlayer_name={setPlayer_name}/>
-          <PlayerList players={players} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
+          <PlayerList players={sortedPlayers} setSelectedPlayer={setSelectedPlayer} setShowModal={setShowModal}/>
         </div>
         <PlayerModal
           selectedPlayer={selectedPlayer}

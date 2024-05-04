@@ -14,12 +14,12 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ selectedPlayer, showModal, ha
   return (
     <Modal show={showModal} onHide={handleClose} className="player-modal">
       <Modal.Header closeButton className="player-modal-header">
-        <Modal.Title>{selectedPlayer ? selectedPlayer["player-name"] : "Player Details"}</Modal.Title>
+        <Modal.Title>{selectedPlayer ? selectedPlayer.player_name : "Player Details"}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="player-modal-body">
         {selectedPlayer && (
           <>
-            <p>Player id: {selectedPlayer.player_id}</p>
+            <p>Eff score: {selectedPlayer.effective_field_goal_percentage}</p>
             <p>Points: {selectedPlayer.points}</p>
             <p>Jersey number: {selectedPlayer.jersey_number}</p>
 

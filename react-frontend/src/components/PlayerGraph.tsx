@@ -8,7 +8,7 @@ interface PlayerGraphProps {
 
 const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
     useEffect(() => {
-        var player1_name = player['player-name']
+        var player1_name = player.player_name
         var player1_stats = [
             player['drives_%'],
             player['free_throws_%'],

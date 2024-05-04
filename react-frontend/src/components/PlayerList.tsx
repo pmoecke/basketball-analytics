@@ -23,7 +23,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                         setShowModal(true);
                     }}
                 >
-                    id: {player.player_id}, name: {player["player-name"]}, points: {player.points}, jersey_number: {player.jersey_number}
+                    {player.effective_field_goal_percentage}, {player.player_name}
                 </li>
             ))}
         </ul>
