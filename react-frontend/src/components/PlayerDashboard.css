@@ -32,3 +32,25 @@ a {
 .blur-background {
     filter: blur(10px);
 }
+
+html body .container {
+    max-width: 1800px; /* This is more specific than just .container */
+}
+
+.box2 {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Adjusts rows size, 1fr takes the remaining space */
+    height: 100%; /* Optional: Ensure the container fills the parent height */
+}
+
+.filter_box {
+    border: solid;
+    border-width: 2px;
+    border-color: #222222;
+    background-color:#222222;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

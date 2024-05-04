@@ -1,0 +1,31 @@
+.comparison-modal-body {
+  overflow-y: auto; /* Scroll only when necessary */
+  max-height: calc(
+    90vh - 120px
+  ); /* Example calculation considering header and footer heights */
+  background-color: #222222;
+  color: white;
+}
+
+.comparison-modal-header {
+  background-color: #222222;
+  color: white;
+}
+
+.modal-footer.comparison-modal-footer {
+  background-color: #222222;
+  color: white;
+}
+
+.playerChart {
+  max-height: 500px !important;
+  margin: 0 0;
+}
+
+.space_between {
+  display: flex;
+  justify-content: space-between; /* This will push the content to both edges */
+  align-items: center; /* Aligns items vertically center */
+  width: 100%; /* Ensure the container takes full width */
+}
+
