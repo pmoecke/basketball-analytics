@@ -12,7 +12,7 @@ import { playerStats, PlayerStatsParams } from "../router/data";
 import Filter from "./Filter";
 import Order from "./Order";
 import FilterGraph from "./FilterGraph";
-import ComparisonView from "./ComparisonView";
+import ComparisonView from "./ComparisonView"
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
