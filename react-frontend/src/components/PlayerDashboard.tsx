@@ -7,7 +7,7 @@ import Player2DView from "./Player2DView";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch";
-import { playerStats, PlayerStatsParams } from "../router/data";
+import { playerStats, PlayerStatsParams, playerOverview, PlayerOverviewParams } from "../router/data";
 
 import Filter from "./Filter";
 import Order from "./Order";
@@ -55,12 +55,12 @@ const PlayerDashboard: React.FC = () => {
   ];
   // Handles general player filtering
   useEffect(() => {
-    const params: Partial<PlayerStatsParams> = {};
+    const params: Partial<PlayerOverviewParams> = {};
     params.league_id = league_id;
     params.team_id = team_id;
     params.player_name = player_name;
 
-    playerStats(params).then((data) => {
+    playerOverview(params).then((data) => {
       if (data !== undefined) {
         console.log(data);
         setPlayers(data);
