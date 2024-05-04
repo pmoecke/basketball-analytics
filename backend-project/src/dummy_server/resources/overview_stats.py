@@ -34,8 +34,14 @@ class OverviewStats(Resource):
         args = schema.dump(arg_dict)
 
         query = """
-            SELECT p.name as 'player_name', s.effective_field_goal_percentage,
-            s.offensive_rating, s.defensive_rating
+            SELECT 
+            p.player_id as 'player_id',
+            p.name as 'player_name',
+            s.effective_field_goal_percentage,
+            s.offensive_rating, 
+            s.defensive_rating,
+            s.games_played,
+            (s.points + s.rebounds + s.assists + s.steals + s.blocks - (s.field_goals_attempted - s.field_goals_made + s.free_throws_attempted - s.free_throws_made + s.turnovers)) as 'efficiency_score'
             FROM Stats s
             INNER JOIN Player p ON p.player_id = s.player_id
             INNER JOIN League l ON l.league_id = s.league_id
