@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { playerStatsFromId, PlayerStatsFromIdParams} from "../router/data";
 
 // Import styles for the component
 
@@ -52,7 +53,16 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
             .attr("r", 5)
             .attr("fill", "dodgerblue")
             .on("click", (event, d) => {
-                setSelectedPlayer(d);
+                const params: PlayerStatsFromIdParams = {
+                    player_id: d.player_id
+                  };
+                playerStatsFromId(params).then((data) => {
+                    if (data !== undefined) {
+                      console.log(data);
+                      const player = data[0]
+                      setSelectedPlayer(player);
+                    }
+                }); 
                 setShowModal(true);
             })
             .append("title")  // Tooltip showing the player's name on hover

@@ -3,6 +3,7 @@ import React from 'react';
 import { Player, PlayerArray } from '../types/player';
 import { FaFlag } from 'react-icons/fa';
 import TooltipOverlay from "./TooltipOverlay";
+import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
 // Styling
 import "./PlayerList.css";
 
@@ -24,7 +25,16 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 className="player-row d-flex justify-content-between"
                 key={`${player.player_id}-${index}`}
                 onClick={() => {
-                    setSelectedPlayer(player);
+                    const params: PlayerStatsFromIdParams = {
+                        player_id: player.player_id
+                      };
+                    playerStatsFromId(params).then((data) => {
+                        if (data !== undefined) {
+                          console.log(data);
+                          const player = data[0]
+                          setSelectedPlayer(player);
+                        }
+                    }); 
                     setShowModal(true);
                 }}
             >

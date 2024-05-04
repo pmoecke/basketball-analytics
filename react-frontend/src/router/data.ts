@@ -48,3 +48,22 @@ export function playerOverview(params: PlayerOverviewParams): Promise<PlayerArra
     }
   );
 }
+
+export interface PlayerStatsFromIdParams {
+  player_id?: number;
+}
+
+export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<PlayerArray | undefined> {
+  const url = 'stats'; // Endpoint relative to the BASE_URL
+  return axiosClient.get<PlayerArray>(url, { params })
+    .then(response => {
+      if (response.status !== 204) {
+        return response.data;
+      }
+      return undefined;
+    })
+    .catch(error => {
+      console.error('Error fetching player stats:', error);
+      throw error;
+    });
+}
