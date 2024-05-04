@@ -24,7 +24,7 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] = useState<keyof Player>("points");
+  const [orderValue, setOrderValue] = useState<keyof Player>("efficiency_score");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -165,7 +165,7 @@ const PlayerDashboard: React.FC = () => {
           <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
             <Tab eventKey="list" title="Player List">
               <PlayerList
-                players={players}
+                players={sortedPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}
                 togglePlayerForComparison={togglePlayerForComparison}
