@@ -19,7 +19,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ selectedPlayer, showModal, ha
       <Modal.Body className="player-modal-body">
         {selectedPlayer && (
           <>
-            <p>Eff score: {selectedPlayer.effective_field_goal_percentage}</p>
+            <p>Eff score: {selectedPlayer.efficiency_score}</p>
             <p>Points: {selectedPlayer.points}</p>
             <p>Jersey number: {selectedPlayer.jersey_number}</p>
 

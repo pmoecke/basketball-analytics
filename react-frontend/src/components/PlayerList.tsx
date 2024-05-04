@@ -23,7 +23,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                         setShowModal(true);
                     }}
                 >
-                    {player.effective_field_goal_percentage}, {player.player_name}
+                    {Math.round(player.efficiency_score).toFixed(2)}, {player.player_name}
                 </li>
             ))}
         </ul>

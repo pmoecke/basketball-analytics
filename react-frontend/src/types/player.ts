@@ -3,7 +3,7 @@ export interface Player {
   player_name: string;
   offensive_rating: number;
   defensive_rating: number;
-  effective_field_goal_percentage: number;
+  efficiency_score: number;
   points: number;
   jersey_number: number;
   "free_throws_%": number;
@@ -14,7 +14,7 @@ export interface Player {
 }
 
 export const playerKeys: (keyof Player)[] = [
-  "effective_field_goal_percentage"
+  "efficiency_score"
 ];
 
 export type PlayerArray = Player[];
