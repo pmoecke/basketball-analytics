@@ -19,7 +19,7 @@ interface Player2DViewProps {
 const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer, setShowModal }) => {
     const svgRef = useRef(null);
 
-    const width = 500;
+    const width = 560;
     const height = width
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove(); // Clear SVG content before adding new elements
 
-        const margin = 30;
+        const margin = 50;
         const innerWidth = width - 2*margin;
         const innerHeight = height - 2*margin;
 
@@ -65,6 +65,19 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
 
         g.append("g")
             .call(d3.axisLeft(yScale));
+
+        // Add X Axis label
+        g.append("text")
+        .attr("transform", `translate(${innerWidth / 2}, ${innerHeight + margin*0.7})`)
+        .style("text-anchor", "middle")
+        .text("Defensive Rating");
+
+        // Add Y Axis label
+        g.append("text")
+            .attr("transform", `translate(${-margin*0.7}, ${innerHeight / 2}) rotate(-90)`)
+            .style("text-anchor", "middle")
+            .text("Offensive Rating");
+
     }, [players, setSelectedPlayer, setShowModal]);
 
     return (
