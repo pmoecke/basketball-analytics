@@ -3,6 +3,8 @@ import { Player } from "../types/player";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import PlayerGraph from "./PlayerGraph";
+// Styling
+import "./PlayerModal.css"
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
@@ -22,6 +24,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ selectedPlayer, showModal, ha
             <p>Eff score: {selectedPlayer.efficiency_score}</p>
             <p>Points: {selectedPlayer.points}</p>
             <p>Jersey number: {selectedPlayer.jersey_number}</p>
+            <p>Offensive rating: {selectedPlayer.offensive_rating}</p>
+            <p>Defensive rating: {selectedPlayer.defensive_rating}</p>
 
             <PlayerGraph player={selectedPlayer}/>
           </>

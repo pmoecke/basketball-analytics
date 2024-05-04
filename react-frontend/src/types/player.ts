@@ -11,6 +11,15 @@ export interface Player {
   "isolation_%": number;
   "drives_%": number;
   "pick-n-pops_%": number;
+  "2-pt_field_goals_attempted":number;
+  "2-pt_field_goals_made":number;
+  "3-pt_field_goals_attempted": number;
+  "3-pt_field_goals_made": number;
+  "assists": number;
+  points: number;
+  jersey_number: number;
+  offensive_rating: number;
+  defensive_rating: number;
 }
 
 export const playerKeys: (keyof Player)[] = [

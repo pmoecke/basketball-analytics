@@ -10,11 +10,11 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
     useEffect(() => {
         var player1_name = player.player_name
         var player1_stats = [
-            player['drives_%'],
-            player['free_throws_%'],
-            player['isolation_%'],
-            player['pick-n-pops_%'],
-            player['transition_attacks_%']
+            player['2-pt_field_goals_attempted']*multiply,
+            player['2-pt_field_goals_made']*multiply,
+            player['3-pt_field_goals_attempted']*multiply,
+            player['3-pt_field_goals_made']*multiply,
+            player['assists']*multiply
         ]
         var player1_color = 'rgb(153, 102, 255)'
         var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
