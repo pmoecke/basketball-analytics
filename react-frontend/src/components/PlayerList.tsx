@@ -2,6 +2,7 @@
 import React from 'react';
 import { Player, PlayerArray } from '../types/player';
 import { FaFlag } from 'react-icons/fa';
+import TooltipOverlay from "./TooltipOverlay";
 // Styling
 import "./PlayerList.css";
 
@@ -34,7 +35,9 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 <div className="d-flex align-items-center">
                     
                     {player.games_played < 5 && ( // change value according to ml model
-                        <FaFlag className='mx-3' style={{ color: 'red' }} />
+                        <TooltipOverlay tooltipText='Players with limited data are flagged; their stats may be inaccurate.' placement="left">
+                            <FaFlag className='mx-3' style={{ color: 'red' }} />
+                        </TooltipOverlay>
                     )}
 
                     <button 
