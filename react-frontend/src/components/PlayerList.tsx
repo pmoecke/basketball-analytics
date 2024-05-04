@@ -1,6 +1,7 @@
 // PlayerList.tsx
 import React from 'react';
 import { Player, PlayerArray } from '../types/player';
+import { FaFlag } from 'react-icons/fa';
 // Styling
 import "./PlayerList.css";
 
@@ -27,6 +28,15 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 <div className='row-content'>
                     {Math.round(player.efficiency_score).toFixed(2)} : {player.player_name}
                 </div>
+
+                {player.games_played < 200 ? (
+                    <div className="games-played-marker">
+                        <FaFlag style={{ color: 'red' }} /> {/* Render a red flag icon */}
+                    </div>
+                ) : null}
+
+
+
                 <div className="ml-auto">
                     <button 
                         onClick={(e) => {
