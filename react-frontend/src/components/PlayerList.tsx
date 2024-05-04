@@ -17,29 +17,31 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
         <ul className="player-list">
             {players.map((player, index) => (
                 <li
-                    className="player-row"
-                    key={`${player.player_id}-${index}`}
-                    onClick={() => {
-                        setSelectedPlayer(player);
-                        setShowModal(true);
-                    }}
-                >
-                    <div className='row-content'>
-                        id: {player.player_id}, name: {player.player_name}, points: {player.points}, jersey_number: {player.jersey_number}
-                    </div>
+                className="player-row d-flex justify-content-between"
+                key={`${player.player_id}-${index}`}
+                onClick={() => {
+                    setSelectedPlayer(player);
+                    setShowModal(true);
+                }}
+            >
+                <div className='row-content'>
+                    {Math.round(player.efficiency_score).toFixed(2)} : {player.player_name}
+                </div>
+                <div className="ml-auto">
                     <button 
                         onClick={(e) => {
                             e.stopPropagation(); // Prevent the li onClick from firing when the button is clicked
                             togglePlayerForComparison(player);
                         }}
-                        className={`btn ml-3 ${
+                        className={`btn ${
                             comparisonPlayers.find(p => p.player_id === player.player_id) ? 'btn-danger' : 
                             comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                         }`}
                     >
                         {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
                     </button>
-                </li>
+                </div>
+            </li>
             ))}
         </ul>
     );
