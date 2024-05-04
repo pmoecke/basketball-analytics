@@ -16,10 +16,6 @@ export interface Player {
   "3-pt_field_goals_attempted": number;
   "3-pt_field_goals_made": number;
   "assists": number;
-  points: number;
-  jersey_number: number;
-  offensive_rating: number;
-  defensive_rating: number;
 }
 
 export const playerKeys: (keyof Player)[] = [
