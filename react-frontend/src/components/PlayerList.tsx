@@ -28,10 +28,14 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     setShowModal(true);
                 }}
             >
+            
                 <div className='row-content'>
-                    {Math.round(player.efficiency_score).toFixed(2)} : {player.player_name}
+                    <TooltipOverlay tooltipText='Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP' placement="left">
+                    {Math.round(player.efficiency_score).toFixed(2)} 
+                    </TooltipOverlay>
+                    : {player.player_name}
                 </div>
-
+              
                 <div className="d-flex align-items-center">
                     
                     {player.games_played < 5 && ( // change value according to ml model
@@ -53,7 +57,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     >
                         {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
                     </button>
-                   
                  </div>
             </li>
             ))}

@@ -1,6 +1,6 @@
 .player-list {
     color: orange;
-    height: 50vh; /* Adjust based on your header/nav size */
+    height: 60vh; /* Adjust based on your header/nav size */
     overflow-y: auto; /* Enables vertical scrolling */
     border-radius: 10px;
     -webkit-overflow-scrolling: touch; /* For momentum scrolling on iOS devices */

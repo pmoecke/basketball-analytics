@@ -18,7 +18,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
   const isCompareButtonDisabled = comparisonPlayers.length !== 2;
 
   return (
-    <div className="player-comparison  box d-flex ">
+    <div className="player-comparison d-flex ">
       
       {comparisonPlayers[0] ? (
         <div className="player-info">

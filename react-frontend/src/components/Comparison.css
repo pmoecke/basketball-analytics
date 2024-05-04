@@ -3,14 +3,15 @@ span {
 }
 
 .player-comparison {
+    height: 10vh;
     display: flex;
     align-items: center; /* Align items vertically */
     justify-content: space-between; /* Distribute items evenly horizontally */
-  }
+}
   
-  .player-info {
+.player-info {
     width: 240px; /* Adjust width as needed */
-    height: 100px; /* Adjust height as needed */
+    height: 60px; /* Adjust height as needed */
     background-color: black;
     border: solid;
     border-radius: 4px;
@@ -20,6 +21,5 @@ span {
     flex-direction: row;
     flex-shrink: 0; /* Prevent shrinking */
     justify-content: center; /* Center content vertically */
-    margin: 0 10px; /* Add margin between player-info squares */
-  }
+}
   
