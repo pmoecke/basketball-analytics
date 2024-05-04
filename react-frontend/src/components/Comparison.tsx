@@ -2,6 +2,8 @@ import React from "react";
 import { PlayerArray } from "../types/player";
 import { Player } from "../types/player";
 
+import "./Comparison.css"
+
 interface ComparisonViewProps {
   comparisonPlayers: PlayerArray;
   togglePlayerForComparison: (player: Player) => void;
@@ -13,34 +15,47 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
   togglePlayerForComparison,
   setShowComparisonModal,
 }) => {
+  const isCompareButtonDisabled = comparisonPlayers.length !== 2;
+
   return (
-    <div className="player-comparison col-md-2 box">
-      <div className="fs-2 text-center white mb-3">Comparison</div>
-      <ul>
-        {comparisonPlayers.map((player: Player) => (
-          <li
-            key={player.player_id}
-            className="fs-5 player-row white d-flex justify-content-between align-items-center"
+    <div className="player-comparison  box d-flex ">
+      
+      {comparisonPlayers[0] ? (
+        <div className="player-info">
+          <span>{comparisonPlayers[0].player_name}</span>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={() => togglePlayerForComparison(comparisonPlayers[0])}
           >
-            {player.player_name}
-            <button
-              className="btn btn-danger btn-sm ml-3"
-              onClick={() => togglePlayerForComparison(player)}
-            >
-              -
-            </button>
-          </li>
-        ))}
-      </ul>
-      {comparisonPlayers.length === 2 && (
-        <button
-          className="btn text-center btn-primary"
-          onClick={() => {
-            setShowComparisonModal(true);
-          }}
-        >
-          Compare
-        </button>
+            -
+          </button>
+        </div>
+      ) : (
+        <div className="player-info"></div>
+      )}
+
+      <button
+        className="btn m-5 text-center btn-primary"
+        onClick={() => {
+          setShowComparisonModal(true);
+        }}
+        disabled={isCompareButtonDisabled}
+      >
+        Compare
+      </button>
+
+      {comparisonPlayers[1] ? (
+        <div className="player-info">
+          <span>{comparisonPlayers[1].player_name}</span>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={() => togglePlayerForComparison(comparisonPlayers[1])}
+          >
+            -
+          </button>
+        </div>
+      ) : (
+        <div className="player-info"></div>
       )}
     </div>
   );

@@ -160,7 +160,7 @@ const PlayerDashboard: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="player-search col-md-6 box">
+        <div className="player-search col-md-8 box">
           <PlayerSearch setPlayer_name={setPlayer_name} />
           <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
             <Tab eventKey="list" title="Player List">
@@ -180,15 +180,13 @@ const PlayerDashboard: React.FC = () => {
               />
             </Tab>
           </Tabs>
-          <div className="fs-5 text-center white mt-3">
-            Results: {players.length}
-          </div>
-        </div>
-        <ComparisonView
+          <ComparisonView
           comparisonPlayers={comparisonPlayers}
           togglePlayerForComparison={togglePlayerForComparison}
           setShowComparisonModal={setShowComparisonModal}
         />
+        </div>
+        
       </div>
       <PlayerModal
         selectedPlayer={selectedPlayer}

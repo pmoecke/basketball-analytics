@@ -29,18 +29,15 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     {Math.round(player.efficiency_score).toFixed(2)} : {player.player_name}
                 </div>
 
-                {player.games_played < 200 ? (
-                    <div className="games-played-marker">
-                        <FaFlag style={{ color: 'red' }} /> {/* Render a red flag icon */}
-                    </div>
-                ) : null}
+                <div className="d-flex align-items-center">
+                    
+                    {player.games_played < 5 && ( // change value according to ml model
+                        <FaFlag className='mx-3' style={{ color: 'red' }} />
+                    )}
 
-
-
-                <div className="ml-auto">
                     <button 
                         onClick={(e) => {
-                            e.stopPropagation(); // Prevent the li onClick from firing when the button is clicked
+                            e.stopPropagation(); 
                             togglePlayerForComparison(player);
                         }}
                         className={`btn ${
@@ -50,7 +47,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     >
                         {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
                     </button>
-                </div>
+                   
+                 </div>
             </li>
             ))}
         </ul>
