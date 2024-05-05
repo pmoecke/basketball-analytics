@@ -123,8 +123,8 @@ def insert_cluster_data(con: sqlite3.Connection, off_file: str, def_file: str):
     cur = con.cursor()
     off_cluster = pd.read_csv(off_file)
     def_cluster = pd.read_csv(def_file)
-    cluster_data = off_cluster.copy()
-    # Add defensive cluster to the data so we have one dataframe
+    cluster_data = off_cluster.copy().rename(columns={"player name": "player_name"})
+    # Add defensive cluster to the data so we have omly one dataframe
     cluster_data['def_cluster'] = def_cluster['def_cluster']
     # Add two new columns to the Stats table: off_cluster (INTEGER) and def_cluster (STRING)
     cur.execute("ALTER TABLE Stats ADD COLUMN off_cluster INTEGER;")
