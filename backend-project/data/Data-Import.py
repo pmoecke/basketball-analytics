@@ -15,7 +15,7 @@ def clean_name(name: str) -> str:
             .replace("-", "_")
 
 
-def load_data() -> tuple[pd.DataFrame, [str]]:
+def load_data() -> tuple[pd.DataFrame, list[str]]:
     # Extract League and Season information from filename
     regex = r".+\. (.+) \- (\d{4}-\d{4}).xls$"
     frames = []
@@ -119,10 +119,28 @@ def insert_data(con: sqlite3.Connection, df: pd.DataFrame):
         cur.execute(f"INSERT INTO Stats ({cols}) VALUES ({pid}, {tid}, {lid}, '{row['season']}', '{row['minutes']}', {', '.join(vals)});")
 
 
+def insert_cluster_data(con: sqlite3.Connection, off_file: str, def_file: str):
+    cur = con.cursor()
+    off_cluster = pd.read_csv(off_file)
+    def_cluster = pd.read_csv(def_file)
+    cluster_data = off_cluster.copy()
+    # Add defensive cluster to the data so we have one dataframe
+    cluster_data['def_cluster'] = def_cluster['def_cluster']
+    # Add two new columns to the Stats table: off_cluster (INTEGER) and def_cluster (STRING)
+    cur.execute("ALTER TABLE Stats ADD COLUMN off_cluster INTEGER;")
+    cur.execute("ALTER TABLE Stats ADD COLUMN def_cluster TEXT CHECK (def_cluster IN ('A', 'B'));")
+    # Insert cluster data
+    for index, row in tqdm(cluster_data.iterrows()):
+        player_name = row['player_name'].replace("'", "''")
+        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()[0]
+        cur.execute(f"UPDATE Stats SET off_cluster = {row['off_cluster']}, def_cluster = '{row['def_cluster']}' WHERE player_id = {pid};")
+
+
 if __name__ == "__main__":
     df, p = load_data()
     con = sqlite3.connect("Players.db")
     create_tables(con, df, p)
     insert_data(con, df)
+    insert_cluster_data(con, "player_cluster_off.csv", "player_cluster_def.csv")
     con.commit()
     con.close()
