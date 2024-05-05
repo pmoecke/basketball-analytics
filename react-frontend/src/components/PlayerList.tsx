@@ -1,30 +1,74 @@
 // PlayerList.tsx
 import React from 'react';
-
-// Assuming you have defined these types somewhere else in your project.
-// If not, you need to define them appropriately based on how players are structured.
 import { Player, PlayerArray } from '../types/player';
+import { FaFlag } from 'react-icons/fa';
+import TooltipOverlay from "./TooltipOverlay";
+import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
+// Styling
+import "./PlayerList.css";
 
 interface PlayerListProps {
     players: PlayerArray;
     setSelectedPlayer: (player: Player) => void;
     setShowModal: (show: boolean) => void;
+    togglePlayerForComparison: (player: Player) => void;
+    comparisonPlayers: PlayerArray;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers}) => {
+    // Only show the first 100 players
+    const slicedPlayers = players.slice(0, 100);
     return (
         <ul className="player-list">
-            {players.map((player, index) => (
+            {slicedPlayers.map((player, index) => (
                 <li
-                    className="player-row"
-                    key={`${player.player_id}-${index}`}
-                    onClick={() => {
-                        setSelectedPlayer(player);
-                        setShowModal(true);
-                    }}
-                >
-                    id: {player.player_id}, name: {player["player-name"]}, points: {player.points}, jersey_number: {player.jersey_number}
-                </li>
+                className="player-row d-flex justify-content-between"
+                key={`${player.player_id}-${index}`}
+                onClick={() => {
+                    const params: PlayerStatsFromIdParams = {
+                        player_id: player.player_id
+                      };
+                    playerStatsFromId(params).then((data) => {
+                        if (data !== undefined) {
+                          console.log(data);
+                          const player = data[0]
+                          setSelectedPlayer(player);
+                        }
+                    }); 
+                    setShowModal(true);
+                }}
+            >
+            
+                <div className='row-content'>
+                    <TooltipOverlay tooltipText='Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP' placement="left">
+                    {Math.round(player.efficiency_score).toFixed(2)} 
+                    </TooltipOverlay>
+                    : {player.player_name}
+                </div>
+              
+                <div className="d-flex align-items-center">
+                    
+                    {player.games_played < 5 && ( // change value according to ml model
+                        <TooltipOverlay tooltipText='Players with limited data are flagged; their stats may be inaccurate.' placement="left">
+                            <FaFlag className='mx-3' style={{ color: 'red' }} />
+                        </TooltipOverlay>
+                    )}
+
+                    <button 
+                        onClick={(e) => {
+                            e.stopPropagation(); 
+                            togglePlayerForComparison(player);
+                        }}
+                        className={`btn ${
+                            comparisonPlayers.find(p => p.player_id === player.player_id) ? 'btn-danger' : 
+                            comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
+                        }`}
+                        style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
+                    >
+                        {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove from Comparison' : 'Add to Comparison'}
+                    </button>
+                 </div>
+            </li>
             ))}
         </ul>
     );

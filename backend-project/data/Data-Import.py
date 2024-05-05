@@ -11,7 +11,8 @@ def clean_name(name: str) -> str:
     return name.lower() \
             .replace("'s", "") \
             .replace(",", "") \
-            .replace(" ", "_")
+            .replace(" ", "_") \
+            .replace("-", "_")
 
 
 def load_data() -> tuple[pd.DataFrame, [str]]:
@@ -49,7 +50,7 @@ def load_data() -> tuple[pd.DataFrame, [str]]:
 
     # Drop columns containing percenteges as we can just recalculate them if needed
     percentage_cols = list(filter(lambda x: "%" in x, df.columns))
-    percentage_cols.append("usage-percentage")
+    percentage_cols.append("usage_percentage")
     df = df.drop(columns=percentage_cols)
 
     # Remove percentage sign so the data can be stored as an int into the database

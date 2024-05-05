@@ -8,13 +8,16 @@ interface PlayerGraphProps {
 
 const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
     useEffect(() => {
-        var player1_name = player['player-name']
+        var player1_name = player.player_name
+
+        const multiply = 10;
+
         var player1_stats = [
-            player['drives_%'],
-            player['free_throws_%'],
-            player['isolation_%'],
-            player['pick-n-pops_%'],
-            player['transition_attacks_%']
+            player['2-pt_field_goals_attempted']*multiply,
+            player['2-pt_field_goals_made']*multiply,
+            player['3-pt_field_goals_attempted']*multiply,
+            player['3-pt_field_goals_made']*multiply,
+            player['assists']*multiply
         ]
         var player1_color = 'rgb(153, 102, 255)'
         var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
@@ -31,6 +34,8 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                 backgroundColor: player1_color_transparent,
                 borderColor: player1_color,
                 pointBackgroundColor: player1_color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: player1_color,
             }],
         };
@@ -48,8 +53,6 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         radius: 4,
                         hitRadius: 10,
                         hoverRadius: 6,
-                        borderColor: '#fff',
-                        hoverBackgroundColor: '#fff',
                     }
                 },
                 scales: {
@@ -86,6 +89,8 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         //onClick: (e) => e.stopPropagation(),
                     },
                 },
+                maintainAspectRatio: true, // Ensure the aspect ratio is maintained
+                aspectRatio: 1.4, //Width is X times height
             },
         };
 

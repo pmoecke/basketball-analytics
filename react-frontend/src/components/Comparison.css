@@ -1,0 +1,25 @@
+span {
+    color: white;
+}
+
+.player-comparison {
+    height: 10vh;
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Distribute items evenly horizontally */
+}
+  
+.player-info {
+    width: 240px; /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    background-color: black;
+    border: solid;
+    border-radius: 4px;
+    border-color: black;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0; /* Prevent shrinking */
+    justify-content: center; /* Center content vertically */
+}
+  

@@ -2,6 +2,13 @@
     color: #F5F5F5;
 }
 
+.nav-tabs .nav-link {
+    color: white;
+  }
+.nav-tabs .nav-link:hover {
+    color: white;
+}
+
 ul {
     list-style-type: none;
     padding-inline-start: 0;
@@ -11,32 +18,6 @@ ul {
 a {
     color: #F5F5F5 !important;
     text-decoration: none!important;
-}
-
-.player-list {
-    color: orange;
-    height: 70vh; /* Adjust based on your header/nav size */
-    overflow-y: auto; /* Enables vertical scrolling */
-    -webkit-overflow-scrolling: touch; /* For momentum scrolling on iOS devices */
-}
-
-.player-row {
-    font-size: 24px;
-    color: white;
-    border: solid;
-    border-color: black;
-    border-radius: 10px;
-    border-width: 2px;
-    margin-bottom: 10px;
-    margin-right: 6px;
-    padding: 6px;
-    background-color: black;
-    cursor: pointer;
-}
-
-.player-row:hover {
-    border-color: #313131;
-    background-color: #313131;
 }
 
 .box {
@@ -52,18 +33,25 @@ a {
     filter: blur(10px);
 }
 
-.player-modal .modal-dialog {
-    max-width: 600px; /* Set the maximum width you prefer */
-    width: 100%; /* Use 100% of the max-width */
-    margin: auto; /* Center the modal dialog horizontally */
-  }
-
-.player-modal-header {
-    background-color:#222222;   
-    color: white;
+html body .container {
+    max-width: 1800px; /* This is more specific than just .container */
 }
 
-.player-modal-body {
-    background-color:#222222;   
-    color: white;
+.box2 {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Adjusts rows size, 1fr takes the remaining space */
+    height: 100%; /* Optional: Ensure the container fills the parent height */
+}
+
+.filter_box {
+    border: solid;
+    border-width: 2px;
+    border-color: #222222;
+    background-color:#222222;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 96vh;
 }
