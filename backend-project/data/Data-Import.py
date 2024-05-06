@@ -127,13 +127,26 @@ def insert_cluster_data(con: sqlite3.Connection, off_file: str, def_file: str):
     # Add defensive cluster to the data so we have omly one dataframe
     cluster_data['def_cluster'] = def_cluster['def_cluster']
     # Add two new columns to the Stats table: off_cluster (INTEGER) and def_cluster (STRING)
-    cur.execute("ALTER TABLE Stats ADD COLUMN off_cluster INTEGER;")
-    cur.execute("ALTER TABLE Stats ADD COLUMN def_cluster TEXT CHECK (def_cluster IN ('A', 'B'));")
+    # Create columns def_cluster and off_cluster if they don't exist
+    if not column_exists(cur, "Stats", "off_cluster"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN off_cluster INTEGER;")
+    if not column_exists(cur, "Stats", "def_cluster"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN def_cluster TEXT CHECK (def_cluster IN ('A', 'B'));")
     # Insert cluster data
     for index, row in tqdm(cluster_data.iterrows()):
         player_name = row['player_name'].replace("'", "''")
-        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()[0]
-        cur.execute(f"UPDATE Stats SET off_cluster = {row['off_cluster']}, def_cluster = '{row['def_cluster']}' WHERE player_id = {pid};")
+        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()
+        if pid is not None:
+            pid = pid[0]
+            cur.execute(f"UPDATE Stats SET off_cluster = {row['off_cluster']}, def_cluster = '{row['def_cluster']}' WHERE player_id = {pid};")
+        else:
+            print(f"Player {player_name} not found in the database")
+            continue
+
+def column_exists(cursor, table_name, column_name):
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns = [row[1] for row in cursor.fetchall()]
+    return column_name in columns
 
 
 if __name__ == "__main__":
