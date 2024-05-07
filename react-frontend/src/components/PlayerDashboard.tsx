@@ -10,6 +10,7 @@ import PlayerSearch from "./PlayerSearch";
 import { playerStats, PlayerStatsParams, playerOverview, PlayerOverviewParams } from "../router/data";
 
 import Filter from "./Filter";
+import SidebarFilter from './SidebarFilter'; 
 import Order from "./Order";
 import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison"
@@ -36,6 +37,11 @@ const PlayerDashboard: React.FC = () => {
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
   const [league_id, setLeague_id] = useState<number | undefined>(undefined);
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
+
+  // Toggle sidebar
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
   // Tabs
   const [activeKey, setActiveKey] = useState("list");
 
@@ -45,14 +51,6 @@ const PlayerDashboard: React.FC = () => {
   //Advanced Filtering
   const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
 
-  const leagueOptions = [
-    { value: 1, label: "Basket League" },
-    { value: 2, label: "LEB Oro" },
-  ];
-  const teamOptions = [
-    { value: 1, label: "Larisa BC" },
-    { value: 4, label: "Olympiacos BC" },
-  ];
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerOverviewParams> = {};
@@ -106,10 +104,6 @@ const PlayerDashboard: React.FC = () => {
     console.log(comparisonPlayers);
   }, [comparisonPlayers]);
 
-  // Filter graph values
-  const [min] = useState([65, 65, 65, 65, 65]);
-  const [max] = useState([85, 85, 85, 85, 85]);
-
   return (
     <div className="container m-3">
       <div
@@ -117,47 +111,22 @@ const PlayerDashboard: React.FC = () => {
           showModal || showComparisonModal || showAdvancedFilterModal ? "blur-background" : ""
         }`}
       >
-        <div className="col-md-3 filter_box">
-          
-          <div className="filter">
-            <h1 className="fs-3 text-center white">General Filter</h1>
-            <Filter
-              label="League"
-              value={league_id}
-              onChange={setLeague_id}
-              options={leagueOptions}
-            />
-            <Filter
-              label="Team"
-              value={team_id}
-              onChange={setTeam_id}
-              options={teamOptions}
-            />
-          </div>
-          <div className="pentagon">
-            <h1 className="fs-3 text-center white">Player Filter</h1>
-            <FilterGraph min={min} max={max} />
-          </div>
-          <div className="advanced">
-            <button
-              className="btn text-center btn-secondary w-100"
-              onClick={() => {
-                setShowAdvancedFilterModal(true);
-              }}
-              //style={{ backgroundColor: 'grey' }}  // Replace colors as needed
-
-            >
-              Advanced Filter
-            </button>
-          </div>
-        </div>
-        <div className="player-search col-md-8 box">
+       <SidebarFilter
+        showAdvancedFilterModal={showAdvancedFilterModal}
+        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
+        league_id={league_id}
+        setLeague_id={setLeague_id}
+        team_id={team_id}
+        setTeam_id={setTeam_id}
+        isOpen={isOpen}
+      />
+        <div className="player-search col-md-11 box">
           <div className="row">
-            <div className="col-md-6">
-            <h1 className="fs-3 white">Search</h1>
+            <div className="col-md-4">
+              <h1 className="fs-3 white">Search</h1>
               <PlayerSearch setPlayer_name={setPlayer_name} />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <Order
                 sortOrder={sortOrder}
                 setSortOrder={setSortOrder}
@@ -165,32 +134,36 @@ const PlayerDashboard: React.FC = () => {
                 setOrderValue={setOrderValue}
               />
             </div>
+            <div className="col-md-4">
+              <h1 className="fs-3 white">Show Filters</h1>
+              <button className={`btn ${isOpen ? 'btn-danger' : 'btn-success'}`} onClick={toggleSidebar}>
+                  {isOpen ? 'False' : 'True'}
+              </button>
+            </div>
           </div>
-          <Tabs activeKey={activeKey} onSelect={handleSelect} className="mb-3">
-            <Tab eventKey="list" title="Player List">
-              <PlayerList
+          <div className="row">
+            <div className="col-md-6">
+            <PlayerList
                 players={sortedPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}
                 togglePlayerForComparison={togglePlayerForComparison}
                 comparisonPlayers={comparisonPlayers}
               />
-            </Tab>
-            <Tab eventKey="view" title="Player 2D View">
-              <Player2DView
-                players={players}
-                setSelectedPlayer={setSelectedPlayer}
-                setShowModal={setShowModal}
-              />
-            </Tab>
-          </Tabs>
-          {activeKey === 'list' && (
-            <ComparisonView
+              <ComparisonView
               comparisonPlayers={comparisonPlayers}
               togglePlayerForComparison={togglePlayerForComparison}
               setShowComparisonModal={setShowComparisonModal}
-            />
-          )}
+              />
+            </div>
+            <div className="col-md-6">
+              <Player2DView
+                  players={players}
+                  setSelectedPlayer={setSelectedPlayer}
+                  setShowModal={setShowModal}
+                />
+            </div>
+          </div>
         </div>
         
       </div>

@@ -1,0 +1,22 @@
+.sidebar {
+    height: 80vh;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition:  width 0.5s, opacity 0.5s, visibility 0.5s;
+    margin: 100px;
+    opacity: 0;
+    visibility: hidden;
+    
+}
+
+.sidebar.active {
+    width: 350px;
+    transition: width 0.5s, opacity 0.5s, visibility 0.5s;
+    opacity: 1;
+    visibility: visible;
+}
