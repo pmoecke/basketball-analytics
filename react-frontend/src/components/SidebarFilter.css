@@ -1,5 +1,5 @@
 .sidebar {
-    height: 80vh;
+    height: 89vh;
     width: 0;
     position: fixed;
     z-index: 1;
@@ -8,14 +8,15 @@
     background-color: #111;
     overflow-x: hidden;
     transition:  width 0.5s, opacity 0.5s, visibility 0.5s;
-    margin: 100px;
+    margin-left: 5vb;
+    margin-top: 2vh;
     opacity: 0;
     visibility: hidden;
     
 }
 
 .sidebar.active {
-    width: 350px;
+    width: 50vb;
     transition: width 0.5s, opacity 0.5s, visibility 0.5s;
     opacity: 1;
     visibility: visible;

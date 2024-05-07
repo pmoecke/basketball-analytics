@@ -10,7 +10,7 @@ span {
 }
   
 .player-info {
-    width: 240px; /* Adjust width as needed */
+    width: 200px; /* Adjust width as needed */
     height: 60px; /* Adjust height as needed */
     background-color: black;
     border: solid;
