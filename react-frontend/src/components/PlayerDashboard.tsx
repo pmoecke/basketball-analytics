@@ -159,6 +159,7 @@ const PlayerDashboard: React.FC = () => {
             <div className="col-md-6">
               <Player2DView
                   players={players}
+                  comparisonPlayers={comparisonPlayers}
                   setSelectedPlayer={setSelectedPlayer}
                   setShowModal={setShowModal}
                 />

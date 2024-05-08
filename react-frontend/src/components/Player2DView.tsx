@@ -5,11 +5,12 @@ import { Player, PlayerArray } from '../types/player';
 
 interface Player2DViewProps {
     players: PlayerArray;
+    comparisonPlayers: PlayerArray;
     setSelectedPlayer: (player: Player) => void;
     setShowModal: (show: boolean) => void;
 }
 
-const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer, setShowModal }) => {
+const Player2DView: React.FC<Player2DViewProps> = ({ players, comparisonPlayers, setSelectedPlayer, setShowModal }) => {
     const svgRef = useRef<SVGSVGElement>(null);
     const [showGridlines, setShowGridlines] = useState(true);
 
@@ -86,7 +87,7 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
 
         // Zoom behavior
         const zoom = d3.zoom<SVGSVGElement, unknown>()
-            .scaleExtent([1, 5])
+            .scaleExtent([1, 10])
             .translateExtent([[-margin, -margin], [width - margin, height - margin]])
             .on("zoom", event => {
                 const transform = event.transform;
@@ -96,6 +97,22 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
             });
         svg.call(zoom);
     }, [players]);
+
+    useEffect(() => {
+        const svg = d3.select(svgRef.current);
+        if (!svg.empty()) {
+            const comparisonPlayerIds = new Set(comparisonPlayers.map(player => player.player_id));
+
+            svg.selectAll("circle")
+                .data(players)
+                .attr("fill", d => comparisonPlayerIds.has(d.player_id) ? "red" : "dodgerblue");
+        }
+    }, [players, comparisonPlayers]);
+
+    useEffect(() => {
+        const svg = d3.select(svgRef.current);
+        svg.selectAll('.grid').style('display', showGridlines ? 'block' : 'none');
+    }, [showGridlines]);
 
     useEffect(() => {
         const svg = d3.select(svgRef.current);
@@ -117,7 +134,7 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, setSelectedPlayer,
         <div className="player-2d-view d-flex flex-column justify-content-center">
             <div className="btn-toolbar mb-2 mb-md-0">
                 <div className="btn-group mr-2">
-                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={resetZoom}>Reset View</button>
+                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={resetZoom}>Reset Zoom</button>
                     <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setShowGridlines(!showGridlines)}>
                         {showGridlines ? 'Hide Gridlines' : 'Show Gridlines'}
                     </button>
