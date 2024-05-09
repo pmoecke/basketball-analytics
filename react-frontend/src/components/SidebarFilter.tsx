@@ -39,7 +39,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
   return (
     <div>
-        <div className={`filter_box sidebar ${isOpen ? 'active' : ''}`}>
+        
             <div className="filter">
                 <div>
                     <h1 className="fs-3 text-center white">General Filter</h1>
@@ -73,7 +73,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                 Advanced Filter
                 </button>
             </div>
-        </div>
+      
     </div> 
   );
 };

@@ -13,9 +13,11 @@ interface PlayerListProps {
     setShowModal: (show: boolean) => void;
     togglePlayerForComparison: (player: Player) => void;
     comparisonPlayers: PlayerArray;
+    highlightedPlayer: Player | null;
+    setHighlightedPlayer: (player: Player | null) => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers}) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers, highlightedPlayer, setHighlightedPlayer}) => {
     // Only show the first 100 players
     const slicedPlayers = players.slice(0, 100);
     return (
@@ -36,6 +38,24 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                         }
                     }); 
                     setShowModal(true);
+                }}
+                onMouseEnter={() => {
+                    const params: PlayerStatsFromIdParams = {
+                        player_id: player.player_id
+                      };
+                    playerStatsFromId(params).then((data) => {
+                        if (data !== undefined) {
+                          console.log(data);
+                          const player = data[0]
+                          setHighlightedPlayer(player);
+                          console.log(player);  
+                        }
+                    })  
+                          
+                }}
+                onMouseLeave={() => {
+                    setHighlightedPlayer(null);
+                    console.log(null); 
                 }}
             >
             

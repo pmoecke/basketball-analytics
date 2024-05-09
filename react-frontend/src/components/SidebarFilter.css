@@ -15,9 +15,22 @@
     
 }
 
+/*
 .sidebar.active {
     width: 50vb;
     transition: width 0.5s, opacity 0.5s, visibility 0.5s;
     opacity: 1;
     visibility: visible;
 }
+*/
+
+.sidebar-transition {
+    transition: width 0.5s ease-out; /* Adjust timing and easing to your preference */
+    overflow: hidden; /* Prevents content from overflowing during transition */
+    width: 100%; /* Default width */
+}
+
+.sidebar-closed {
+    width: 0; /* Width is zero when sidebar is closed */
+}
+
