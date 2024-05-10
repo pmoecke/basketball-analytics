@@ -68,14 +68,29 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
                         x: {
                             type: 'linear',
                             position: 'bottom',
+                            grid: {
+                                color: 'grey' // Grid line colors
+                            },
+                            ticks: {
+                                color: 'white' // Ticks labels color
+                            }
                         },
                         y: {
                             type: 'linear',
+                            grid: {
+                                color: 'grey' // Grid line colors
+                            },
+                            ticks: {
+                                color: 'white' // Ticks labels color
+                            }
                         }
                     },
                     plugins: {
                         legend: {
-                            display: true
+                            display: true,
+                            labels: {
+                                color: 'white' // Legend labels color
+                            }
                         },
                         zoom: {
                             limits: {
