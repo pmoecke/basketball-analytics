@@ -56,8 +56,8 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
                         {
                             label: 'Highlighted Player',
                             data: [],
-                            backgroundColor: 'rgb(0, 0, 255)',
-                            pointBackgroundColor: 'yellow',
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            pointBackgroundColor: 'rgba(255, 255, 255, 0.7)',
                             order: 0,
                             pointRadius: 5,
                         },
@@ -104,6 +104,14 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
                             const selectedPlayer = datasetIndex === 0 ? players[index] : comparisonPlayers[index];
                             setSelectedPlayer(selectedPlayer);
                             setShowModal(true);
+                        }
+                    },
+                    onHover: (event, chartElements) => {
+                        const chartElement = event.native ? event.native.target as HTMLElement : null;
+                        if (chartElement && chartElements.length > 0) {
+                            chartElement.style.cursor = 'pointer';
+                        } else if (chartElement) {
+                            chartElement.style.cursor = 'default';
                         }
                     },
                     maintainAspectRatio: false

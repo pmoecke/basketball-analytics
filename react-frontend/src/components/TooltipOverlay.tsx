@@ -5,10 +5,11 @@ interface TooltipOverlayProps {
   tooltipText: string;
   placement: 'top' | 'right' | 'bottom' | 'left';
   children: any;
+  showTitle?: boolean;
 }
 
 // Reusable OverlayTrigger component
-const TooltipOverlay: React.FC<TooltipOverlayProps> = ({ tooltipText, placement, children }) => {
+const TooltipOverlay: React.FC<TooltipOverlayProps> = ({ tooltipText, placement, children , showTitle = true}) => {
     const [show, setShow] = useState(false);
 
     // Function to show tooltip
@@ -23,7 +24,7 @@ const TooltipOverlay: React.FC<TooltipOverlayProps> = ({ tooltipText, placement,
             overlay={
                 <Tooltip id={`tooltip-${tooltipText}`} onMouseOver={handleShow} onMouseOut={handleHide}>
                     <div style={{ textAlign: 'left' }}>
-                        <strong>{children}</strong><br />
+                    {showTitle && <div><strong>{children}</strong><br /></div>}
                         {tooltipText}
                     </div>
                 </Tooltip>

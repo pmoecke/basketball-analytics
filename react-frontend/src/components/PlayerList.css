@@ -10,17 +10,17 @@
     font-size: 24px;
     color: white;
     border: solid;
-    border-color: black;
+    border-color: #444444;
     border-radius: 10px;
     border-width: 2px;
     margin-bottom: 10px;
     margin-right: 6px;
     padding: 6px;
-    background-color: black;
+    background-color:  #444444;
     cursor: pointer;
 }
 
 .player-row:hover {
-    border-color: #313131;
-    background-color: #313131;
+    border-color: #666666;
+    background-color: #666666;
 }

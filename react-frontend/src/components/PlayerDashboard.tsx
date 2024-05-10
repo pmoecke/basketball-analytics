@@ -23,6 +23,7 @@ import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
+import TooltipOverlay from "./TooltipOverlay";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -39,8 +40,10 @@ const PlayerDashboard: React.FC = () => {
   const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
   // Highlight player
-  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(null);
-  
+  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(
+    null
+  );
+
   // Filtering
   const [player_search, setPlayer_search] = useState("");
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
@@ -48,7 +51,7 @@ const PlayerDashboard: React.FC = () => {
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
 
   // Toggle sidebar
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   // Tabs
@@ -117,32 +120,28 @@ const PlayerDashboard: React.FC = () => {
     <div className="container m-3">
       <div
         className={`row justify-content-evenly ${
-          showModal || showComparisonModal || showAdvancedFilterModal
+          showModal || showComparisonModal || showAdvancedFilterModal || isOpen
             ? "blur-background"
             : ""
         }`}
       >
-        {isOpen && (
-          <div className="col-md-4 box">
-            <SidebarFilter
-              showAdvancedFilterModal={showAdvancedFilterModal}
-              setShowAdvancedFilterModal={setShowAdvancedFilterModal}
-              league_id={league_id}
-              setLeague_id={setLeague_id}
-              team_id={team_id}
-              setTeam_id={setTeam_id}
-              isOpen={isOpen}
-            />
-          </div>
-        )}
-
         <div
-          className={
-            isOpen
-              ? "player-search col-md-7 box"
-              : "player-search col-md-11 box"
-          }
+          className="col-md-1"
+          onClick={toggleSidebar}
+          style={{ cursor: "pointer" }}
         >
+          <TooltipOverlay
+            tooltipText="Show Filter"
+            placement="right"
+            children={
+              <button className={`btn sidebar-btn `}>
+                {isOpen ? "Close Sidebar" : "〉"}
+              </button>
+            }
+            showTitle={false}
+          />
+        </div>
+        <div className="player-search col-md-11">
           <div className="row">
             <div className="col-md-4">
               <h1 className="fs-3 white">Search</h1>
@@ -156,15 +155,7 @@ const PlayerDashboard: React.FC = () => {
                 setOrderValue={setOrderValue}
               />
             </div>
-            <div className="col-md-4">
-              <h1 className="fs-3 white">Show Filters</h1>
-              <button
-                className={`btn ${isOpen ? "btn-danger" : "btn-success"}`}
-                onClick={toggleSidebar}
-              >
-                {isOpen ? "False" : "True"}
-              </button>
-            </div>
+            <div className="col-md-4"></div>
           </div>
           <div className="row">
             <div className="col-md-6">
@@ -177,7 +168,6 @@ const PlayerDashboard: React.FC = () => {
                 highlightedPlayer={highlightedPlayer}
                 setHighlightedPlayer={setHighlightedPlayer}
               />
-              
             </div>
             <div className="col-md-6">
               <Player2DGraph
@@ -191,11 +181,11 @@ const PlayerDashboard: React.FC = () => {
             </div>
           </div>
           <div className="row">
-          <ComparisonView
-                comparisonPlayers={comparisonPlayers}
-                togglePlayerForComparison={togglePlayerForComparison}
-                setShowComparisonModal={setShowComparisonModal}
-              />
+            <ComparisonView
+              comparisonPlayers={comparisonPlayers}
+              togglePlayerForComparison={togglePlayerForComparison}
+              setShowComparisonModal={setShowComparisonModal}
+            />
           </div>
         </div>
       </div>
@@ -212,6 +202,17 @@ const PlayerDashboard: React.FC = () => {
       <AdvancedFilterModal
         showModal={showAdvancedFilterModal}
         handleClose={() => setShowAdvancedFilterModal(false)}
+      />
+
+      <SidebarFilter
+        showAdvancedFilterModal={showAdvancedFilterModal}
+        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
+        league_id={league_id}
+        setLeague_id={setLeague_id}
+        team_id={team_id}
+        setTeam_id={setTeam_id}
+        isOpen={isOpen}
+        handleClose={() => setIsOpen(false)}
       />
     </div>
   );
