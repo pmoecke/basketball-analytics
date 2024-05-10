@@ -96,7 +96,11 @@ const PlayerDashboard: React.FC = () => {
       return 0;
     });
 
-    setSortedPlayers(sortedData);
+    // Take only the first 100 elements after sorting
+    let top100Players = sortedData.slice(0, 100);
+
+    // Update state with only the first 100 sorted players
+    setSortedPlayers(top100Players);
   }, [players, sortOrder, orderValue]);
 
   const togglePlayerForComparison = (player: Player) => {
@@ -171,7 +175,7 @@ const PlayerDashboard: React.FC = () => {
             </div>
             <div className="col-md-6">
               <Player2DGraph
-                players={players}
+                players={sortedPlayers}
                 comparisonPlayers={comparisonPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}

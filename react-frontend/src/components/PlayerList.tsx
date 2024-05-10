@@ -19,10 +19,9 @@ interface PlayerListProps {
 
 const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers, highlightedPlayer, setHighlightedPlayer}) => {
     // Only show the first 100 players
-    const slicedPlayers = players.slice(0, 100);
     return (
         <ul className="player-list">
-            {slicedPlayers.map((player, index) => (
+            {players.map((player, index) => (
                 <li
                 className="player-row d-flex justify-content-between"
                 key={`${player.player_id}-${index}`}
