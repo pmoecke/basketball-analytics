@@ -13,14 +13,15 @@ interface PlayerListProps {
     setShowModal: (show: boolean) => void;
     togglePlayerForComparison: (player: Player) => void;
     comparisonPlayers: PlayerArray;
+    highlightedPlayer: Player | null;
+    setHighlightedPlayer: (player: Player | null) => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers}) => {
+const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers, highlightedPlayer, setHighlightedPlayer}) => {
     // Only show the first 100 players
-    const slicedPlayers = players.slice(0, 100);
     return (
         <ul className="player-list">
-            {slicedPlayers.map((player, index) => (
+            {players.map((player, index) => (
                 <li
                 className="player-row d-flex justify-content-between"
                 key={`${player.player_id}-${index}`}
@@ -37,6 +38,24 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     }); 
                     setShowModal(true);
                 }}
+                onMouseEnter={() => {
+                    const params: PlayerStatsFromIdParams = {
+                        player_id: player.player_id
+                      };
+                    playerStatsFromId(params).then((data) => {
+                        if (data !== undefined) {
+                          console.log(data);
+                          const player = data[0]
+                          setHighlightedPlayer(player);
+                          console.log(player);  
+                        }
+                    })  
+                          
+                }}
+                onMouseLeave={() => {
+                    setHighlightedPlayer(null);
+                    console.log(null); 
+                }}
             >
             
                 <div className='row-content'>
@@ -49,12 +68,12 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 <div className="d-flex align-items-center">
                     
                     {player.games_played < 5 && ( // change value according to ml model
-                        <TooltipOverlay tooltipText='Players with limited data are flagged; their stats may be inaccurate.' placement="left">
+                        <TooltipOverlay tooltipText='Players with limited data are flagged; their stats may be inaccurate.' placement="left" showTitle={false}>
                             <FaFlag className='mx-3' style={{ color: 'red' }} />
                         </TooltipOverlay>
                     )}
 
-                    <TooltipOverlay tooltipText='Add/remove from comparison' placement="left">  
+                    <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
                         <button 
                             onClick={(e) => {
                                 e.stopPropagation(); 

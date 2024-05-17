@@ -3,21 +3,27 @@ import { Tab, Tabs } from "react-bootstrap";
 
 import { Player, PlayerArray } from "../types/player";
 import PlayerList from "./PlayerList";
-import Player2DView from "./Player2DView";
+import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch";
-import { playerStats, PlayerStatsParams, playerOverview, PlayerOverviewParams } from "../router/data";
+import {
+  playerStats,
+  PlayerStatsParams,
+  playerOverview,
+  PlayerOverviewParams,
+} from "../router/data";
 
 import Filter from "./Filter";
-import SidebarFilter from './SidebarFilter'; 
+import SidebarFilter from "./SidebarFilter";
 import Order from "./Order";
 import FilterGraph from "./FilterGraph";
-import ComparisonView from "./Comparison"
+import ComparisonView from "./Comparison";
 
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
+import TooltipOverlay from "./TooltipOverlay";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -25,13 +31,19 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] = useState<keyof Player>("efficiency_score");
+  const [orderValue, setOrderValue] =
+    useState<keyof Player>("efficiency_score");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   // Compare player
   const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
+  // Highlight player
+  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(
+    null
+  );
+
   // Filtering
   const [player_search, setPlayer_search] = useState("");
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
@@ -84,7 +96,11 @@ const PlayerDashboard: React.FC = () => {
       return 0;
     });
 
-    setSortedPlayers(sortedData);
+    // Take only the first 100 elements after sorting
+    let top100Players = sortedData.slice(0, 100);
+
+    // Update state with only the first 100 sorted players
+    setSortedPlayers(top100Players);
   }, [players, sortOrder, orderValue]);
 
   const togglePlayerForComparison = (player: Player) => {
@@ -108,19 +124,28 @@ const PlayerDashboard: React.FC = () => {
     <div className="container m-3">
       <div
         className={`row justify-content-evenly ${
-          showModal || showComparisonModal || showAdvancedFilterModal ? "blur-background" : ""
+          showModal || showComparisonModal || showAdvancedFilterModal || isOpen
+            ? "blur-background"
+            : ""
         }`}
       >
-       <SidebarFilter
-        showAdvancedFilterModal={showAdvancedFilterModal}
-        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
-        league_id={league_id}
-        setLeague_id={setLeague_id}
-        team_id={team_id}
-        setTeam_id={setTeam_id}
-        isOpen={isOpen}
-      />
-        <div className="player-search col-md-11 box">
+        <div
+          className="col-md-1"
+          onClick={toggleSidebar}
+          style={{ cursor: "pointer" }}
+        >
+          <TooltipOverlay
+            tooltipText="Show Filter"
+            placement="right"
+            children={
+              <button className={`btn sidebar-btn `}>
+                {isOpen ? "Close Sidebar" : "〉"}
+              </button>
+            }
+            showTitle={false}
+          />
+        </div>
+        <div className="player-search col-md-11">
           <div className="row">
             <div className="col-md-4">
               <h1 className="fs-3 white">Search</h1>
@@ -134,39 +159,39 @@ const PlayerDashboard: React.FC = () => {
                 setOrderValue={setOrderValue}
               />
             </div>
-            <div className="col-md-4">
-              <h1 className="fs-3 white">Show Filters</h1>
-              <button className={`btn ${isOpen ? 'btn-danger' : 'btn-success'}`} onClick={toggleSidebar}>
-                  {isOpen ? 'False' : 'True'}
-              </button>
-            </div>
+            <div className="col-md-4"></div>
           </div>
           <div className="row">
             <div className="col-md-6">
-            <PlayerList
+              <PlayerList
                 players={sortedPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}
                 togglePlayerForComparison={togglePlayerForComparison}
                 comparisonPlayers={comparisonPlayers}
-              />
-              <ComparisonView
-              comparisonPlayers={comparisonPlayers}
-              togglePlayerForComparison={togglePlayerForComparison}
-              setShowComparisonModal={setShowComparisonModal}
+                highlightedPlayer={highlightedPlayer}
+                setHighlightedPlayer={setHighlightedPlayer}
               />
             </div>
             <div className="col-md-6">
-              <Player2DView
-                  players={players}
-                  comparisonPlayers={comparisonPlayers}
-                  setSelectedPlayer={setSelectedPlayer}
-                  setShowModal={setShowModal}
-                />
+              <Player2DGraph
+                players={sortedPlayers}
+                comparisonPlayers={comparisonPlayers}
+                setSelectedPlayer={setSelectedPlayer}
+                setShowModal={setShowModal}
+                highlightedPlayer={highlightedPlayer}
+                setHighlightedPlayer={setHighlightedPlayer}
+              />
             </div>
           </div>
+          <div className="row">
+            <ComparisonView
+              comparisonPlayers={comparisonPlayers}
+              togglePlayerForComparison={togglePlayerForComparison}
+              setShowComparisonModal={setShowComparisonModal}
+            />
+          </div>
         </div>
-        
       </div>
       <PlayerModal
         selectedPlayer={selectedPlayer}
@@ -181,6 +206,17 @@ const PlayerDashboard: React.FC = () => {
       <AdvancedFilterModal
         showModal={showAdvancedFilterModal}
         handleClose={() => setShowAdvancedFilterModal(false)}
+      />
+
+      <SidebarFilter
+        showAdvancedFilterModal={showAdvancedFilterModal}
+        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
+        league_id={league_id}
+        setLeague_id={setLeague_id}
+        team_id={team_id}
+        setTeam_id={setTeam_id}
+        isOpen={isOpen}
+        handleClose={() => setIsOpen(false)}
       />
     </div>
   );

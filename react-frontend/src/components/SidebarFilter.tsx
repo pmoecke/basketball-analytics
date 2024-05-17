@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './SidebarFilter.css'; // Make sure to import the CSS
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import Filter from './Filter'
 import FilterGraph from './FilterGraph'
 
@@ -11,6 +13,7 @@ interface SidebarFilterProps {
     team_id: number | undefined;
     setTeam_id: (value: number | undefined) => void;
     isOpen: boolean;
+    handleClose: () => void;
 }
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
@@ -20,7 +23,8 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
      setLeague_id,
      team_id,
      setTeam_id,
-     isOpen
+     isOpen,
+     handleClose,
     })  => {
 
   const leagueOptions = [
@@ -37,9 +41,22 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
   const [min] = useState([65, 65, 65, 65, 65]);
   const [max] = useState([85, 85, 85, 85, 85]);
 
+  
   return (
-    <div>
-        <div className={`filter_box sidebar ${isOpen ? 'active' : ''}`}>
+    <Modal
+      show={isOpen}
+      onHide={handleClose}
+      className="filter-modal"
+      size="lg"
+    >   
+      <Modal.Header closeButton className="filter-modal-header">
+        <Modal.Title>
+          {"Filter"}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body className="filter-modal-body">
+
+        
             <div className="filter">
                 <div>
                     <h1 className="fs-3 text-center white">General Filter</h1>
@@ -73,8 +90,12 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                 Advanced Filter
                 </button>
             </div>
-        </div>
-    </div> 
+        
+        </Modal.Body>
+        <Modal.Footer className="filter-modal-footer">
+        
+      </Modal.Footer>
+    </Modal> 
   );
 };
 
