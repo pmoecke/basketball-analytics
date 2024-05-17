@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Player } from "../types/player";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import ComparisonGraph from "./ComparisonGraph";
 import TooltipOverlay from "./TooltipOverlay";
+import { tooltipTexts } from "./tooltipTexts"; // Import the tooltip texts dictionary
 import "./ComparisonModal.css";
 
 interface ComparisonModalProps {
@@ -17,11 +20,161 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
   showModal,
   handleClose,
 }) => {
+  const [selectedCategory, setSelectedCategory] = useState("boxscore");
+
   if (players.length !== 2 || !showModal) {
     return null;
   } else {
     const player1 = players[0];
     const player2 = players[1];
+
+    const getTriangle = (stat1: number, stat2: number) => {
+      if (stat1 > stat2) {
+        return (
+          <>
+            <span style={{ color: "lightgreen" }}>{stat1} ▲</span>
+          </>
+        );
+      } else if (stat1 < stat2) {
+        return (
+          <>
+            <span style={{ color: "LightCoral" }}>{stat1} ▼</span>
+          </>
+        );
+      } else {
+        return <>{stat1}=</>;
+      }
+    };
+
+    const renderTable = (category: string) => {
+      switch (category) {
+        case "playmaking":
+          return (
+            <Table striped bordered responsive-sm variant="dark" className="transparent-table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" className="text-right">{player1.player_name}</th>
+                  <th scope="col" className="text-right">{player2.player_name}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    <TooltipOverlay
+                      tooltipText={tooltipTexts["ID: "]}
+                      placement="right"
+                      children={"ID: "}
+                    />
+                  </th>
+                  <td className="text-right">{player1.player_id}</td>
+                  <td className="text-right">{player2.player_id}</td>
+                </tr>
+                <tr>
+                  <th>
+                    <TooltipOverlay
+                      tooltipText={tooltipTexts["Nr: "]}
+                      placement="right"
+                      children={"Nr: "}
+                    />
+                  </th>
+                  <td className="text-right">{player1.jersey_number}</td>
+                  <td className="text-right">{player2.jersey_number}</td>
+                </tr>
+                <tr>
+                  <th>
+                    <TooltipOverlay
+                      tooltipText={tooltipTexts["Off: "]}
+                      placement="right"
+                      children={"Off: "}
+                    />
+                  </th>
+                  <td className="text-right">
+                    {getTriangle(
+                      player1.offensive_rating,
+                      player2.offensive_rating
+                    )}
+                  </td>
+                  <td className="text-right">
+                    {getTriangle(
+                      player2.offensive_rating,
+                      player1.offensive_rating
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <TooltipOverlay
+                      tooltipText={tooltipTexts["Def: "]}
+                      placement="right"
+                      children={"Def: "}
+                    />
+                  </th>
+                  <td className="text-right">{player1.defensive_rating}</td>
+                  <td className="text-right">{player2.defensive_rating}</td>
+                </tr>
+              </tbody>
+            </Table>
+          );
+        // Add more cases for other categories like "defense", "scoring", etc.
+        case "boxscore":
+          return (
+            <Table striped bordered responsive-sm variant="dark" className="transparent-table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" className="text-right">{player1.player_name}</th>
+                  <th scope="col" className="text-right">{player2.player_name}</th>
+                </tr>
+              </thead>
+              <tbody>
+
+
+                <tr>
+                  <th>
+                    <TooltipOverlay
+                      tooltipText={tooltipTexts["GMP: "]}
+                      placement="right"
+                      children={"GMP: "}
+                    />
+                  </th>
+                  {/* FIXME stats arent loaded correctly? */}
+                  <td className="text-right">{getTriangle(player1.games_played, player2.games_played)}</td>
+                  <td className="text-right">{getTriangle(player2.games_played, player1.games_played)}</td>
+                </tr>
+                  <tr>
+                    <th>
+                      <TooltipOverlay
+                        tooltipText={tooltipTexts["MINS: "]}
+                        placement="right"
+                        children={"MINS: "}
+                      />
+                    </th>
+                    <td className="text-right">{player1.minutes}</td>
+                    <td className="text-right">{player2.minutes}</td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <TooltipOverlay
+                        tooltipText={tooltipTexts["PTS: "]}
+                        placement="right"
+                        children={"PTS: "}
+                      />
+                    </th>
+                    <td className="text-right">{player1.points}</td>
+                    <td className="text-right">{player2.points}</td>
+                  </tr>
+
+
+                </tbody>
+            </Table>
+          );
+        // Add more cases for other categories like "defense", "scoring", etc.
+        
+        default:
+          return null;
+      }
+    };
 
     return (
       <Modal
@@ -38,107 +191,31 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
         <Modal.Body className="comparison-modal-body">
           <div className="container">
             <div className="row">
-              <div className="col-md-6">
-                <div className="p-3  "><h5>{player1.player_name}</h5></div>
-              </div>
-              
-              <div className="col-md-6">
-                <div className="p-3 text-end"><h5>{player2.player_name}</h5></div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-md-2">
-                <div className="p-3  ">
-                  {player1 && (
-                    <>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="ID used to identify each player uniquely"
-                          placement="right"
-                          children={"ID: "}
-                        />
-                        {player1.player_id}
-                      </p>
-                      <p className="space_between"> 
-                        <TooltipOverlay
-                          tooltipText="Number on this player's jersey"
-                          placement="right"
-                          children={"Nr: "}
-                        />
-                        {player1.jersey_number}
-                      </p>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="Score between 0 and 100 based on player's offensive prowess"
-                          placement="right"
-                          children={"Off: "}
-                        />
-                        {player1.offensive_rating}
-                      </p>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="Score between 0 and 100 based on player's defensive prowess"
-                          placement="right"
-                          children={"Def: "}
-                        />
-                        {player1.defensive_rating}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
               <div className="col-md-8">
-                <div className="p-3  ">
-                  <ComparisonGraph player1={player1} player2={player2} />
-                </div>
+                <ComparisonGraph player1={player1} player2={player2} />
               </div>
-              <div className="col-md-2">
-                <div className="p-3  text-end">
-                  {player2 && (
-                    <>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="ID used to identify each player uniquely"
-                          placement="left"
-                          children={"ID: "}
-                        />
-                        {player2.player_id}
-                      </p>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="Number on this player's jersey"
-                          placement="left"
-                          children={"Nr: "}
-                        />
-                        {player2.jersey_number}
-                      </p>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="Score between 0 and 100 based on player's offensive prowess"
-                          placement="left"
-                          children={"Off: "}
-                        />
-                        {player2.offensive_rating}
-                      </p>
-                      <p className="space_between">
-                        <TooltipOverlay
-                          tooltipText="Score between 0 and 100 based on player's defensive prowess"
-                          placement="left"
-                          children={"Def: "}
-                        />
-                        {player2.defensive_rating}
-                      </p>
-                    </>
-                  )}
+              <div className="col-md-4">
+                
+                <div className="table-container">
+                <DropdownButton
+                  id="dropdown-basic-button"
+                  title={selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
+                  onSelect={(eventKey) => setSelectedCategory(eventKey || "playmaking")}
+                  className="mb-3"
+                  menuVariant="dark"
+                >
+                  <Dropdown.Item eventKey="playmaking" >Playmaking</Dropdown.Item>
+                  <Dropdown.Item eventKey="boxscore" >Boxscore</Dropdown.Item>
+                  <Dropdown.Item eventKey="scoring">Scoring</Dropdown.Item>
+                  {/* Add more dropdown items as needed */}
+                </DropdownButton>
+                  {renderTable(selectedCategory)}
                 </div>
               </div>
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className="comparison-modal-footer">
-          
-        </Modal.Footer>
+        <Modal.Footer className="comparison-modal-footer"></Modal.Footer>
       </Modal>
     );
   }
