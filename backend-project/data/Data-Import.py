@@ -68,7 +68,12 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str])
     con.execute("DROP TABLE IF EXISTS League;")
     con.execute("DROP TABLE IF EXISTS Team;")
     con.execute("DROP TABLE IF EXISTS Stats;")
-    con.execute("CREATE TABLE Player (player_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
+    con.execute("CREATE TABLE Player (player_id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+                "name TEXT, x_boxscore REAL DEFAULT NULL, y_boxscore REAL DEFAULT NULL, x_advanced_boxscore REAL DEFAULT NULL, y_advanced_boxscore REAL DEFAULT NULL," + 
+                "x_additional_field_goal_data REAL DEFAULT NULL, y_additional_field_goal_data REAL DEFAULT NULL, " +
+                "x_play_type_combinations REAL DEFAULT NULL, y_play_type_combinations REAL DEFAULT NULL, " + 
+                "x_defense_against_play_type_combinations REAL DEFAULT NULL, y_defense_against_play_type_combinations REAL DEFAULT NULL, " +
+                "x_drivers REAL DEFAULT NULL, y_drivers REAL DEFAULT NULL, x_drivers_defense REAL DEFAULT NULL, y_drivers_defense REAL DEFAULT NULL);")
     con.execute("CREATE TABLE League (league_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     con.execute("CREATE TABLE Team (team_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     # Associate each non-real column with a datatype
@@ -154,6 +159,5 @@ if __name__ == "__main__":
     con = sqlite3.connect("Players.db")
     create_tables(con, df, p)
     insert_data(con, df)
-    insert_cluster_data(con, "player_cluster_off.csv", "player_cluster_def.csv")
     con.commit()
     con.close()

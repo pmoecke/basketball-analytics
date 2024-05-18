@@ -12,5 +12,6 @@ def add_routes(app):
     api.add_resource(res.players.Players, API + "players/")
     api.add_resource(res.leagues.Leagues, API + "leagues/")
     api.add_resource(res.teams.Teams, API + "teams/")
+    api.add_resource(res.projection.Projection, API + "projection/")
 
     return api
