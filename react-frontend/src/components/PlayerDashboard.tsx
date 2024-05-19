@@ -1,26 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 
-import { Player, PlayerArray } from "../types/player";
+import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import PlayerList from "./PlayerList";
 import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch";
 import {
-  playerStats,
-  PlayerStatsParams,
   playerOverview,
   PlayerOverviewParams,
   PlayerProjectionParams,
 } from "../router/data";
 
-import Filter from "./Filter";
 import SidebarFilter from "./SidebarFilter";
 import Order from "./Order";
-import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison";
-
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
@@ -56,17 +50,11 @@ const PlayerDashboard: React.FC = () => {
 
   // Projections
   const [projection, setProjection] = useState<string | undefined>("boxscore");
-  const [playerProjections, setPlayerProjections] = useState<PlayerProjectionParams | undefined>(undefined);
+  const [playerProjections, setPlayerProjections] = useState<ProjectedPlayer[]>([]);
 
   // Toggle sidebar
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
-
-  // Tabs
-  const [activeKey, setActiveKey] = useState("list");
-
-  // Function to handle tab selection change
-  const handleSelect = (key: string | null) => key && setActiveKey(key);
 
   //Advanced Filtering
   const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
@@ -116,7 +104,7 @@ const PlayerDashboard: React.FC = () => {
       playerProjection(params)
       .then(data => {
         if (data !== undefined) {
-          console.log(data);
+          console.log("projectedplayers", data);
           setPlayerProjections(data);
         }
       });
@@ -204,6 +192,7 @@ const PlayerDashboard: React.FC = () => {
             <div className="col-md-6">
               <Player2DGraph
                 players={sortedPlayers}
+                projectedPlayersData={playerProjections}
                 comparisonPlayers={comparisonPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}

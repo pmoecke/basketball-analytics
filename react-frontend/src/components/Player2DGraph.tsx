@@ -1,21 +1,40 @@
 import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration } from "chart.js/auto";
-import { Player, PlayerArray } from "../types/player";
+import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import zoomPlugin from "chartjs-plugin-zoom";
+import { playerProjection } from "../router/data";
 
 Chart.register(zoomPlugin);
 
+function transformPlayerData(players: any[]): ProjectedPlayer[] {
+  return players.map(player => {
+      const transformed: ProjectedPlayer = { player_id: player.player_id, x: 0, y: 0 };
+
+      for (const key in player) {
+          if (key.startsWith('x_')) {
+              transformed.x = player[key];  // Assign the first found '_x' value to 'x'
+          } else if (key.startsWith('y_')) {
+              transformed.y = player[key];  // Assign the first found '_y' value to 'y'
+          }
+      }
+      return transformed;
+  });
+}
+
 interface Player2DGraphProps {
-  players: PlayerArray;
+  players: Player[];
+  projectedPlayersData: any[];
   comparisonPlayers: PlayerArray;
   setSelectedPlayer: (player: Player) => void;
   setShowModal: (show: boolean) => void;
   highlightedPlayer: Player | null;
   setHighlightedPlayer: (player: Player | null) => void;
+  
 }
 
 const Player2DGraph: React.FC<Player2DGraphProps> = ({
   players,
+  projectedPlayersData,
   comparisonPlayers,
   setSelectedPlayer,
   setShowModal,
@@ -24,15 +43,19 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 }) => {
   const chartRef = useRef<Chart | null>(null);
 
-    var activePlayers = players;
+  var projectedPlayers = transformPlayerData(projectedPlayersData)
 
+  console.log("here", projectedPlayers)
+  var activePlayers = projectedPlayers;
+
+  
   useEffect(() => {
     const chartElement = document.getElementById(
       "chart2d"
     ) as HTMLCanvasElement;
     if (chartElement) {
 
-        activePlayers = players.filter(
+        activePlayers = projectedPlayers.filter(
             p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
           );
 
@@ -47,8 +70,8 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
             {
               label: "Players",
               data: activePlayers.map((player) => ({
-                x: player.offensive_rating,
-                y: player.defensive_rating,
+                x: player.x,
+                y: player.y,
               })),
               backgroundColor: "rgb(153, 102, 255)",
               pointBackgroundColor: "rgb(153, 102, 255)",
@@ -176,7 +199,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
         chartRef.current = null;
       }
     };
-  }, [players]); // Only reinitialize chart if these arrays change
+  }, [projectedPlayers]); // Only reinitialize chart if these arrays change
 
   useEffect(() => {
     if (chartRef.current) {
@@ -186,27 +209,28 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
         y: player.defensive_rating,
       }));
 
-      activePlayers = players.filter(
+      activePlayers = projectedPlayers.filter(
         p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
       );
 
       const activeDataset = chartRef.current.data.datasets[0];
       activeDataset.data = activePlayers.map((player) => ({
-        x: player.offensive_rating,
-        y: player.defensive_rating,
+        x: player.x,
+        y: player.y,
       }));
       chartRef.current.update("none");
     }
   }, [comparisonPlayers, activePlayers]); // Update the dataset whenever the comparison players change
 
   useEffect(() => {
-    if (chartRef.current) {
+    if (chartRef.current && highlightedPlayer != null) {
       const dataset = chartRef.current.data.datasets[2]; // Assuming highlighted player is always the third dataset
-      dataset.data = highlightedPlayer
+      const highlightedProjection = projectedPlayers.find(player => player.player_id === highlightedPlayer.player_id);
+      dataset.data = highlightedProjection
         ? [
             {
-              x: highlightedPlayer.offensive_rating,
-              y: highlightedPlayer.defensive_rating,
+              x: highlightedProjection.x,
+              y: highlightedProjection.y,
             },
           ]
         : [];

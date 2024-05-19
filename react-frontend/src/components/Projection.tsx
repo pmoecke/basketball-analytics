@@ -20,7 +20,7 @@ const Projection: React.FC<ProjectionProps> = ({ projection, setProjection }) =>
   return (
     <div className="row">
     <h1 className="fs-3 white">Projection</h1>
-    <div className='col-md-6'>
+    <div className='col-md-11'>
         <select
         className="form-select"
         value={projection}

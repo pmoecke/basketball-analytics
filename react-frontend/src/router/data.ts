@@ -1,4 +1,4 @@
-import { PlayerArray } from '../types/player';
+import { PlayerArray, ProjectedPlayer } from '../types/player';
 import axiosClient from './apiClient'
 
 export interface PlayerStatsParams {
@@ -73,7 +73,9 @@ export interface PlayerProjectionParams {
   projections?: string | undefined;
 }
 
-export function playerProjection(params: PlayerProjectionParams): Promise<any | undefined> {
+
+
+export function playerProjection(params: PlayerProjectionParams): Promise<ProjectedPlayer[] | undefined> {
   const url = 'projection'; // Endpoint relative to the BASE_URL
   console.log(params)
   return axiosClient.get<any>(url, { params })
