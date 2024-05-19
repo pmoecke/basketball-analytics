@@ -67,3 +67,24 @@ export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<Play
       throw error;
     });
 }
+
+export interface PlayerProjectionParams {
+  player_id?: number[];
+  projections?: string | undefined;
+}
+
+export function playerProjection(params: PlayerProjectionParams): Promise<any | undefined> {
+  const url = 'projection'; // Endpoint relative to the BASE_URL
+  console.log(params)
+  return axiosClient.get<any>(url, { params })
+    .then(response => {
+      if (response.status !== 204) {
+        return response.data;
+      }
+      return undefined;
+    })
+    .catch(error => {
+      console.error('Error fetching player stats:', error);
+      throw error;
+    });
+}

@@ -12,6 +12,7 @@ import {
   PlayerStatsParams,
   playerOverview,
   PlayerOverviewParams,
+  PlayerProjectionParams,
 } from "../router/data";
 
 import Filter from "./Filter";
@@ -24,6 +25,9 @@ import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
 import TooltipOverlay from "./TooltipOverlay";
+
+import { playerProjection } from "../router/data";
+import Projection from "./Projection";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -49,6 +53,10 @@ const PlayerDashboard: React.FC = () => {
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
   const [league_id, setLeague_id] = useState<number | undefined>(undefined);
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
+
+  // Projections
+  const [projection, setProjection] = useState<string | undefined>("boxscore");
+  const [playerProjections, setPlayerProjections] = useState<PlayerProjectionParams | undefined>(undefined);
 
   // Toggle sidebar
   const [isOpen, setIsOpen] = useState(false);
@@ -98,10 +106,25 @@ const PlayerDashboard: React.FC = () => {
 
     // Take only the first 100 elements after sorting
     let top100Players = sortedData.slice(0, 100);
-
+    const top100PlayerIds: number[] = top100Players.map(player => player.player_id);
+    const params: Partial<PlayerProjectionParams> = {};
+    params.player_id = top100PlayerIds;
+    params.projections = projection;
+    console.log(top100PlayerIds)
+    if (top100PlayerIds.length != 0){
+      // Update the state for player projections based on the filtered 100 sorted players
+      playerProjection(params)
+      .then(data => {
+        if (data !== undefined) {
+          console.log(data);
+          setPlayerProjections(data);
+        }
+      });
+    }
+    
     // Update state with only the first 100 sorted players
     setSortedPlayers(top100Players);
-  }, [players, sortOrder, orderValue]);
+  }, [players, sortOrder, orderValue, projection]);
 
   const togglePlayerForComparison = (player: Player) => {
     if (
@@ -159,7 +182,12 @@ const PlayerDashboard: React.FC = () => {
                 setOrderValue={setOrderValue}
               />
             </div>
-            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <Projection 
+                projection={projection} 
+                setProjection={setProjection}
+              />
+            </div>
           </div>
           <div className="row">
             <div className="col-md-6">
