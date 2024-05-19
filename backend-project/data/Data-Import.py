@@ -61,7 +61,7 @@ def load_data() -> tuple[pd.DataFrame, list[str]]:
     return df, percentages
 
 
-def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str]):
+def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: list[str]):
     con = sqlite3.connect("Players.db")
     cur = con.cursor()
     con.execute("DROP TABLE IF EXISTS Player;")
@@ -92,6 +92,40 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str])
     # Create stats table with all columns and correct datatypes
     col_str = "player_id INTEGER, team_id INTEGER, league_id INTEGER, " + ", ".join(cols).replace("'s", "")
     con.execute(f"CREATE TABLE Stats ({col_str}, PRIMARY KEY (season, player_id, team_id, league_id));")
+
+
+def create_scores_table(con: sqlite3.Connection, df: pd.DataFrame):
+    # Assumes con is already connected to the database
+    cur = con.cursor()
+    cur.execute("DROP TABLE IF EXISTS Scores;")
+    # Primary key for the Scores table should be player and season
+    # Set up the Scores table with the correct columns
+    cur.execute("CREATE TABLE Scores (player_id INTEGER, season TEXT, PRIMARY KEY (player_id, season));")
+    if not column_exists(cur, "Scores", "off_score_1"):
+        cur.execute("ALTER TABLE Scores ADD COLUMN off_score_1 REAL;")
+    if not column_exists(cur, "Scores", "off_score_2"):
+        cur.execute("ALTER TABLE Scores ADD COLUMN off_score_2 REAL;")
+    if not column_exists(cur, "Scores", "off_score_3"):
+        cur.execute("ALTER TABLE Scores ADD COLUMN off_score_3 REAL;")
+    if not column_exists(cur, "Scores", "def_score"):
+        cur.execute("ALTER TABLE Scores ADD COLUMN def_score REAL;")
+    if not column_exists(cur, "Scores", "reb_score"):
+        cur.execute("ALTER TABLE Scores ADD COLUMN reb_score REAL;")
+
+    # Insert data from df into the Scores table
+    for index, row in tqdm(df.iterrows()):
+        player_name = row['player name'].replace("'", "''")
+        season = row['season'].replace("'", "''")
+        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()
+        if pid is not None:
+            pid = pid[0]
+            cur.execute(f"INSERT INTO Scores (player_id, season) VALUES ({pid}, '{season}');")
+            cur.execute(f"UPDATE Scores SET off_score_1 = {row['off_score_1']}, off_score_2 = {row['off_score_2']}, \
+                        off_score_3 = {row['off_score_3']}, def_score = {row['def_score']}, \
+                        reb_score = {row['reb_score']} WHERE player_id = {pid} AND season = '{season}';")
+        else:
+            print(f"Player {player_name} not found in the database")
+            continue
 
 
 def insert_data(con: sqlite3.Connection, df: pd.DataFrame):
@@ -150,10 +184,12 @@ def column_exists(cursor, table_name, column_name):
 
 
 if __name__ == "__main__":
-    df, p = load_data()
+    # df, p = load_data()
     con = sqlite3.connect("Players.db")
-    create_tables(con, df, p)
-    insert_data(con, df)
-    insert_cluster_data(con, "player_cluster_off.csv", "player_cluster_def.csv")
+    # create_tables(con, df, p)
+    scores_df = pd.read_csv("player_scores.csv")
+    create_scores_table(con, scores_df)
+    # insert_data(con, df)
+    # insert_cluster_data(con, "player_cluster_off.csv", "player_cluster_def.csv")
     con.commit()
     con.close()
