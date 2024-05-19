@@ -61,7 +61,7 @@ def load_data() -> tuple[pd.DataFrame, list[str]]:
     return df, percentages
 
 
-def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str]):
+def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: list[str]):
     con = sqlite3.connect("Players.db")
     cur = con.cursor()
     con.execute("DROP TABLE IF EXISTS Player;")
