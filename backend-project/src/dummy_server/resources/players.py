@@ -24,7 +24,7 @@ class Players(Resource):
         print(args)
 
         # Fetch data from database
-        query = "SELECT * FROM Player WHERE 1=1 "
+        query = "SELECT player_id, name FROM Player WHERE 1=1 "
 
         if "player_name" in args:
             query += "AND name LIKE :player_name "

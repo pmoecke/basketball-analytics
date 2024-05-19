@@ -15,7 +15,7 @@ def clean_name(name: str) -> str:
             .replace("-", "_")
 
 
-def load_data() -> tuple[pd.DataFrame, [str]]:
+def load_data() -> tuple[pd.DataFrame, list[str]]:
     # Extract League and Season information from filename
     regex = r".+\. (.+) \- (\d{4}-\d{4}).xls$"
     frames = []
@@ -68,7 +68,12 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: [str])
     con.execute("DROP TABLE IF EXISTS League;")
     con.execute("DROP TABLE IF EXISTS Team;")
     con.execute("DROP TABLE IF EXISTS Stats;")
-    con.execute("CREATE TABLE Player (player_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
+    con.execute("CREATE TABLE Player (player_id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+                "name TEXT, x_boxscore REAL DEFAULT NULL, y_boxscore REAL DEFAULT NULL, x_advanced_boxscore REAL DEFAULT NULL, y_advanced_boxscore REAL DEFAULT NULL," + 
+                "x_additional_field_goal_data REAL DEFAULT NULL, y_additional_field_goal_data REAL DEFAULT NULL, " +
+                "x_play_type_combinations REAL DEFAULT NULL, y_play_type_combinations REAL DEFAULT NULL, " + 
+                "x_defense_against_play_type_combinations REAL DEFAULT NULL, y_defense_against_play_type_combinations REAL DEFAULT NULL, " +
+                "x_drivers REAL DEFAULT NULL, y_drivers REAL DEFAULT NULL, x_drivers_defense REAL DEFAULT NULL, y_drivers_defense REAL DEFAULT NULL);")
     con.execute("CREATE TABLE League (league_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     con.execute("CREATE TABLE Team (team_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     # Associate each non-real column with a datatype
@@ -117,6 +122,36 @@ def insert_data(con: sqlite3.Connection, df: pd.DataFrame):
         lid = cur.execute(f"select league_id from League where name = '{league_name}'").fetchone()[0]
         vals = [str(val) for val in row.drop(["league", "player_name", "team_name", "season", "minutes"]).values]
         cur.execute(f"INSERT INTO Stats ({cols}) VALUES ({pid}, {tid}, {lid}, '{row['season']}', '{row['minutes']}', {', '.join(vals)});")
+
+
+def insert_cluster_data(con: sqlite3.Connection, off_file: str, def_file: str):
+    cur = con.cursor()
+    off_cluster = pd.read_csv(off_file)
+    def_cluster = pd.read_csv(def_file)
+    cluster_data = off_cluster.copy().rename(columns={"player name": "player_name"})
+    # Add defensive cluster to the data so we have omly one dataframe
+    cluster_data['def_cluster'] = def_cluster['def_cluster']
+    # Add two new columns to the Stats table: off_cluster (INTEGER) and def_cluster (STRING)
+    # Create columns def_cluster and off_cluster if they don't exist
+    if not column_exists(cur, "Stats", "off_cluster"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN off_cluster INTEGER;")
+    if not column_exists(cur, "Stats", "def_cluster"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN def_cluster TEXT CHECK (def_cluster IN ('A', 'B'));")
+    # Insert cluster data
+    for index, row in tqdm(cluster_data.iterrows()):
+        player_name = row['player_name'].replace("'", "''")
+        pid = cur.execute(f"select player_id from Player where name = '{player_name}'").fetchone()
+        if pid is not None:
+            pid = pid[0]
+            cur.execute(f"UPDATE Stats SET off_cluster = {row['off_cluster']}, def_cluster = '{row['def_cluster']}' WHERE player_id = {pid};")
+        else:
+            print(f"Player {player_name} not found in the database")
+            continue
+
+def column_exists(cursor, table_name, column_name):
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns = [row[1] for row in cursor.fetchall()]
+    return column_name in columns
 
 
 if __name__ == "__main__":
