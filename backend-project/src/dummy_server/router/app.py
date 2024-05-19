@@ -48,7 +48,8 @@ def start_server():
 
 
 if __name__ == "__main__":
-    if os.environ["DATA_PATH"]: #You are in deployment (this variable is crated only in the helm chart, not in the docker)
+    data_path = os.environ.get("DATA_PATH")
+    if data_path:   # You are in deployment (this variable is crated only in the helm chart, not in the docker)
         data_path = os.environ["DATA_PATH"]
     else: #You are in local, use local path
          print("Local environment")
