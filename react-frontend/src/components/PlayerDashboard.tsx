@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 
-import { Player, PlayerArray } from "../types/player";
+import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import PlayerList from "./PlayerList";
 import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch";
 import {
-  playerStats,
-  PlayerStatsParams,
   playerOverview,
   PlayerOverviewParams,
+  PlayerProjectionParams,
 } from "../router/data";
 
-import Filter from "./Filter";
 import SidebarFilter from "./SidebarFilter";
 import Order from "./Order";
 import Order2 from "./Order2";
 import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison";
-
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
 import TooltipOverlay from "./TooltipOverlay";
 import AiModelDropdown from "./AiModelDropdown";
+
+import { playerProjection } from "../router/data";
+import Projection from "./Projection";
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -52,15 +51,13 @@ const PlayerDashboard: React.FC = () => {
   const [league_id, setLeague_id] = useState<number | undefined>(undefined);
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
 
+  // Projections
+  const [projection, setProjection] = useState<string | undefined>("boxscore");
+  const [playerProjections, setPlayerProjections] = useState<ProjectedPlayer[]>([]);
+
   // Toggle sidebar
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
-
-  // Tabs
-  const [activeKey, setActiveKey] = useState("list");
-
-  // Function to handle tab selection change
-  const handleSelect = (key: string | null) => key && setActiveKey(key);
 
   //Advanced Filtering
   const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
@@ -100,10 +97,25 @@ const PlayerDashboard: React.FC = () => {
 
     // Take only the first 100 elements after sorting
     let top100Players = sortedData.slice(0, 100);
-
+    const top100PlayerIds: number[] = top100Players.map(player => player.player_id);
+    const params: Partial<PlayerProjectionParams> = {};
+    params.player_id = top100PlayerIds;
+    params.projections = projection;
+    console.log(top100PlayerIds)
+    if (top100PlayerIds.length != 0){
+      // Update the state for player projections based on the filtered 100 sorted players
+      playerProjection(params)
+      .then(data => {
+        if (data !== undefined) {
+          console.log("projectedplayers", data);
+          setPlayerProjections(data);
+        }
+      });
+    }
+    
     // Update state with only the first 100 sorted players
     setSortedPlayers(top100Players);
-  }, [players, sortOrder, orderValue]);
+  }, [players, sortOrder, orderValue, projection]);
 
   const togglePlayerForComparison = (player: Player) => {
     if (
@@ -190,6 +202,7 @@ const PlayerDashboard: React.FC = () => {
             <div className="col-md-6">
               <Player2DGraph
                 players={sortedPlayers}
+                projectedPlayersData={playerProjections}
                 comparisonPlayers={comparisonPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}

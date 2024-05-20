@@ -105,6 +105,12 @@ export interface Player {
   uncontested_field_goals_made: number;
 }
 
+export interface ProjectedPlayer {
+  player_id: number;
+  x: number;
+  y: number;
+}
+
 export const playerKeys: (keyof Player)[] = [
   "efficiency_score",
   "player_id",
