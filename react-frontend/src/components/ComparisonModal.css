@@ -57,3 +57,37 @@
   border-radius: 5px;
 }
 
+.table-responsive-vertical {
+  max-height: 60vh; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+.scrollable-nav {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.scrollable-nav .nav-item {
+  display: inline-block;
+}
+
+.full-width-dropdown .dropdown-toggle {
+  width: 100%!important;
+}
+
+.full-width-dropdown .dropdown-item {
+  color: black!important;
+}
+
+.nav-tabs .nav-link.active {
+  color: black !important;
+  background-color: white !important; /* Adjust background color if needed */
+  border-color: #444444; /* Match border color with the dark theme */
+}
+
+.nav-tabs .nav-link {
+margin-bottom: 0!important;
+border: var(--bs-nav-tabs-border-width) solid transparent;
+border-top-left-radius: var(--bs-nav-tabs-border-radius);
+border-top-right-radius: var(--bs-nav-tabs-border-radius);
+}

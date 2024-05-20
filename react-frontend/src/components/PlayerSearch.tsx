@@ -1,6 +1,7 @@
 // PlayerSearch.tsx
 import React, { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
+import './PlayerSearch.css';
 
 interface PlayerSearchProps {
     setPlayer_name: (name: string | undefined) => void;
@@ -26,7 +27,7 @@ const PlayerSearch: React.FC<PlayerSearchProps> = ({ setPlayer_name }) => {
 
     return (
         <input
-            className="form-control search"
+            className="form-control search no-right-round-corners"
             type="text"
             placeholder="Search for players..."
             value={searchTerm}

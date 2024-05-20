@@ -1,0 +1,12 @@
+.larger-icon {
+    font-size: 2.5em; /* Adjust the size as needed to make it twice as big */
+    color: lightgray;
+}
+
+.padded-icon {
+    padding-right: 10px; /* Add padding to the right of the icon */
+  }
+
+  .narrow-select {
+    width: auto!important; /* Adjust the width as needed */
+  }

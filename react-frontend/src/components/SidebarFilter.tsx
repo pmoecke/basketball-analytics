@@ -17,7 +17,7 @@ interface SidebarFilterProps {
 }
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
-     showAdvancedFilterModal : boolean, 
+     showAdvancedFilterModal, 
      setShowAdvancedFilterModal,
      league_id,
      setLeague_id,
@@ -46,7 +46,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
     <Modal
       show={isOpen}
       onHide={handleClose}
-      className="filter-modal"
+      className={`filter-modal ${showAdvancedFilterModal ? 'blur-background' : ''}`}
       size="lg"
     >   
       <Modal.Header closeButton className="filter-modal-header">

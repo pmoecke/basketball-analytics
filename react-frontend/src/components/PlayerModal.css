@@ -22,3 +22,67 @@
     align-items: center; /* Aligns items vertically center */
     width: 100%; /* Ensure the container takes full width */
 }
+
+
+
+
+.transparent-table {
+    background-color: rgba(34, 34, 34, 0.5); /* Half transparent background */
+  }
+  
+  .transparent-table thead th,
+  .transparent-table tbody td,
+  .transparent-table tbody th {
+    background-color: rgba(34, 34, 34, 0.5); /* Ensure the transparency applies to all table cells */
+    color: #ffffff; /* Ensure text is white */
+    border-color: #444444; /* Ensure border color matches dark theme */
+  }
+  
+  .transparent-table .stat-name {
+    background-color: rgba(51, 51, 51, 0.5); /* Slightly highlighted left column */
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .table-container {
+    border: 1px solid #444444; /* Border around the table */
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .table-responsive-vertical {
+    max-height: 65vh!important; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
+  
+  .scrollable-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .scrollable-nav .nav-item {
+    display: inline-block;
+  }
+
+  .full-width-dropdown .dropdown-toggle {
+    width: 100%!important;
+  }
+
+  .full-width-dropdown .dropdown-item {
+    color: black!important;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: black !important;
+    background-color: white !important; /* Adjust background color if needed */
+    border-color: #444444; /* Match border color with the dark theme */
+}
+
+.nav-tabs .nav-link {
+  margin-bottom: 0!important;
+  border: var(--bs-nav-tabs-border-width) solid transparent;
+  border-top-left-radius: var(--bs-nav-tabs-border-radius);
+  border-top-right-radius: var(--bs-nav-tabs-border-radius);
+}
