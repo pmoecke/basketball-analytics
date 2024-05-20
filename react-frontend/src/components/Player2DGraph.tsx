@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import Chart, { ChartConfiguration, TooltipItem } from "chart.js/auto";
+import Chart, { ChartConfiguration } from "chart.js/auto";
 import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import zoomPlugin from "chartjs-plugin-zoom";
-import { playerProjection } from "../router/data";
+import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
 
 Chart.register(zoomPlugin);
 
@@ -183,9 +183,19 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
             if (elements.length > 0) {
               const index = elements[0].index;
               const datasetIndex = elements[0].datasetIndex;
-              const selectedPlayer =
-                datasetIndex === 0 ? players[index] : comparisonPlayers[index];
-              setSelectedPlayer(selectedPlayer);
+              const selectedPlayer = datasetIndex === 0 ? players[index] : comparisonPlayers[index];
+
+              const params: PlayerStatsFromIdParams = {
+                player_id: selectedPlayer.player_id
+              };
+              playerStatsFromId(params).then((data) => {
+                if (data !== undefined) {
+                  const player = data[0]
+                  console.log("api call", player)
+                  setSelectedPlayer(player);
+                }
+              }); 
+              
               setShowModal(true);
             }
           },

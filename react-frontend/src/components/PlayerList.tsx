@@ -31,8 +31,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                       };
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {
-                          console.log(data);
                           const player = data[0]
+                          console.log("api call", player)
                           setSelectedPlayer(player);
                         }
                     }); 

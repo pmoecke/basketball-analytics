@@ -12,11 +12,11 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
         var player1_name = player.player_name
 
         var player1_stats = [
-            playerScore.def_score,
-            playerScore.off_score_1,
             playerScore.off_score_2,
             playerScore.off_score_3,
             playerScore.reb_score,
+            playerScore.def_score,
+            playerScore.off_score_1,
         ]
         var player1_color = 'rgb(153, 102, 255)'
         var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
@@ -26,7 +26,7 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
         var font_size = 16
 
         const data = {
-            labels: ["def_score", "off_score_1", "off_score_2", "off_score_3", "reb_score"],
+            labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
             datasets: [{
                 label: player1_name,
                 data: player1_stats,
