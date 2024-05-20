@@ -14,11 +14,14 @@ import {
 
 import SidebarFilter from "./SidebarFilter";
 import Order from "./Order";
+import Order2 from "./Order2";
+import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
 import TooltipOverlay from "./TooltipOverlay";
+import AiModelDropdown from "./AiModelDropdown";
 
 import { playerProjection } from "../router/data";
 import Projection from "./Projection";
@@ -131,6 +134,8 @@ const PlayerDashboard: React.FC = () => {
     console.log(comparisonPlayers);
   }, [comparisonPlayers]);
 
+  const [selectedModel, setSelectedModel] = useState("GPT-4");
+
   return (
     <div className="container m-3">
       <div
@@ -158,23 +163,28 @@ const PlayerDashboard: React.FC = () => {
         </div>
         <div className="player-search col-md-11">
           <div className="row">
-            <div className="col-md-4">
-              <h1 className="fs-3 white">Search</h1>
-              <PlayerSearch setPlayer_name={setPlayer_name} />
-            </div>
-            <div className="col-md-4">
-              <Order
-                sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
-                orderValue={orderValue}
-                setOrderValue={setOrderValue}
-              />
-            </div>
-            <div className="col-md-4">
-              <Projection 
-                projection={projection} 
-                setProjection={setProjection}
-              />
+            <div className="col-md-8 mb-3">
+              <div className="d-flex justify-content-between">
+        <div className="flex-grow-1 ">
+          <PlayerSearch setPlayer_name={setPlayer_name} />
+        </div>
+        <div>
+          <Order2
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+            orderValue={orderValue}
+            setOrderValue={setOrderValue}
+          />
+        </div>
+      </div>
+              </div>
+            
+              <div className="col-md-1"></div>
+            <div className="col-md-3">
+
+            <AiModelDropdown selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+
+
             </div>
           </div>
           <div className="row">

@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import './MultiRangeSlider.css';
 
 interface MultiRangeSliderProps {
+  id: string; // Add an id prop
   min: number;
   max: number;
+  onChange: (id: string, min: number, max: number) => void; // Update onChange to include id
 }
 
-const MultiRangeSlider: React.FC<MultiRangeSliderProps> = ({ min, max }) => {
+const MultiRangeSlider: React.FC<MultiRangeSliderProps> = ({ id, min, max, onChange }) => {
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
   const range = useRef<HTMLDivElement>(null);
@@ -23,18 +25,19 @@ const MultiRangeSlider: React.FC<MultiRangeSliderProps> = ({ min, max }) => {
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
   }, [minVal, maxVal]);
-  
 
   // Handles the left thumb change
   const handleMinChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = Math.min(Number(event.target.value), maxVal - 1);
     setMinVal(value);
+    onChange(id, value, maxVal); // Pass id, minVal, and maxVal to onChange
   };
 
   // Handles the right thumb change
   const handleMaxChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = Math.max(Number(event.target.value), minVal + 1);
     setMaxVal(value);
+    onChange(id, minVal, value); // Pass id, minVal, and maxVal to onChange
   };
 
   return (
