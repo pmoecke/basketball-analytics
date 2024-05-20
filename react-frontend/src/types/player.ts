@@ -45,7 +45,7 @@ export interface Player {
   jersey_number: number;
   left_drives: number;
   left_drives_made: number;
-  minutes: number;
+  minutes: string;
   net_rating: number;
   number_of_player_possessions: number;
   offensive_rebounds: number;
@@ -110,6 +110,15 @@ export interface ProjectedPlayer {
   x: number;
   y: number;
 }
+
+export const playerKeys2: (keyof Player)[] = [
+  "efficiency_score",
+  "player_id",
+  "player_name",
+  "offensive_rating",
+  "defensive_rating",
+  "games_played",
+]
 
 export const playerKeys: (keyof Player)[] = [
   "efficiency_score",

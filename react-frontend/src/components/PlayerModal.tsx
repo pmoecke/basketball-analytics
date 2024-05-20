@@ -11,21 +11,24 @@ import "./PlayerModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
+import { FaInfoCircle } from "react-icons/fa";
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
+  selectedPlayerScore: any;
   showModal: boolean;
   handleClose: () => void;
 }
 
 const PlayerModal: React.FC<PlayerModalProps> = ({
   selectedPlayer,
+  selectedPlayerScore,
   showModal,
   handleClose,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState("Boxscore");
 
-  const renderTable2 = (category: string) => {
+  const renderTable = (category: string) => {
     const filteredStats = statDictionary[category as keyof typeof statDictionary] || [];
 
     return (
@@ -51,7 +54,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                 <th scope="row" className="text-center">{selectedPlayer.player_name}</th>
                 {filteredStats.map((stat) => (
                   <td key={stat} className="text-right">
-                    {selectedPlayer[stat as keyof Player] as string}
+                    {selectedPlayer[stat as keyof Player]}
                   </td>
                 ))}
               </tr>
@@ -82,6 +85,9 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
     "DrivesDefense", "Efficiency", "PlayTypeCombinations", "Stats"
   ];
 
+  const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
+  
+
   return (
     <Modal
       show={showModal}
@@ -98,11 +104,18 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
         {selectedPlayer && (
           <div className="container">
             <div className="row">
+              <div className="col-md-2"/>
               <div className="col-md-8">
-                <PlayerGraph player={selectedPlayer} />
+                <PlayerGraph player={selectedPlayer} playerScore={selectedPlayerScore} />
               </div>
-              <div className="col-md-4">
-                Explain 5 Axes here
+              <div className="col-md-2">
+                <TooltipOverlay
+                  tooltipText={pentagonTooltips}
+                  placement="right"
+                  showTitle={false}
+                >
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>  
               </div>
               <div className="col-md-12">
                 <div className="table-container">
@@ -113,7 +126,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                       </Nav.Item>
                     ))}
                   </Nav>
-                  {renderTable2(selectedCategory)}
+                  {renderTable(selectedCategory)}
                 </div>
               </div>
             </div>

@@ -2,23 +2,29 @@ import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration } from "chart.js/auto";
 import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import zoomPlugin from "chartjs-plugin-zoom";
-import { playerProjection } from "../router/data";
+import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
 
 Chart.register(zoomPlugin);
 
 function transformPlayerData(players: any[]): ProjectedPlayer[] {
   return players.map(player => {
-      const transformed: ProjectedPlayer = { player_id: player.player_id, x: 0, y: 0 };
+    const transformed: ProjectedPlayer = { player_id: player.player_id, x: 0, y: 0 };
 
-      for (const key in player) {
-          if (key.startsWith('x_')) {
-              transformed.x = player[key];  // Assign the first found '_x' value to 'x'
-          } else if (key.startsWith('y_')) {
-              transformed.y = player[key];  // Assign the first found '_y' value to 'y'
-          }
+    for (const key in player) {
+      if (key.startsWith('x_')) {
+        transformed.x = player[key];  // Assign the first found '_x' value to 'x'
+      } else if (key.startsWith('y_')) {
+        transformed.y = player[key];  // Assign the first found '_y' value to 'y'
       }
-      return transformed;
+    }
+    return transformed;
   });
+}
+
+interface ScatterDataPoint {
+  x: number;
+  y: number;
+  player_id: number;
 }
 
 interface Player2DGraphProps {
@@ -29,7 +35,6 @@ interface Player2DGraphProps {
   setShowModal: (show: boolean) => void;
   highlightedPlayer: Player | null;
   setHighlightedPlayer: (player: Player | null) => void;
-  
 }
 
 const Player2DGraph: React.FC<Player2DGraphProps> = ({
@@ -43,25 +48,19 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 }) => {
   const chartRef = useRef<Chart | null>(null);
 
-  var projectedPlayers = transformPlayerData(projectedPlayersData)
+  const projectedPlayers = transformPlayerData(projectedPlayersData);
+  let activePlayers = projectedPlayers;
 
-  console.log("here", projectedPlayers)
-  var activePlayers = projectedPlayers;
-
-  
   useEffect(() => {
-    const chartElement = document.getElementById(
-      "chart2d"
-    ) as HTMLCanvasElement;
+    const chartElement = document.getElementById("chart2d") as HTMLCanvasElement;
     if (chartElement) {
-
-        activePlayers = projectedPlayers.filter(
-            p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
-          );
+      activePlayers = projectedPlayers.filter(
+        p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
+      );
 
       const config: ChartConfiguration<
         "scatter",
-        { x: number; y: number }[],
+        ScatterDataPoint[],
         unknown
       > = {
         type: "scatter",
@@ -72,6 +71,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               data: activePlayers.map((player) => ({
                 x: player.x,
                 y: player.y,
+                player_id: player.player_id,
               })),
               backgroundColor: "rgb(153, 102, 255)",
               pointBackgroundColor: "rgb(153, 102, 255)",
@@ -87,6 +87,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               data: comparisonPlayers.map((player) => ({
                 x: player.offensive_rating,
                 y: player.defensive_rating,
+                player_id: player.player_id,
               })),
               backgroundColor: "rgb(255, 159, 64)",
               pointBackgroundColor: "rgb(255, 159, 64)",
@@ -96,7 +97,6 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               order: 1,
               pointRadius: 4,
               pointHoverRadius: 6,
-
             },
             {
               label: "Highlighted Player",
@@ -111,6 +111,9 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
           ],
         },
         options: {
+          animation: {
+            duration: 0, // Disable animations
+          },
           scales: {
             x: {
               type: "linear",
@@ -137,13 +140,13 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               display: true,
               labels: {
                 color: "white", // Legend labels color
-                filter: function(legendItem, chartData) {
-                    // Check the label of the dataset and decide whether to display it in the legend
-                    if (legendItem.text === "Highlighted Player") {
-                      return false; // Do not display the label for "Highlighted Player"
-                    }
-                    return true; // Display labels for all other datasets
+                filter: function (legendItem, chartData) {
+                  // Check the label of the dataset and decide whether to display it in the legend
+                  if (legendItem.text === "Highlighted Player") {
+                    return false; // Do not display the label for "Highlighted Player"
                   }
+                  return true; // Display labels for all other datasets
+                }
               },
             },
             zoom: {
@@ -165,14 +168,34 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
                 mode: "xy",
               },
             },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const raw = context.raw as ScatterDataPoint;
+                  const player = players.find(p => p.player_id === raw.player_id);
+                  const playerName = player ? player.player_name : "Unknown Player";
+                  return `${playerName}: (${Math.round(raw.x).toFixed(1)}, ${Math.round(raw.y).toFixed(1)})`;
+                },
+              },
+            },
           },
           onClick: (event, elements) => {
             if (elements.length > 0) {
               const index = elements[0].index;
               const datasetIndex = elements[0].datasetIndex;
-              const selectedPlayer =
-                datasetIndex === 0 ? players[index] : comparisonPlayers[index];
-              setSelectedPlayer(selectedPlayer);
+              const selectedPlayer = datasetIndex === 0 ? players[index] : comparisonPlayers[index];
+
+              const params: PlayerStatsFromIdParams = {
+                player_id: [selectedPlayer.player_id]
+              };
+              playerStatsFromId(params).then((data) => {
+                if (data !== undefined) {
+                  const player = data[0]
+                  console.log("api call", player)
+                  setSelectedPlayer(player);
+                }
+              }); 
+              
               setShowModal(true);
             }
           },
@@ -192,21 +215,25 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 
       chartRef.current = new Chart(chartElement, config);
     }
-
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
         chartRef.current = null;
       }
     };
-  }, [projectedPlayers]); // Only reinitialize chart if these arrays change
+
+  }, [projectedPlayers, comparisonPlayers, players]); // Only reinitialize chart if these arrays change
 
   useEffect(() => {
     if (chartRef.current) {
       const comparisonDataset = chartRef.current.data.datasets[1]; // Accessing the second dataset
-      comparisonDataset.data = comparisonPlayers.map((player) => ({
-        x: player.offensive_rating,
-        y: player.defensive_rating,
+      
+      const comparisonPlayerIds = comparisonPlayers.map(player => player.player_id);
+      const comparisonProjection = projectedPlayers.filter(player => comparisonPlayerIds.includes(player.player_id));
+      comparisonDataset.data = comparisonProjection.map((player) => ({
+        x: player.x,
+        y: player.y,
+        player_id: player.player_id,
       }));
 
       activePlayers = projectedPlayers.filter(
@@ -217,26 +244,28 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       activeDataset.data = activePlayers.map((player) => ({
         x: player.x,
         y: player.y,
+        player_id: player.player_id,
       }));
-      chartRef.current.update("none");
+      chartRef.current.update("none"); // Update without animation
     }
-  }, [comparisonPlayers, activePlayers]); // Update the dataset whenever the comparison players change
+  }, [comparisonPlayers, projectedPlayers]); // Update the dataset whenever the comparison players change
 
   useEffect(() => {
     if (chartRef.current && highlightedPlayer != null) {
-      const dataset = chartRef.current.data.datasets[2]; // Assuming highlighted player is always the third dataset
+      const dataset = chartRef.current.data.datasets[2] as {data: ScatterDataPoint[];};
       const highlightedProjection = projectedPlayers.find(player => player.player_id === highlightedPlayer.player_id);
       dataset.data = highlightedProjection
         ? [
-            {
-              x: highlightedProjection.x,
-              y: highlightedProjection.y,
-            },
-          ]
+          {
+            x: highlightedProjection.x,
+            y: highlightedProjection.y,
+            player_id: highlightedProjection.player_id,
+          },
+        ]
         : [];
       chartRef.current.update("none"); // Update without animation
     }
-  }, [highlightedPlayer]); // Update the dataset whenever the highlighted player changes, even if null
+  }, [highlightedPlayer, projectedPlayers]); // Update the dataset whenever the highlighted player changes, even if null
 
   return (
     <div className="chart-container" style={{ height: "100%", width: "100%" }}>

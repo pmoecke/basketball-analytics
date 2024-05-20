@@ -1,5 +1,5 @@
 import React from 'react';
-import { Player, playerKeys } from '../types/player';
+import { Player, playerKeys2 } from '../types/player';
 import { Button } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import './Order2.css';
@@ -20,7 +20,7 @@ const Order2: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, set
           value={orderValue}
           onChange={(e) => setOrderValue(e.target.value as keyof Player)}
         >
-          {playerKeys.map(key => (
+          {playerKeys2.map(key => (
             <option key={key} value={key}>{key.replace(/_/g, ' ').replace(/-/g, ' ').replace(/%/g, '% ')}</option>
           ))}
         </select>

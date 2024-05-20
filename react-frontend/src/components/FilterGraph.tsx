@@ -15,16 +15,18 @@ let filterChart : Chart | null = null;
 interface PlayerFilterProps {
   min: number[];
   max: number[];
+  setPlayerFilterValues: ((value: [number[], number[]]) => void)
+  handleClose: any;
 }
 
-const FilterGraph: React.FC<PlayerFilterProps> = ({min, max}) => {
+const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValues, handleClose}) => {
     useEffect(() => {
         const ctx = document.getElementById('filterChart') as HTMLCanvasElement;
         if (ctx) {
             filterChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ["Drives %", "Free Throws %", "Isolation %", "Pick-n-Pops %", "Transition Attacks %"],
+                    labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
                     datasets: [{
                             label: "Maximum",
                             data: max,
@@ -126,8 +128,20 @@ const FilterGraph: React.FC<PlayerFilterProps> = ({min, max}) => {
     }, [min, max]); // dependencies array ensures effect runs again if min or max props change
 
     return (
-        <div className="chart-container">
-            <canvas id="filterChart"></canvas>
+        <div>
+            <div className="chart-container">
+                <canvas id="filterChart"></canvas>
+            </div>
+            
+            <button className="btn text-center btn-primary w-100 mb-3"
+                onClick={() => {
+                    // top, right, bottom right, left bottom, left
+                    // off2, off3, reb, def, off1
+                    setPlayerFilterValues([min, max])
+                    handleClose()
+                }}>
+                Apply Filter
+            </button>
         </div>
     );
 };
