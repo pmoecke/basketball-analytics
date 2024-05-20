@@ -21,10 +21,10 @@ import ComparisonModal from "./ComparisonModal";
 
 import AdvancedFilterModal from "./AdvancedFilterModal";
 import TooltipOverlay from "./TooltipOverlay";
-import AiModelDropdown from "./AiModelDropdown";
-
+import ProjectionDropdown from "./projectionDropdown"
 import { playerProjection } from "../router/data";
-import Projection from "./Projection";
+
+
 
 const PlayerDashboard: React.FC = () => {
   // Player data
@@ -177,15 +177,11 @@ const PlayerDashboard: React.FC = () => {
           />
         </div>
       </div>
-              </div>
-            
-              <div className="col-md-1"></div>
-            <div className="col-md-3">
-
-            <AiModelDropdown selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
-
-
-            </div>
+          </div>
+          <div className="col-md-1"></div>
+          <div className="col-md-3">
+            <ProjectionDropdown projection={projection} setProjection={setProjection}/>
+          </div>
           </div>
           <div className="row">
             <div className="col-md-6">
