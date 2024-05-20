@@ -27,7 +27,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 key={`${player.player_id}-${index}`}
                 onClick={() => {
                     const params: PlayerStatsFromIdParams = {
-                        player_id: player.player_id
+                        player_id: [player.player_id]
                       };
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {
@@ -40,7 +40,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 }}
                 onMouseEnter={() => {
                     const params: PlayerStatsFromIdParams = {
-                        player_id: player.player_id
+                        player_id: [player.player_id]
                       };
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {

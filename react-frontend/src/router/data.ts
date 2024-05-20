@@ -50,7 +50,17 @@ export function playerOverview(params: PlayerOverviewParams): Promise<PlayerArra
 }
 
 export interface PlayerStatsFromIdParams {
-  player_id?: number;
+  player_id?: number[];
+  min_def_score?: number;
+  max_def_score?: number;
+  min_off_score_1?: number;
+  max_off_score_1?: number;
+  min_off_score_2?: number;
+  max_off_score_2?: number;
+  min_off_score_3?: number;
+  max_off_score_3?: number;
+  min_reb_score?: number; 
+  max_reb_score?: number;
 }
 
 export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<PlayerArray | undefined> {
@@ -72,8 +82,6 @@ export interface PlayerProjectionParams {
   player_id?: number[];
   projections?: string | undefined;
 }
-
-
 
 export function playerProjection(params: PlayerProjectionParams): Promise<ProjectedPlayer[] | undefined> {
   const url = 'projection'; // Endpoint relative to the BASE_URL

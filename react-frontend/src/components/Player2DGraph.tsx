@@ -186,7 +186,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               const selectedPlayer = datasetIndex === 0 ? players[index] : comparisonPlayers[index];
 
               const params: PlayerStatsFromIdParams = {
-                player_id: selectedPlayer.player_id
+                player_id: [selectedPlayer.player_id]
               };
               playerStatsFromId(params).then((data) => {
                 if (data !== undefined) {

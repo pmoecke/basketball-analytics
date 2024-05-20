@@ -12,6 +12,7 @@ interface SidebarFilterProps {
     setLeague_id: (value: number | undefined) => void;
     team_id: number | undefined;
     setTeam_id: (value: number | undefined) => void;
+    setPlayerFilterValues: ((value:[number[], number[]]) => void)
     isOpen: boolean;
     handleClose: () => void;
 }
@@ -23,6 +24,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
      setLeague_id,
      team_id,
      setTeam_id,
+     setPlayerFilterValues,
      isOpen,
      handleClose,
     })  => {
@@ -77,7 +79,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
             </div>
             <div className="pentagon">
                 <h1 className="fs-3 text-center white">Player Filter</h1>
-                <FilterGraph min={min} max={max} />
+                <FilterGraph min={min} max={max} setPlayerFilterValues={setPlayerFilterValues} handleClose={handleClose} />
             </div>
             <div className="advanced">
                 <button

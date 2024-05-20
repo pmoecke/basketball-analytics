@@ -31,8 +31,8 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 
   useEffect(() => {
     if (players.length === 2) {
-      const params1: PlayerStatsFromIdParams = { player_id: players[0].player_id };
-      const params2: PlayerStatsFromIdParams = { player_id: players[1].player_id };
+      const params1: PlayerStatsFromIdParams = { player_id: [players[0].player_id] };
+      const params2: PlayerStatsFromIdParams = { player_id: [players[1].player_id] };
 
       playerStatsFromId(params1).then((data) => {
         if (data !== undefined) {
@@ -50,8 +50,8 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 
   useEffect(() => {
     if (players.length === 2) {
-      const params1: PlayerStatsFromIdParams = { player_id: players[0].player_id };
-      const params2: PlayerStatsFromIdParams = { player_id: players[1].player_id };
+      const params1: PlayerStatsFromIdParams = { player_id: [players[0].player_id] };
+      const params2: PlayerStatsFromIdParams = { player_id: [players[1].player_id] };
 
       playerStatsFromId(params1).then((data) => {
         if (data !== undefined) {

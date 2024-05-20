@@ -11,6 +11,7 @@ import {
   playerOverview,
   PlayerOverviewParams,
   PlayerProjectionParams,
+  playerStatsFromId,
   PlayerStatsFromIdParams,
 } from "../router/data";
 
@@ -53,6 +54,7 @@ const PlayerDashboard: React.FC = () => {
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
   const [league_id, setLeague_id] = useState<number | undefined>(undefined);
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
+  const [playerFilterValues, setPlayerFilterValues] = useState<([number[], number[]]) | undefined>(undefined);
 
   // Projections
   const [projection, setProjection] = useState<string | undefined>("boxscore");
@@ -89,7 +91,7 @@ const PlayerDashboard: React.FC = () => {
         setPlayers(data);
       }
     });
-  }, [league_id, team_id, player_name]);
+  }, [league_id, team_id, player_name]); // add playerFilterValues here later when in same table
 
   // Handles ordering of the data
   useEffect(() => {
@@ -151,7 +153,7 @@ const PlayerDashboard: React.FC = () => {
   useEffect(() => {
     if (selectedPlayer != null) {
       const params: Partial<PlayerStatsFromIdParams> = {};
-      params.player_id = selectedPlayer!.player_id
+      params.player_id = [selectedPlayer!.player_id]
       getPlayerScore(params).then(data => {
         if (data !== undefined) {
           var score = data[0]
@@ -161,6 +163,53 @@ const PlayerDashboard: React.FC = () => {
       });
     }
   }, [selectedPlayer]);
+
+
+  useEffect(() => {
+    if (playerFilterValues != null) {
+      const params: Partial<PlayerStatsFromIdParams> = {};
+      // top, right, bottom right, left bottom, left
+      // off2, off3, reb, def, off1
+      console.log("playerFilterValues", playerFilterValues)
+      params.min_def_score = playerFilterValues[0][3]
+      params.max_def_score = playerFilterValues[1][3]
+      params.min_off_score_1 = playerFilterValues[0][4]
+      params.max_off_score_1 = playerFilterValues[1][4]
+      params.min_off_score_2 = playerFilterValues[0][0]
+      params.max_off_score_2 = playerFilterValues[1][0]
+      params.min_off_score_3 = playerFilterValues[0][1]
+      params.max_off_score_3 = playerFilterValues[1][1]
+      params.min_reb_score = playerFilterValues[0][2]
+      params.max_reb_score = playerFilterValues[1][2]
+      getPlayerScore(params).then(data => {
+        if (data !== undefined && data!.length !== 0) {
+          console.log(data)
+          const playerIds = data.map(player => player.player_id);
+          console.log("playerIds", playerIds);
+          
+          const params1: Partial<PlayerStatsFromIdParams> = { player_id: playerIds }; // Initialize params1 properly
+          
+          playerStatsFromId(params1).then(data => {
+            if (data !== undefined) {
+              const players = data;
+              console.log("players", players);
+              setPlayers(players);
+            }else {
+              console.log("here??????")
+              setPlayers([])
+            }
+          }).catch(error => {
+            console.error("Error fetching player stats:", error);
+          });
+        } else {
+          setPlayers([])
+        }
+      }).catch(error => {
+        console.error("Error fetching player scores:", error);
+      });
+    } 
+  }, [playerFilterValues]);
+  
 
 
   return (
@@ -270,6 +319,7 @@ const PlayerDashboard: React.FC = () => {
         setLeague_id={setLeague_id}
         team_id={team_id}
         setTeam_id={setTeam_id}
+        setPlayerFilterValues={setPlayerFilterValues}
         isOpen={isOpen}
         handleClose={() => setIsOpen(false)}
       />
