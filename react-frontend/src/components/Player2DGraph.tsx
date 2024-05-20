@@ -45,7 +45,8 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 
   var projectedPlayers = transformPlayerData(projectedPlayersData)
 
-  console.log("here", projectedPlayers)
+  console.log("projection", projectedPlayers)
+  console.log("players", players)
   var activePlayers = projectedPlayers;
 
   

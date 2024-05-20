@@ -66,13 +66,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                 </div>
               
                 <div className="d-flex align-items-center">
-                    
-                    {player.games_played < 5 && ( // change value according to ml model
-                        <TooltipOverlay tooltipText='Players with limited data are flagged; their stats may be inaccurate.' placement="left" showTitle={false}>
-                            <FaFlag className='mx-3' style={{ color: 'red' }} />
-                        </TooltipOverlay>
-                    )}
-
                     <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
                         <button 
                             onClick={(e) => {

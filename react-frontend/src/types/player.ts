@@ -45,7 +45,7 @@ export interface Player {
   jersey_number: number;
   left_drives: number;
   left_drives_made: number;
-  minutes: number;
+  minutes: string;
   net_rating: number;
   number_of_player_possessions: number;
   offensive_rebounds: number;

@@ -62,6 +62,13 @@ const PlayerDashboard: React.FC = () => {
   //Advanced Filtering
   const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
 
+  function totalMinutesPlayed(timeStr: string, games_played: number): number {
+    const [minutes, seconds] = timeStr.split(':').map(Number);
+    var avgMinutesPlayed = (minutes * 60 + seconds) / 60;
+    var totalMinutesPlayed = avgMinutesPlayed * games_played
+    return totalMinutesPlayed
+  }
+  
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerOverviewParams> = {};
@@ -71,7 +78,11 @@ const PlayerDashboard: React.FC = () => {
 
     playerOverview(params).then((data) => {
       if (data !== undefined) {
-        console.log(data);
+        
+        console.log("before", data);
+        data = data.filter(player => totalMinutesPlayed(player.minutes, player.games_played) >= 230);
+        console.log("after", data);
+      
         setPlayers(data);
       }
     });
@@ -134,7 +145,6 @@ const PlayerDashboard: React.FC = () => {
     console.log(comparisonPlayers);
   }, [comparisonPlayers]);
 
-  const [selectedModel, setSelectedModel] = useState("GPT-4");
 
   return (
     <div className="container m-3">
