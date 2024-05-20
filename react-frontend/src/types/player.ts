@@ -111,6 +111,15 @@ export interface ProjectedPlayer {
   y: number;
 }
 
+export const playerKeys2: (keyof Player)[] = [
+  "efficiency_score",
+  "player_id",
+  "player_name",
+  "offensive_rating",
+  "defensive_rating",
+  "games_played",
+]
+
 export const playerKeys: (keyof Player)[] = [
   "efficiency_score",
   "player_id",
