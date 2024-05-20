@@ -4,20 +4,19 @@ import { Player } from "../types/player";
 
 interface PlayerGraphProps {
     player: Player;
+    playerScore: any;
 }
 
-const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
+const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
     useEffect(() => {
         var player1_name = player.player_name
 
-        const multiply = 10;
-
         var player1_stats = [
-            player['2-pt_field_goals_attempted']*multiply,
-            player['2-pt_field_goals_made']*multiply,
-            player['3-pt_field_goals_attempted']*multiply,
-            player['3-pt_field_goals_made']*multiply,
-            player['assists']*multiply
+            playerScore.def_score,
+            playerScore.off_score_1,
+            playerScore.off_score_2,
+            playerScore.off_score_3,
+            playerScore.reb_score,
         ]
         var player1_color = 'rgb(153, 102, 255)'
         var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
@@ -27,7 +26,7 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
         var font_size = 16
 
         const data = {
-            labels: ["Drives %", "Free Throws %", "Isolation %", "Pick-n-Pops %", "Transition Attacks %"],
+            labels: ["def_score", "off_score_1", "off_score_2", "off_score_3", "reb_score"],
             datasets: [{
                 label: player1_name,
                 data: player1_stats,

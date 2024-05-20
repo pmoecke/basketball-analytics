@@ -7,9 +7,11 @@ import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 import PlayerSearch from "./PlayerSearch";
 import {
+  getPlayerScore,
   playerOverview,
   PlayerOverviewParams,
   PlayerProjectionParams,
+  PlayerStatsFromIdParams,
 } from "../router/data";
 
 import SidebarFilter from "./SidebarFilter";
@@ -37,6 +39,8 @@ const PlayerDashboard: React.FC = () => {
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [selectedPlayerScore, setSelectedPlayerScore] = useState<any | null>(null);
+
   // Compare player
   const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
@@ -46,7 +50,6 @@ const PlayerDashboard: React.FC = () => {
   );
 
   // Filtering
-  const [player_search, setPlayer_search] = useState("");
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
   const [league_id, setLeague_id] = useState<number | undefined>(undefined);
   const [team_id, setTeam_id] = useState<number | undefined>(undefined);
@@ -145,6 +148,20 @@ const PlayerDashboard: React.FC = () => {
     console.log(comparisonPlayers);
   }, [comparisonPlayers]);
 
+  useEffect(() => {
+    if (selectedPlayer != null) {
+      const params: Partial<PlayerStatsFromIdParams> = {};
+      params.player_id = selectedPlayer!.player_id
+      getPlayerScore(params).then(data => {
+        if (data !== undefined) {
+          var score = data[0]
+          //console.log("player score", score);
+          setSelectedPlayerScore(score);
+        }
+      });
+    }
+  }, [selectedPlayer]);
+
 
   return (
     <div className="container m-3">
@@ -226,11 +243,14 @@ const PlayerDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-      <PlayerModal
-        selectedPlayer={selectedPlayer}
-        showModal={showModal}
-        handleClose={() => setShowModal(false)}
-      />
+      {selectedPlayer && selectedPlayerScore && (
+        <PlayerModal
+          selectedPlayer={selectedPlayer}
+          selectedPlayerScore={selectedPlayerScore}
+          showModal={showModal}
+          handleClose={() => setShowModal(false)}
+        />
+      )}
       <ComparisonModal
         players={comparisonPlayers}
         showModal={showComparisonModal}

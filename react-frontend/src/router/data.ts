@@ -90,3 +90,19 @@ export function playerProjection(params: PlayerProjectionParams): Promise<Projec
       throw error;
     });
 }
+
+export function getPlayerScore(params: PlayerStatsFromIdParams): Promise<ProjectedPlayer[] | undefined> {
+  const url = 'scores'; // Endpoint relative to the BASE_URL
+  console.log(params)
+  return axiosClient.get<any>(url, { params })
+    .then(response => {
+      if (response.status !== 204) {
+        return response.data;
+      }
+      return undefined;
+    })
+    .catch(error => {
+      console.error('Error fetching player stats:', error);
+      throw error;
+    });
+}

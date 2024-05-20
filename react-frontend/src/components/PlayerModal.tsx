@@ -14,12 +14,14 @@ import { tooltipTexts } from "./tooltipTexts";
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
+  selectedPlayerScore: any;
   showModal: boolean;
   handleClose: () => void;
 }
 
 const PlayerModal: React.FC<PlayerModalProps> = ({
   selectedPlayer,
+  selectedPlayerScore,
   showModal,
   handleClose,
 }) => {
@@ -98,11 +100,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
         {selectedPlayer && (
           <div className="container">
             <div className="row">
-              <div className="col-md-8">
-                <PlayerGraph player={selectedPlayer} />
-              </div>
-              <div className="col-md-4">
-                Explain 5 Axes here
+              <div className="col-md-12">
+                <PlayerGraph player={selectedPlayer} playerScore={selectedPlayerScore} />
               </div>
               <div className="col-md-12">
                 <div className="table-container">
