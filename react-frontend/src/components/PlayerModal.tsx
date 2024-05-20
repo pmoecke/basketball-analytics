@@ -54,7 +54,6 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                 <th scope="row" className="text-center">{selectedPlayer.player_name}</th>
                 {filteredStats.map((stat) => (
                   <td key={stat} className="text-right">
-                    {console.log("here", selectedPlayer)}
                     {selectedPlayer[stat as keyof Player]}
                   </td>
                 ))}

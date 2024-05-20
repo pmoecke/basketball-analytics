@@ -251,11 +251,13 @@ const PlayerDashboard: React.FC = () => {
           handleClose={() => setShowModal(false)}
         />
       )}
+      {comparisonPlayers && (
       <ComparisonModal
         players={comparisonPlayers}
         showModal={showComparisonModal}
         handleClose={() => setShowComparisonModal(false)}
       />
+      )}
       <AdvancedFilterModal
         showModal={showAdvancedFilterModal}
         handleClose={() => setShowAdvancedFilterModal(false)}
