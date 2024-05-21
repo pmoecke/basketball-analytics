@@ -88,7 +88,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
   ];
 
   const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
-  
+
+  const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id)
 
   return (
     <Modal
@@ -109,11 +110,9 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                     togglePlayerForComparison(selectedPlayer);
                     handleClose();
                 }}
-                className={`btn ms-5 ${
-                    comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id) ? 'btn-danger' : 
-                    comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
+                className={`btn ms-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                 }`}
-                style={{ display: comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
+                style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
             >
                 {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id) ? 'Remove Compare' : 'Add Compare'}
             </button>
