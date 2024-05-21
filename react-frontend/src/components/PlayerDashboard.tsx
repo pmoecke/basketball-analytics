@@ -33,8 +33,7 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] =
-    useState<keyof Player>("efficiency_score");
+  const [orderValue, setOrderValue] = useState<keyof Player>("efficiency_score");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -266,6 +265,7 @@ const PlayerDashboard: React.FC = () => {
                 players={sortedPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}
+                orderValue={orderValue}
                 togglePlayerForComparison={togglePlayerForComparison}
                 comparisonPlayers={comparisonPlayers}
                 highlightedPlayer={highlightedPlayer}

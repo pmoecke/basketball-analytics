@@ -11,13 +11,29 @@ interface PlayerListProps {
     players: PlayerArray;
     setSelectedPlayer: (player: Player) => void;
     setShowModal: (show: boolean) => void;
+    orderValue: keyof Player;
     togglePlayerForComparison: (player: Player) => void;
     comparisonPlayers: PlayerArray;
     highlightedPlayer: Player | null;
     setHighlightedPlayer: (player: Player | null) => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers, highlightedPlayer, setHighlightedPlayer}) => {
+const PlayerList: React.FC<PlayerListProps> = ({ 
+    players, 
+    setSelectedPlayer, 
+    setShowModal, 
+    orderValue,
+    togglePlayerForComparison, 
+    comparisonPlayers, 
+    highlightedPlayer, 
+    setHighlightedPlayer
+}) => {
+
+    const toolTipMap : { [key: string]: string } = {
+        "efficiency_score" : "Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP",
+        "player_id" : "player_id "
+    }
+
     // Only show the first 100 players
     return (
         <ul className="player-list">
@@ -57,10 +73,14 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
             >
             
                 <div className='row-content'>
-                    <TooltipOverlay tooltipText='Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP' placement="left">
-                    {Math.round(player.efficiency_score).toFixed(2)} 
-                    </TooltipOverlay>
-                    : {player.player_name}
+                <TooltipOverlay tooltipText={toolTipMap[orderValue]} placement="left">
+                    {typeof player[orderValue] === 'number' 
+                    ? Number.isInteger(player[orderValue])
+                        ? player[orderValue]
+                        : (player[orderValue] as number).toFixed(2)
+                    : player[orderValue]}
+                </TooltipOverlay>
+                : {player.player_name}
                 </div>
               
                 <div className="d-flex align-items-center">
