@@ -91,6 +91,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
 
   const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id)
 
+  //console.log("selectedplayer", selectedPlayer)
+
   return (
     <Modal
       show={showModal}

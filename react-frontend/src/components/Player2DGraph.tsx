@@ -208,21 +208,27 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
           },
           onClick: (event, elements) => {
             if (elements.length > 0) {
-              const index = elements[0].index;
               const datasetIndex = elements[0].datasetIndex;
-              const selectedPlayer = datasetIndex === 0 ? players[index] : comparisonPlayers[index];
+              const dataIndex = elements[0].index;
+              const dataPoint = chartRef.current?.data.datasets[datasetIndex].data[dataIndex] as ScatterDataPoint;
 
-              const params: PlayerStatsFromIdParams = {
-                player_id: [selectedPlayer.player_id]
-              };
-              playerStatsFromId(params).then((data) => {
-                if (data !== undefined) {
-                  const player = data[0]
-                  setSelectedPlayer(player);
-                }
-              }); 
-              
-              setShowModal(true);
+              const selectedPlayerId = dataPoint.player_id;
+              const selectedPlayer = players.find(p => p.player_id === selectedPlayerId) || comparisonPlayers.find(p => p.player_id === selectedPlayerId);
+
+              if (selectedPlayer) {
+                const params: PlayerStatsFromIdParams = {
+                  player_id: [selectedPlayer.player_id]
+                };
+                playerStatsFromId(params).then((data) => {
+                  if (data !== undefined) {
+                    const player = data[0];
+                    console.log("selected query", player.player_name);
+                    setSelectedPlayer(player);
+                  }
+                }); 
+                
+                setShowModal(true);
+              }
             }
           },
           onHover: (event, chartElements) => {

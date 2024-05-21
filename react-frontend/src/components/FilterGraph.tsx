@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Chart, { ChartConfiguration, ChartType, PluginOptionsByType } from 'chart.js/auto';
+import Chart from 'chart.js/auto';
 import 'chartjs-plugin-dragdata';
 
 declare module 'chart.js' {
@@ -107,8 +107,8 @@ const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValu
                                     ctx.style.cursor = 'default';
                                 }
                                 if (max[index] <= min[index]) {
-                                    if (datasetIndex == 0) max[index] = min[index] + 1;
-                                    if (datasetIndex == 1) min[index] = max[index] - 1;
+                                    if (datasetIndex === 0) max[index] = min[index] + 1;
+                                    if (datasetIndex === 1) min[index] = max[index] - 1;
                                     filterChart?.update();
                                 }
                                 console.log(min, max);

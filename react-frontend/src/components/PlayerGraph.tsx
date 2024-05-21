@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Chart, { ChartConfiguration, ChartType } from 'chart.js/auto';
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { Player } from "../types/player";
 
 interface PlayerGraphProps {
@@ -96,7 +96,8 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
         const chartElement = document.getElementById('playerChart') as HTMLCanvasElement;
         if (chartElement) {
             Chart.defaults.font.size = font_size;
-            const playerChart = new Chart(chartElement, config);
+            // Create the new chart based on the config
+            new Chart(chartElement, config);
         }
     }, []);
 

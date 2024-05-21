@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import './SidebarFilter.css'; // Make sure to import the CSS
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Filter from './Filter'
 import FilterGraph from './FilterGraph'
 import PlayerSearch from './PlayerSearch';
 
 interface SidebarFilterProps {
-    showAdvancedFilterModal: boolean;
-    setShowAdvancedFilterModal: (value: boolean) => void;
     setPlayer_name: (name: string | undefined) => void; 
     league_id: number | undefined;
     setLeague_id: (value: number | undefined) => void;
@@ -20,8 +17,6 @@ interface SidebarFilterProps {
 }
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
-     showAdvancedFilterModal, 
-     setShowAdvancedFilterModal,
      setPlayer_name,
      league_id,
      setLeague_id,
@@ -51,7 +46,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
     <Modal
       show={isOpen}
       onHide={handleClose}
-      className={`filter-modal ${showAdvancedFilterModal ? 'blur-background' : ''}`}
+      className="filter-modal"
       size="lg"
     >   
       <Modal.Header closeButton className="filter-modal-header">

@@ -1,7 +1,6 @@
 // PlayerList.tsx
 import React from 'react';
 import { Player, PlayerArray } from '../types/player';
-import { FaFlag } from 'react-icons/fa';
 import TooltipOverlay from "./TooltipOverlay";
 import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
 // Styling
@@ -59,8 +58,7 @@ const PlayerList: React.FC<PlayerListProps> = ({
                       };
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {
-                          const player = data[0]
-                          console.log(player);  
+                          const player = data[0] 
                           setHighlightedPlayer(player);
                         }
                     })  
@@ -68,7 +66,7 @@ const PlayerList: React.FC<PlayerListProps> = ({
                 }}
                 onMouseLeave={() => {
                     setHighlightedPlayer(null);
-                    console.log(null); 
+                    // console.log(null); 
                 }}
             >
             

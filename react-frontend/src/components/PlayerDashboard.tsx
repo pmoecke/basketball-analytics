@@ -113,7 +113,7 @@ const PlayerDashboard: React.FC = () => {
     params.player_id = top100PlayerIds;
     params.projections = projection;
     console.log(top100PlayerIds)
-    if (top100PlayerIds.length != 0){
+    if (top100PlayerIds.length !== 0){
       // Update the state for player projections based on the filtered 100 sorted players
       playerProjection(params)
       .then(data => {
@@ -210,11 +210,7 @@ const PlayerDashboard: React.FC = () => {
   return (
     <div className="container m-3">
       <div
-        className={`row justify-content-evenly ${
-          showModal || showComparisonModal || showAdvancedFilterModal || isOpen
-            ? "blur-background"
-            : ""
-        }`}
+        className={`row `}
       >
         <div
           className="col-md-1"
@@ -316,8 +312,6 @@ const PlayerDashboard: React.FC = () => {
       />
 
       <SidebarFilter
-        showAdvancedFilterModal={showAdvancedFilterModal}
-        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
         setPlayer_name={setPlayer_name}
         league_id={league_id}
         setLeague_id={setLeague_id}
