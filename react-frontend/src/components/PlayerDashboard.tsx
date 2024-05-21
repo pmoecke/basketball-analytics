@@ -46,9 +46,7 @@ const PlayerDashboard: React.FC = () => {
   const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
   // Highlight player
-  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(
-    null
-  );
+  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(null);
 
   // Filtering
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
