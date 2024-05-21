@@ -208,7 +208,7 @@ const PlayerDashboard: React.FC = () => {
 
 
   return (
-    <div className="container m-3">
+    <div className="container my-4">
       <div
         className={`row justify-content-evenly ${
           showModal || showComparisonModal || showAdvancedFilterModal || isOpen
@@ -233,7 +233,7 @@ const PlayerDashboard: React.FC = () => {
           />
         </div>
         <div className="col-md-10">
-          <div className="row my-3">
+          <div className="row my-2">
             <div className="col-md-2">
               <h1 className="fs-3 white">Player Order</h1>
             </div> 
@@ -262,7 +262,7 @@ const PlayerDashboard: React.FC = () => {
               <ProjectionDropdown projection={projection} setProjection={setProjection}/>
             </div>
           </div>
-          <div className="row my-4">
+          <div className="row my-5">
             <div className="col-md-6">
               <PlayerList
                 players={sortedPlayers}
