@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { Player } from "../types/player";
 
@@ -8,22 +8,27 @@ interface PlayerGraphProps {
 }
 
 const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
-    useEffect(() => {
-        var player1_name = player.player_name
+    const chartRef = useRef<Chart | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-        var player1_stats = [
+    useEffect(() => {
+        const chartElement = canvasRef.current;
+        if (!chartElement) return;
+
+        const player1_name = player.player_name;
+        const player1_stats = [
             playerScore.off_score_2,
             playerScore.off_score_3,
             playerScore.reb_score,
             playerScore.def_score,
             playerScore.off_score_1,
-        ]
-        var player1_color = 'rgb(153, 102, 255)'
-        var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
+        ];
+        const player1_color = 'rgb(153, 102, 255)';
+        const player1_color_transparent = 'rgba(153, 102, 255, 0.1)';
 
-        var text_color = '#ddd'
-        var background_color = "#222222"
-        var font_size = 16
+        const text_color = '#ddd';
+        const background_color = "#222222";
+        const font_size = 16;
 
         const data = {
             labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
@@ -93,17 +98,23 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
             },
         };
 
-        const chartElement = document.getElementById('playerChart') as HTMLCanvasElement;
-        if (chartElement) {
-            Chart.defaults.font.size = font_size;
-            // Create the new chart based on the config
-            new Chart(chartElement, config);
+        if (chartRef.current) {
+            chartRef.current.destroy();
         }
-    }, []);
+
+        chartRef.current = new Chart(chartElement, config);
+
+        return () => {
+            if (chartRef.current) {
+                chartRef.current.destroy();
+                chartRef.current = null;
+            }
+        };
+    }, [player, playerScore]);
 
     return (
         <div className="chart-container">
-            <canvas id="playerChart"></canvas>
+            <canvas id="playerChart" ref={canvasRef}></canvas>
         </div>
     );
 };

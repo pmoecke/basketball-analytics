@@ -112,7 +112,7 @@ const PlayerDashboard: React.FC = () => {
     const params: Partial<PlayerProjectionParams> = {};
     params.player_id = top100PlayerIds;
     params.projections = projection;
-    console.log(top100PlayerIds)
+    console.log("top100PlayerIds", top100PlayerIds)
     if (top100PlayerIds.length !== 0){
       // Update the state for player projections based on the filtered 100 sorted players
       playerProjection(params)
@@ -210,7 +210,11 @@ const PlayerDashboard: React.FC = () => {
   return (
     <div className="container m-3">
       <div
-        className={`row `}
+        className={`row justify-content-evenly ${
+          showModal || showComparisonModal || showAdvancedFilterModal || isOpen
+            ? "blur-background"
+            : ""
+        }`}
       >
         <div
           className="col-md-1"

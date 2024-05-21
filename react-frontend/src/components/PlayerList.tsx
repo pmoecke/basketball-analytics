@@ -28,11 +28,6 @@ const PlayerList: React.FC<PlayerListProps> = ({
     setHighlightedPlayer
 }) => {
 
-    const toolTipMap : { [key: string]: string } = {
-        "efficiency_score" : "Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP",
-        "player_id" : "player_id "
-    }
-
     // Only show the first 100 players
     return (
         <ul className="player-list">
@@ -68,19 +63,13 @@ const PlayerList: React.FC<PlayerListProps> = ({
                     setHighlightedPlayer(null);
                     // console.log(null); 
                 }}
-            >
-            
+                >
                 <div className='row-content'>
-                <TooltipOverlay tooltipText={toolTipMap[orderValue]} placement="left">
-                    {typeof player[orderValue] === 'number' 
-                    ? Number.isInteger(player[orderValue])
-                        ? player[orderValue]
+                    {typeof player[orderValue] === 'number' ? Number.isInteger(player[orderValue]) ? player[orderValue]
                         : (player[orderValue] as number).toFixed(2)
-                    : player[orderValue]}
-                </TooltipOverlay>
-                : {player.player_name}
+                        : player[orderValue]}
+                    : {player.player_name}
                 </div>
-              
                 <div className="d-flex align-items-center">
                     <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
                         <button 
