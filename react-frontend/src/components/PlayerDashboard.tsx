@@ -5,7 +5,7 @@ import PlayerList from "./PlayerList";
 import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
-import PlayerSearch from "./PlayerSearch";
+
 import {
   getPlayerScore,
   playerOverview,
@@ -16,9 +16,7 @@ import {
 } from "../router/data";
 
 import SidebarFilter from "./SidebarFilter";
-import Order from "./Order";
 import Order2 from "./Order2";
-import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
@@ -235,29 +233,34 @@ const PlayerDashboard: React.FC = () => {
             showTitle={false}
           />
         </div>
-        <div className="player-search col-md-11">
-          <div className="row">
-            <div className="col-md-8 mb-3">
-              <div className="d-flex justify-content-between">
-        <div className="flex-grow-1 ">
-          <PlayerSearch setPlayer_name={setPlayer_name} />
-        </div>
-        <div>
-          <Order2
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            orderValue={orderValue}
-            setOrderValue={setOrderValue}
-          />
-        </div>
-      </div>
+        <div className="col-md-11">
+          <div className="row my-3">
+            <div className="col-md-3"> 
+              <Order2
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                orderValue={orderValue}
+                setOrderValue={setOrderValue}
+              />
+            </div>
+            <div className="col-md-3"/> 
+            <div className="col-md-2"> 
+              <div className="advanced">
+                  <button
+                  className="btn text-center btn-secondary w-100"
+                  onClick={() => {
+                      setShowAdvancedFilterModal(true);
+                  }}
+                  >
+                  Config Projection
+                  </button>
+              </div>
+            </div>
+            <div className="col-md-4"> 
+              <ProjectionDropdown projection={projection} setProjection={setProjection}/>
+            </div>
           </div>
-          <div className="col-md-1"></div>
-          <div className="col-md-3">
-            <ProjectionDropdown projection={projection} setProjection={setProjection}/>
-          </div>
-          </div>
-          <div className="row">
+          <div className="row my-4">
             <div className="col-md-6">
               <PlayerList
                 players={sortedPlayers}
@@ -313,6 +316,7 @@ const PlayerDashboard: React.FC = () => {
       <SidebarFilter
         showAdvancedFilterModal={showAdvancedFilterModal}
         setShowAdvancedFilterModal={setShowAdvancedFilterModal}
+        setPlayer_name={setPlayer_name}
         league_id={league_id}
         setLeague_id={setLeague_id}
         team_id={team_id}

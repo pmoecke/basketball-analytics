@@ -13,10 +13,10 @@ interface OrderProps {
 
 const Order2: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-left">
       <div className='me-0'>
         <select
-          className="form-select no-left-round-corners no-right-round-corners"
+          className="form-select no-right-round-corners"
           value={orderValue}
           onChange={(e) => setOrderValue(e.target.value as keyof Player)}
         >

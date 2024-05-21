@@ -4,10 +4,12 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Filter from './Filter'
 import FilterGraph from './FilterGraph'
+import PlayerSearch from './PlayerSearch';
 
 interface SidebarFilterProps {
     showAdvancedFilterModal: boolean;
     setShowAdvancedFilterModal: (value: boolean) => void;
+    setPlayer_name: (name: string | undefined) => void; 
     league_id: number | undefined;
     setLeague_id: (value: number | undefined) => void;
     team_id: number | undefined;
@@ -20,6 +22,7 @@ interface SidebarFilterProps {
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
      showAdvancedFilterModal, 
      setShowAdvancedFilterModal,
+     setPlayer_name,
      league_id,
      setLeague_id,
      team_id,
@@ -61,8 +64,9 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
         
             <div className="filter">
                 <div>
-                    <h1 className="fs-3 text-center white">General Filter</h1>
+                    <h1 className="fs-3 text-center white mb-3">General Filter</h1>
                 </div>
+                <PlayerSearch setPlayer_name={setPlayer_name} />
                 
                 <Filter
                 label="League"
@@ -80,17 +84,6 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
             <div className="pentagon">
                 <h1 className="fs-3 text-center white">Player Filter</h1>
                 <FilterGraph min={min} max={max} setPlayerFilterValues={setPlayerFilterValues} handleClose={handleClose} />
-            </div>
-            <div className="advanced">
-                <button
-                className="btn text-center btn-secondary w-100"
-                onClick={() => {
-                    setShowAdvancedFilterModal(true);
-                }}
-                //style={{ backgroundColor: 'grey' }}  // Replace colors as needed
-                >
-                Advanced Filter
-                </button>
             </div>
         
         </Modal.Body>
