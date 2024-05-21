@@ -2,7 +2,7 @@ import React from 'react';
 import { Player, playerKeys2 } from '../types/player';
 import { Button } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
-import './Order2.css';
+import './Order.css';
 
 interface OrderProps {
   sortOrder: string;
@@ -11,7 +11,7 @@ interface OrderProps {
   setOrderValue: (value: keyof Player) => void;
 }
 
-const Order2: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
+const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
   return (
     <div className="d-flex justify-content-left">
       <div className='me-0'>
@@ -36,4 +36,4 @@ const Order2: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, set
   );
 };
 
-export default Order2;
+export default Order;

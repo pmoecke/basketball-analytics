@@ -16,7 +16,7 @@ import {
 } from "../router/data";
 
 import SidebarFilter from "./SidebarFilter";
-import Order2 from "./Order2";
+import Order from "./Order";
 import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
@@ -235,7 +235,7 @@ const PlayerDashboard: React.FC = () => {
         <div className="col-md-11">
           <div className="row my-3">
             <div className="col-md-3"> 
-              <Order2
+              <Order
                 sortOrder={sortOrder}
                 setSortOrder={setSortOrder}
                 orderValue={orderValue}
