@@ -232,7 +232,7 @@ const PlayerDashboard: React.FC = () => {
             showTitle={false}
           />
         </div>
-        <div className="col-md-11">
+        <div className="col-md-10">
           <div className="row my-3">
             <div className="col-md-2">
               <h1 className="fs-3 white">Player Order</h1>
@@ -295,6 +295,7 @@ const PlayerDashboard: React.FC = () => {
             />
           </div>
         </div>
+        <div className="col-md-1"/>
       </div>
       {selectedPlayer && selectedPlayerScore && (
         <PlayerModal
