@@ -76,7 +76,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                             }`}
                             style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
                         >
-                            {comparisonPlayers.find(p => p.player_id === player.player_id) ? '-' : '+'}
+                            {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove Compare' : 'Add Compare'}
                         </button>
                     </TooltipOverlay>
                  </div>

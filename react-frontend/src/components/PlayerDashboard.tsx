@@ -297,6 +297,8 @@ const PlayerDashboard: React.FC = () => {
         <PlayerModal
           selectedPlayer={selectedPlayer}
           selectedPlayerScore={selectedPlayerScore}
+          comparisonPlayers={comparisonPlayers}
+          togglePlayerForComparison={togglePlayerForComparison}
           showModal={showModal}
           handleClose={() => setShowModal(false)}
         />
