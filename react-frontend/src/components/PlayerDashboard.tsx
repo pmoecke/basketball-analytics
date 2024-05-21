@@ -234,6 +234,9 @@ const PlayerDashboard: React.FC = () => {
         </div>
         <div className="col-md-11">
           <div className="row my-3">
+            <div className="col-md-2">
+              <h1 className="fs-3 white">Player Order</h1>
+            </div> 
             <div className="col-md-3"> 
               <Order
                 sortOrder={sortOrder}
@@ -242,7 +245,7 @@ const PlayerDashboard: React.FC = () => {
                 setOrderValue={setOrderValue}
               />
             </div>
-            <div className="col-md-3"/> 
+            <div className="col-md-1"/> 
             <div className="col-md-2"> 
               <div className="advanced">
                   <button
