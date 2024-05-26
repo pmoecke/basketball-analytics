@@ -258,7 +258,7 @@ const PlayerDashboard: React.FC = () => {
                   </button>
               </div>
             </div>
-            <div className="col-md-4"> 
+            <div className="col-md-4">
               <ProjectionDropdown projection={projection} setProjection={setProjection}/>
             </div>
           </div>

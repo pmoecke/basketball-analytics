@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { Player } from "../types/player";
+import "./PlayerGraph.css"
 
 interface PlayerGraphProps {
     player: Player;
@@ -94,7 +95,7 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
                     },
                 },
                 maintainAspectRatio: true, // Ensure the aspect ratio is maintained
-                aspectRatio: 1.4, //Width is X times height
+                aspectRatio: 1.4, // Width is 1.4 times the height
             },
         };
 

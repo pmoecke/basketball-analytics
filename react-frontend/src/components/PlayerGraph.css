@@ -1,0 +1,10 @@
+.chart-container {
+    width: 100%;  /* Makes the container take full width of the parent */
+    max-width: 75vb; /* Sets the maximum width of the chart container */
+    margin: auto; /* Centers the chart container */
+}
+
+#playerChart {
+    width: 100% !important;
+    height: auto !important;
+}
