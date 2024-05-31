@@ -162,24 +162,6 @@ def insert_scores_data(con: sqlite3.Connection, scores_file: str):
             print(f"Player {player_name} not found in the database")
             continue
 
-    # Insert data from df into the Scores table
-    for index, row in tqdm(df.iterrows()):
-        player_name = row['player_name'].replace("'", "''")
-        season = row['season'].replace("'", "''")
-        pid = cur.execute(f"SELECT player_id FROM Player WHERE name = '{player_name}'").fetchone()
-        if pid is not None:
-            pid = pid[0]
-            cur.execute(f"INSERT INTO Scores (player_id, season) VALUES ({pid}, '{season}');")
-            cur.execute(f"UPDATE Scores SET off_score_1 = {row['off_score_1']}, off_score_2 = {row['off_score_2']}, \
-                        player_name = '{player_name}', off_score_3 = {row['off_score_3']}, def_score = {row['def_score']}, \
-                        reb_score = {row['reb_score']} WHERE player_id = {pid} AND season = '{season}';")
-        else:
-            print(f"Player {player_name} not found in the database")
-            continue
-    # Update database such that entries are sorted after pid and season
-    cur.execute("CREATE TABLE Scores_temp AS SELECT * FROM Scores ORDER BY player_id, season;")
-    cur.execute("DROP TABLE Scores;")
-    cur.execute("ALTER TABLE Scores_temp RENAME TO Scores;")
 
 def column_exists(cursor, table_name, column_name):
     cursor.execute(f"PRAGMA table_info({table_name})")
