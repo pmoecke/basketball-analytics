@@ -34,10 +34,9 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
         <div className="player-info col-md-4 box"></div>
       )}
 
-      
-
+    
       <button
-        className="btn text-center btn-primary col-md-3 box"
+        className="btn text-center btn-primary col-md-2 box"
         onClick={() => {
           setShowComparisonModal(true);
         }}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Chart, { ChartConfiguration, ChartType } from "chart.js/auto";
+import Chart, { ChartConfiguration } from "chart.js/auto";
 import { Player } from "../types/player";
 
 interface ComparisonGraphProps {
@@ -134,9 +134,10 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
     ) as HTMLCanvasElement;
     if (chartElement) {
       Chart.defaults.font.size = font_size;
-      const playerChart = new Chart(chartElement, config);
+      // Create the new chart based on the config
+      new Chart(chartElement, config);
     }
-  }, []);
+  }, [player1, player2, playerScore1, playerScore2]);
 
   return (
     <div className="chart-container">

@@ -5,7 +5,7 @@ import PlayerList from "./PlayerList";
 import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
-import PlayerSearch from "./PlayerSearch";
+
 import {
   getPlayerScore,
   playerOverview,
@@ -17,8 +17,6 @@ import {
 
 import SidebarFilter from "./SidebarFilter";
 import Order from "./Order";
-import Order2 from "./Order2";
-import FilterGraph from "./FilterGraph";
 import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
@@ -35,8 +33,7 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] =
-    useState<keyof Player>("efficiency_score");
+  const [orderValue, setOrderValue] = useState<keyof Player>("efficiency_score");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -46,9 +43,7 @@ const PlayerDashboard: React.FC = () => {
   const [showComparisonModal, setShowComparisonModal] = useState(false);
   const [comparisonPlayers, setComparisonPlayers] = useState<Player[]>([]);
   // Highlight player
-  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(
-    null
-  );
+  const [highlightedPlayer, setHighlightedPlayer] = useState<Player | null>(null);
 
   // Filtering
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
@@ -117,8 +112,8 @@ const PlayerDashboard: React.FC = () => {
     const params: Partial<PlayerProjectionParams> = {};
     params.player_id = top100PlayerIds;
     params.projections = projection;
-    console.log(top100PlayerIds)
-    if (top100PlayerIds.length != 0){
+    console.log("top100PlayerIds", top100PlayerIds)
+    if (top100PlayerIds.length !== 0){
       // Update the state for player projections based on the filtered 100 sorted players
       playerProjection(params)
       .then(data => {
@@ -213,7 +208,7 @@ const PlayerDashboard: React.FC = () => {
 
 
   return (
-    <div className="container m-3">
+    <div className="container my-4">
       <div
         className={`row justify-content-evenly ${
           showModal || showComparisonModal || showAdvancedFilterModal || isOpen
@@ -237,34 +232,43 @@ const PlayerDashboard: React.FC = () => {
             showTitle={false}
           />
         </div>
-        <div className="player-search col-md-11">
-          <div className="row">
-            <div className="col-md-8 mb-3">
-              <div className="d-flex justify-content-between">
-        <div className="flex-grow-1 ">
-          <PlayerSearch setPlayer_name={setPlayer_name} />
-        </div>
-        <div>
-          <Order2
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            orderValue={orderValue}
-            setOrderValue={setOrderValue}
-          />
-        </div>
-      </div>
+        <div className="col-md-10">
+          <div className="row my-2">
+            <div className="col-md-2">
+              <h1 className="fs-3 white">Player Order</h1>
+            </div> 
+            <div className="col-md-3"> 
+              <Order
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                orderValue={orderValue}
+                setOrderValue={setOrderValue}
+              />
+            </div>
+            <div className="col-md-1"/> 
+            <div className="col-md-2"> 
+              <div className="advanced">
+                  <button
+                  className="btn text-center btn-secondary w-100"
+                  onClick={() => {
+                      setShowAdvancedFilterModal(true);
+                  }}
+                  >
+                  Config Projection
+                  </button>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <ProjectionDropdown projection={projection} setProjection={setProjection}/>
+            </div>
           </div>
-          <div className="col-md-1"></div>
-          <div className="col-md-3">
-            <ProjectionDropdown projection={projection} setProjection={setProjection}/>
-          </div>
-          </div>
-          <div className="row">
+          <div className="row my-5">
             <div className="col-md-6">
               <PlayerList
                 players={sortedPlayers}
                 setSelectedPlayer={setSelectedPlayer}
                 setShowModal={setShowModal}
+                orderValue={orderValue}
                 togglePlayerForComparison={togglePlayerForComparison}
                 comparisonPlayers={comparisonPlayers}
                 highlightedPlayer={highlightedPlayer}
@@ -291,11 +295,14 @@ const PlayerDashboard: React.FC = () => {
             />
           </div>
         </div>
+        <div className="col-md-1"/>
       </div>
       {selectedPlayer && selectedPlayerScore && (
         <PlayerModal
           selectedPlayer={selectedPlayer}
           selectedPlayerScore={selectedPlayerScore}
+          comparisonPlayers={comparisonPlayers}
+          togglePlayerForComparison={togglePlayerForComparison}
           showModal={showModal}
           handleClose={() => setShowModal(false)}
         />
@@ -313,8 +320,7 @@ const PlayerDashboard: React.FC = () => {
       />
 
       <SidebarFilter
-        showAdvancedFilterModal={showAdvancedFilterModal}
-        setShowAdvancedFilterModal={setShowAdvancedFilterModal}
+        setPlayer_name={setPlayer_name}
         league_id={league_id}
         setLeague_id={setLeague_id}
         team_id={team_id}

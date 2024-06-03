@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Player } from "../types/player";
+import { Player, PlayerArray } from "../types/player";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import PlayerGraph from "./PlayerGraph";
 import TooltipOverlay from "./TooltipOverlay";
 import "./PlayerModal.css";
@@ -16,6 +14,8 @@ import { FaInfoCircle } from "react-icons/fa";
 interface PlayerModalProps {
   selectedPlayer: Player | null;
   selectedPlayerScore: any;
+  comparisonPlayers: PlayerArray;
+  togglePlayerForComparison: (player: Player) => void;
   showModal: boolean;
   handleClose: () => void;
 }
@@ -23,6 +23,8 @@ interface PlayerModalProps {
 const PlayerModal: React.FC<PlayerModalProps> = ({
   selectedPlayer,
   selectedPlayerScore,
+  comparisonPlayers,
+  togglePlayerForComparison,
   showModal,
   handleClose,
 }) => {
@@ -86,7 +88,10 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
   ];
 
   const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
-  
+
+  const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id)
+
+  //console.log("selectedplayer", selectedPlayer)
 
   return (
     <Modal
@@ -99,6 +104,22 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
         <Modal.Title>
           {selectedPlayer ? selectedPlayer.player_name : "Player Details"}
         </Modal.Title>
+        {selectedPlayer && 
+        <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
+            <button 
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    togglePlayerForComparison(selectedPlayer);
+                    handleClose();
+                }}
+                className={`btn ms-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
+                }`}
+                style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
+            >
+                {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id) ? 'Remove Compare' : 'Add Compare'}
+            </button>
+        </TooltipOverlay>
+        }
       </Modal.Header>
       <Modal.Body className="player-modal-body">
         {selectedPlayer && (
@@ -106,7 +127,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
             <div className="row">
               <div className="col-md-2"/>
               <div className="col-md-8">
-                <PlayerGraph player={selectedPlayer} playerScore={selectedPlayerScore} />
+               <PlayerGraph player={selectedPlayer} playerScore={selectedPlayerScore} />
               </div>
               <div className="col-md-2">
                 <TooltipOverlay
@@ -117,18 +138,22 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                   <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>  
               </div>
-              <div className="col-md-12">
-                <div className="table-container">
-                  <Nav variant="tabs" activeKey={selectedCategory} onSelect={handleSelect} className="mb-0">
-                    {categories.map(category => (
-                      <Nav.Item key={category}>
-                        <Nav.Link eventKey={category}>{categoryNames[category]}</Nav.Link>
-                      </Nav.Item>
-                    ))}
-                  </Nav>
-                  {renderTable(selectedCategory)}
+            </div>
+            
+            
+            <div className="row">
+                <div className="col-md-12">
+                  <div className="table-container">
+                    <Nav variant="tabs" activeKey={selectedCategory} onSelect={handleSelect} className="mb-0">
+                      {categories.map(category => (
+                        <Nav.Item key={category}>
+                          <Nav.Link eventKey={category}>{categoryNames[category]}</Nav.Link>
+                        </Nav.Item>
+                      ))}
+                    </Nav>
+                    {renderTable(selectedCategory)}
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         )}
