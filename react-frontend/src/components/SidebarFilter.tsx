@@ -23,10 +23,21 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
      handleClose,
     })  => {
 
+  const [tempPlayerName, setTempPlayerName] = useState<string | undefined>(undefined);
+  const [tempSeason, setTempSeason] = useState<string | undefined>(undefined);
+  const [tempPlayerFilterValues, setTempPlayerFilterValues] = useState<[number[], number[]]>([[0, 0, 0, 0, 0], [100, 100, 100, 100, 100]]);
+  
+  const handleApplyFilters = () => {
+    setPlayer_name(tempPlayerName);
+    setSeason(tempSeason);
+    setPlayerFilterValues(tempPlayerFilterValues);
+    console.log("Filters Applied:", { player_name: tempPlayerName, season: tempSeason, playerFilterValues: tempPlayerFilterValues });
+  };
+
   const seasonOptions = [
-    { value: "2020-2021", label: "2020-2021" },
-    { value: "2021-2022", label: "2021-2022" },
-    { value: "2022-2023", label: "2022-2023" },
+    { value: '2020-2021', label: '2020-2021' },
+    { value: '2021-2022', label: '2021-2022' },
+    { value: '2022-2023', label: '2022-2023' },
   ];
 
   // Filter graph values
@@ -51,18 +62,26 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                 <div>
                     <h1 className="fs-3 text-center white mb-3">General Filter</h1>
                 </div>
-                <PlayerSearch setPlayer_name={setPlayer_name} />
+                <PlayerSearch 
+                  setPlayer_name={setTempPlayerName} 
+                />
                 
                 <Filter
-                label="Season"
-                value={season}
-                onChange={setSeason}
-                options={seasonOptions}
+                  label="Season"
+                  value={tempSeason}
+                  onChange={setTempSeason}
+                  options={seasonOptions}
                 />
             </div>
             <div className="pentagon">
                 <h1 className="fs-3 text-center white">Player Filter</h1>
-                <FilterGraph min={min} max={max} setPlayerFilterValues={setPlayerFilterValues} handleClose={handleClose} />
+                <FilterGraph 
+                  min={min} 
+                  max={max} 
+                  setTempPlayerFilterValues={setTempPlayerFilterValues} 
+                  handleApplyFilters={handleApplyFilters}
+                  handleClose={handleClose} 
+                />
             </div>
         </Modal.Body>
         <Modal.Footer className="filter-modal-footer">

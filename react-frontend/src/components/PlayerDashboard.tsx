@@ -24,8 +24,6 @@ import TooltipOverlay from "./TooltipOverlay";
 import ProjectionDropdown from "./projectionDropdown"
 import { playerProjection } from "../router/data";
 
-
-
 const PlayerDashboard: React.FC = () => {
   // Player data
   const [players, setPlayers] = useState<PlayerArray>([]);

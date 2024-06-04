@@ -12,14 +12,15 @@ declare module 'chart.js' {
 
 let filterChart : Chart | null = null;
 
-interface PlayerFilterProps {
+interface FilterGraphProps {
   min: number[];
   max: number[];
-  setPlayerFilterValues: ((value: [number[], number[]]) => void)
-  handleClose: any;
+  setTempPlayerFilterValues: ((value: [number[], number[]]) => void)
+  handleApplyFilters: () => void
+  handleClose: () => void
 }
 
-const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValues, handleClose}) => {
+const FilterGraph: React.FC<FilterGraphProps> = ({min, max, setTempPlayerFilterValues, handleApplyFilters, handleClose}) => {
     useEffect(() => {
         const ctx = document.getElementById('filterChart') as HTMLCanvasElement;
         if (ctx) {
@@ -137,7 +138,8 @@ const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValu
                 onClick={() => {
                     // top, right, bottom right, left bottom, left
                     // off2, off3, reb, def, off1
-                    setPlayerFilterValues([min, max])
+                    setTempPlayerFilterValues([min, max])
+                    handleApplyFilters()
                     handleClose()
                 }}>
                 Apply Filter
