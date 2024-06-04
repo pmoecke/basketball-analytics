@@ -3,18 +3,19 @@ import React, { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 
 interface PlayerSearchProps {
-    setPlayer_name: (name: string | undefined) => void;
+    tempPlayerName: string | undefined;
+    setTempPlayerName: (name: string | undefined) => void;
 }
 
-const PlayerSearch: React.FC<PlayerSearchProps> = ({ setPlayer_name }) => {
-    const [searchTerm, setSearchTerm] = useState("");
+const PlayerSearch: React.FC<PlayerSearchProps> = ({ tempPlayerName, setTempPlayerName }) => {
+    const [searchTerm, setSearchTerm] = useState(tempPlayerName);
 
     const debouncedSearch = useCallback(debounce(async (playerName: string) => {
         if (playerName.trim()) {
-            setPlayer_name(playerName)
+            setTempPlayerName(playerName)
         }
         else {
-            setPlayer_name(undefined)
+            setTempPlayerName(undefined)
         }
     }, 300), []);
 

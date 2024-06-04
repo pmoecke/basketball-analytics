@@ -63,7 +63,8 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                     <h1 className="fs-3 text-center white mb-3">General Filter</h1>
                 </div>
                 <PlayerSearch 
-                  setPlayer_name={setTempPlayerName} 
+                  tempPlayerName={tempPlayerName}
+                  setTempPlayerName={setTempPlayerName} 
                 />
                 
                 <Filter
