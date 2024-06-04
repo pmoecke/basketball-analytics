@@ -7,10 +7,8 @@ import PlayerSearch from './PlayerSearch';
 
 interface SidebarFilterProps {
     setPlayer_name: (name: string | undefined) => void; 
-    league_id: number | undefined;
-    setLeague_id: (value: number | undefined) => void;
-    team_id: number | undefined;
-    setTeam_id: (value: number | undefined) => void;
+    season: string | undefined;
+    setSeason: (value: string | undefined) => void;
     setPlayerFilterValues: ((value:[number[], number[]]) => void)
     isOpen: boolean;
     handleClose: () => void;
@@ -18,23 +16,17 @@ interface SidebarFilterProps {
 
 const SidebarFilter: React.FC<SidebarFilterProps> = ({
      setPlayer_name,
-     league_id,
-     setLeague_id,
-     team_id,
-     setTeam_id,
+     season,
+     setSeason,
      setPlayerFilterValues,
      isOpen,
      handleClose,
     })  => {
 
-  const leagueOptions = [
-    { value: 1, label: "Basket League" },
-    { value: 2, label: "LEB Oro" },
-  ];
-
-  const teamOptions = [
-    { value: 1, label: "Larisa BC" },
-    { value: 4, label: "Olympiacos BC" },
+  const seasonOptions = [
+    { value: "2020-2021", label: "2020-2021" },
+    { value: "2021-2022", label: "2021-2022" },
+    { value: "2022-2023", label: "2022-2023" },
   ];
 
   // Filter graph values
@@ -55,8 +47,6 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="filter-modal-body">
-
-        
             <div className="filter">
                 <div>
                     <h1 className="fs-3 text-center white mb-3">General Filter</h1>
@@ -64,26 +54,18 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                 <PlayerSearch setPlayer_name={setPlayer_name} />
                 
                 <Filter
-                label="League"
-                value={league_id}
-                onChange={setLeague_id}
-                options={leagueOptions}
-                />
-                <Filter
-                label="Team"
-                value={team_id}
-                onChange={setTeam_id}
-                options={teamOptions}
+                label="Season"
+                value={season}
+                onChange={setSeason}
+                options={seasonOptions}
                 />
             </div>
             <div className="pentagon">
                 <h1 className="fs-3 text-center white">Player Filter</h1>
                 <FilterGraph min={min} max={max} setPlayerFilterValues={setPlayerFilterValues} handleClose={handleClose} />
             </div>
-        
         </Modal.Body>
         <Modal.Footer className="filter-modal-footer">
-        
       </Modal.Footer>
     </Modal> 
   );

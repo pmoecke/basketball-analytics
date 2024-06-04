@@ -5,11 +5,19 @@ import os
 import sqlite3
 
 class StatsQuerySchema(Schema):
-    team_id = fields.List(fields.Int(), required=False)
-    league_id = fields.List(fields.Int(), required=False)
-    point_min = fields.Int(required=False)
-    point_max = fields.Int(required=False)
+    #player_id = fields.List(fields.Int(), required=False)
     player_name = fields.String(required=False)
+    season = fields.String(required=False)
+    min_def_score = fields.Float(required=False)
+    max_def_score = fields.Float(required=False)
+    min_off_score_1 = fields.Float(required=False)
+    max_off_score_1 = fields.Float(required=False)
+    min_off_score_2 = fields.Float(required=False)
+    max_off_score_2 = fields.Float(required=False)
+    min_off_score_3 = fields.Float(required=False)
+    max_off_score_3 = fields.Float(required=False)
+    min_reb_score = fields.Float(required=False)
+    max_reb_score = fields.Float(required=False)
 
 schema = StatsQuerySchema()
 
@@ -18,16 +26,7 @@ class OverviewStats(Resource):
         con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
         cur = con.cursor()
         # Validate arguments
-        arg_dict = request.args.to_dict(flat=False)
-        # Make sure we have lists where we need lists and single elements
-        # otherwise
-        if "point_min" in arg_dict:
-            arg_dict["point_min"] = arg_dict["point_min"][0]
-        if "point_max" in arg_dict:
-            arg_dict["point_max"] = arg_dict["point_max"][0]
-        if "player_name" in arg_dict:
-            arg_dict["player_name"] = "%" + arg_dict["player_name"][0] + "%"
-        print(arg_dict)
+        arg_dict = request.args.to_dict(flat=True)
         err = schema.validate(arg_dict)
         if err:
             abort(400, str(err))
@@ -35,39 +34,54 @@ class OverviewStats(Resource):
 
         query = """
             SELECT 
-            p.player_id as 'player_id',
-            p.name as 'player_name',
-            s.effective_field_goal_percentage,
-            s.offensive_rating, 
-            s.defensive_rating,
-            s.games_played,
-            s.minutes,
-            (s.points + s.rebounds + s.assists + s.steals + s.blocks - (s.field_goals_attempted - s.field_goals_made + s.free_throws_attempted - s.free_throws_made + s.turnovers)) as 'efficiency_score'
-            FROM Stats s
-            INNER JOIN Player p ON p.player_id = s.player_id
-            INNER JOIN League l ON l.league_id = s.league_id
-            INNER JOIN Team t ON t.team_id = s.team_id
-            WHERE 1 = 1
+            player_id,
+            player_name,
+            season,
+            (points + rebounds + assists + steals + blocks - (field_goals_attempted - field_goals_made + free_throws_attempted - free_throws_made + turnovers)) as 'efficiency_score'
+            FROM Stats
         """
         
-        params = {}
-        if "league_id" in args and -1 not in args["league_id"]:
-            query += "AND l.league_id in (:lids) "
-            params["lids"] = ', '.join([str(id) for id in args['league_id']])
-        if "point_min" in args:
-            query += "AND points >= :point_min "
-            params["point_min"] = args["point_min"]
-        if "point_max" in args:
-            query += "AND points <= :point_max "
-            params["point_max"] = args["point_max"]
-        if "team_id" in args and -1 not in args["team_id"]:
-            query += "AND t.team_id in (:tids) "
-            params["tids"] = ', '.join([str(id) for id in args['team_id']])
+        conditions = []
+        
         if "player_name" in args:
-            query += "AND p.name LIKE :player_name "
-            params["player_name"] = args["player_name"]
+            conditions.append("LOWER(player_name) LIKE LOWER(:player_name)")
+            args["player_name"] = "%" + args["player_name"].lower() + "%"
+        if "season" in args:
+            conditions.append("season = :season")
+        
+        # Handle range filters for scores
+        if "min_def_score" in args:
+            conditions.append("def_score >= :min_def_score")
+        if "max_def_score" in args:
+            conditions.append("def_score <= :max_def_score")
+        if "min_off_score_1" in args:
+            conditions.append("off_score_1 >= :min_off_score_1")
+        if "max_off_score_1" in args:
+            conditions.append("off_score_1 <= :max_off_score_1")
+        if "min_off_score_2" in args:
+            conditions.append("off_score_2 >= :min_off_score_2")
+        if "max_off_score_2" in args:
+            conditions.append("off_score_2 <= :max_off_score_2")
+        if "min_off_score_3" in args:
+            conditions.append("off_score_3 >= :min_off_score_3")
+        if "max_off_score_3" in args:
+            conditions.append("off_score_3 <= :max_off_score_3")
+        if "min_reb_score" in args:
+            conditions.append("reb_score >= :min_reb_score")
+        if "max_reb_score" in args:
+            conditions.append("reb_score <= :max_reb_score")
+        
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+        
+        query += ";"
 
-        cur.execute(query, params)
-        result = [dict(zip([col[0] for col in cur.description], row)) for row in cur.fetchall()]
+        # Debug print statement to see the final query and arguments
+        print("SQL Query:", query)
+        print("Arguments:", args)
+        cur.execute(query, args)
+
+        zipped = [zip(cur.description, row) for row in cur.fetchall()]
+        res = [{col: value for (col, *_), value in row} for row in zipped]
         con.close()
-        return result
+        return res

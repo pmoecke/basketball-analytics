@@ -31,7 +31,14 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
 
   return (
     <div className="d-flex justify-content-end align-items-center w-100">
-    <select
+      <TooltipOverlay
+          tooltipText={projectionToolTips[projection!]}
+          placement="left"
+          showTitle={false}
+        >
+        <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+      </TooltipOverlay>
+      <select
         className="form-select"
         value={projection}
         onChange={(e) => setProjection(e.target.value)}
@@ -39,14 +46,7 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
         {Object.entries(projectionOptions).map(([label, value]) => (
             <option key={value} value={value}>{label}</option>
         ))}
-        </select>
-      <TooltipOverlay
-        tooltipText={projectionToolTips[projection!]}
-        placement="left"
-        showTitle={false}
-      >
-        <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-      </TooltipOverlay>
+      </select>
     </div>
   );
 };

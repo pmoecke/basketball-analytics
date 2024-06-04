@@ -1,16 +1,14 @@
 import { PlayerArray, ProjectedPlayer } from '../types/player';
 import axiosClient from './apiClient'
 
-export interface PlayerStatsParams {
-    league_id?: number;
-    team_id?: number;
-    player_name?: string;
-  }
-  
-export function playerStats(params: PlayerStatsParams): Promise<PlayerArray | undefined> {
-  const url = `stats`; // Endpoint relative to the BASE_URL
-  console.log(params)
-  // Use axiosClient with the existing parameters object (url, { params })
+export interface PlayerStatsFromIdParams {
+  player_id?: number[];
+}
+
+// Gets all the player stats for multiple players
+export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<PlayerArray | undefined> {
+  const url = 'stats'; // Endpoint relative to the BASE_URL
+  console.log("Params being sent to stats: ", params)
   return axiosClient.get<PlayerArray>(url, { params })
     .then(response => {
       if (response.status !== 204) {
@@ -21,36 +19,12 @@ export function playerStats(params: PlayerStatsParams): Promise<PlayerArray | un
     .catch(error => {
       console.error('Error fetching player stats:', error);
       throw error;
-    }
-  );
+    });
 }
 
 export interface PlayerOverviewParams {
-  league_id?: number;
-  team_id?: number;
   player_name?: string;
-}
-
-export function playerOverview(params: PlayerOverviewParams): Promise<PlayerArray | undefined> {
-  const url = `overview-stats`; // Endpoint relative to the BASE_URL
-  console.log(params)
-  // Use axiosClient with the existing parameters object (url, { params })
-  return axiosClient.get<PlayerArray>(url, { params })
-    .then(response => {
-      if (response.status !== 204) {
-        return response.data;
-      }
-      return undefined;
-    })
-    .catch(error => {
-      console.error('Error fetching player stats:', error);
-      throw error;
-    }
-  );
-}
-
-export interface PlayerStatsFromIdParams {
-  player_id?: number[];
+  season?: string;
   min_def_score?: number;
   max_def_score?: number;
   min_off_score_1?: number;
@@ -63,8 +37,11 @@ export interface PlayerStatsFromIdParams {
   max_reb_score?: number;
 }
 
-export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<PlayerArray | undefined> {
-  const url = 'stats'; // Endpoint relative to the BASE_URL
+// Get the overview stats for multiple players
+export function playerOverview(params: PlayerOverviewParams): Promise<PlayerArray | undefined> {
+  const url = `overview-stats`; // Endpoint relative to the BASE_URL
+  console.log("Params being sent to overview-stats: ", params)
+  // Use axiosClient with the existing parameters object (url, { params })
   return axiosClient.get<PlayerArray>(url, { params })
     .then(response => {
       if (response.status !== 204) {
@@ -75,7 +52,8 @@ export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<Play
     .catch(error => {
       console.error('Error fetching player stats:', error);
       throw error;
-    });
+    }
+  );
 }
 
 export interface PlayerProjectionParams {
@@ -83,25 +61,10 @@ export interface PlayerProjectionParams {
   projections?: string | undefined;
 }
 
+// Get the projections for multiple players
 export function playerProjection(params: PlayerProjectionParams): Promise<ProjectedPlayer[] | undefined> {
   const url = 'projection'; // Endpoint relative to the BASE_URL
-  console.log(params)
-  return axiosClient.get<any>(url, { params })
-    .then(response => {
-      if (response.status !== 204) {
-        return response.data;
-      }
-      return undefined;
-    })
-    .catch(error => {
-      console.error('Error fetching player stats:', error);
-      throw error;
-    });
-}
-
-export function getPlayerScore(params: PlayerStatsFromIdParams): Promise<ProjectedPlayer[] | undefined> {
-  const url = 'scores'; // Endpoint relative to the BASE_URL
-  console.log(params)
+  console.log('Params being sent to projection', params)
   return axiosClient.get<any>(url, { params })
     .then(response => {
       if (response.status !== 204) {

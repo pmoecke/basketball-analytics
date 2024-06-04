@@ -9,7 +9,7 @@ import "./ComparisonModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
-import { PlayerStatsFromIdParams, getPlayerScore, playerStatsFromId } from "../router/data";
+import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
 import { FaInfoCircle } from "react-icons/fa";
 
 interface ComparisonModalProps {
@@ -25,8 +25,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 }) => {
   const [player1, setPlayer1] = useState<Player | null>(null);
   const [player2, setPlayer2] = useState<Player | null>(null);
-  const [playerScore1, setPlayerScore1] = useState<any | null>(null);
-  const [playerScore2, setPlayerScore2] = useState<any | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("Boxscore");
 
   useEffect(() => {
@@ -43,39 +41,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
       playerStatsFromId(params2).then((data) => {
         if (data !== undefined) {
           setPlayer2(data[0]);
-        }
-      });
-    }
-  }, [players]);
-
-  useEffect(() => {
-    if (players.length === 2) {
-      const params1: PlayerStatsFromIdParams = { player_id: [players[0].player_id] };
-      const params2: PlayerStatsFromIdParams = { player_id: [players[1].player_id] };
-
-      playerStatsFromId(params1).then((data) => {
-        if (data !== undefined) {
-          setPlayer1(data[0]);
-        }
-      });
-
-      getPlayerScore(params1).then(data => {
-        if (data !== undefined) {
-          var score = data[0]
-          setPlayerScore1(score);
-        }
-      });
-
-      playerStatsFromId(params2).then((data) => {
-        if (data !== undefined) {
-          setPlayer2(data[0]);
-        }
-      });
-
-      getPlayerScore(params2).then(data => {
-        if (data !== undefined) {
-          var score = data[0]
-          setPlayerScore2(score);
         }
       });
     }
@@ -179,7 +144,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
           <div className="row">
           <div className="col-md-2"/>
               <div className="col-md-8">
-                <ComparisonGraph player1={player1} player2={player2} playerScore1={playerScore1} playerScore2={playerScore2}/>
+                <ComparisonGraph player1={player1} player2={player2}/>
               </div>
               <div className="col-md-2">
                 <TooltipOverlay

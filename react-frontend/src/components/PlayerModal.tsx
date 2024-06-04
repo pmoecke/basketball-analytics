@@ -13,7 +13,6 @@ import { FaInfoCircle } from "react-icons/fa";
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
-  selectedPlayerScore: any;
   comparisonPlayers: PlayerArray;
   togglePlayerForComparison: (player: Player) => void;
   showModal: boolean;
@@ -22,7 +21,6 @@ interface PlayerModalProps {
 
 const PlayerModal: React.FC<PlayerModalProps> = ({
   selectedPlayer,
-  selectedPlayerScore,
   comparisonPlayers,
   togglePlayerForComparison,
   showModal,
@@ -127,7 +125,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
             <div className="row">
               <div className="col-md-2"/>
               <div className="col-md-8">
-               <PlayerGraph player={selectedPlayer} playerScore={selectedPlayerScore} />
+               <PlayerGraph player={selectedPlayer}/>
               </div>
               <div className="col-md-2">
                 <TooltipOverlay

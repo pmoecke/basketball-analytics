@@ -7,7 +7,6 @@ import PlayerModal from "./PlayerModal";
 import "./PlayerDashboard.css";
 
 import {
-  getPlayerScore,
   playerOverview,
   PlayerOverviewParams,
   PlayerProjectionParams,
@@ -33,11 +32,10 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] = useState<keyof Player>("efficiency_score");
+  const [orderValue, setOrderValue] = useState<keyof Player>("player_name");
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const [selectedPlayerScore, setSelectedPlayerScore] = useState<any | null>(null);
 
   // Compare player
   const [showComparisonModal, setShowComparisonModal] = useState(false);
@@ -47,8 +45,7 @@ const PlayerDashboard: React.FC = () => {
 
   // Filtering
   const [player_name, setPlayer_name] = useState<string | undefined>(undefined);
-  const [league_id, setLeague_id] = useState<number | undefined>(undefined);
-  const [team_id, setTeam_id] = useState<number | undefined>(undefined);
+  const [season, setSeason] = useState<string | undefined>(undefined);
   const [playerFilterValues, setPlayerFilterValues] = useState<([number[], number[]]) | undefined>(undefined);
 
   // Projections
@@ -59,39 +56,45 @@ const PlayerDashboard: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  //Advanced Filtering
-  const [showAdvancedFilterModal, setShowAdvancedFilterModal] = useState(false);
-
-  function totalMinutesPlayed(timeStr: string, games_played: number): number {
-    const [minutes, seconds] = timeStr.split(':').map(Number);
-    var avgMinutesPlayed = (minutes * 60 + seconds) / 60;
-    var totalMinutesPlayed = avgMinutesPlayed * games_played
-    return totalMinutesPlayed
-  }
+  //Projection configuration
+  const [showProjectionConfig, setShowProjectionConfig] = useState(false);
   
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerOverviewParams> = {};
-    params.league_id = league_id;
-    params.team_id = team_id;
-    params.player_name = player_name;
+    if (player_name != undefined) {
+      params.player_name = player_name;
+    }
+    if (season != undefined) {
+      params.season = season;
+    }
+    if (playerFilterValues != null) {
+      console.log("playerFilterValues", playerFilterValues)
+      params.min_def_score = playerFilterValues[0][3]
+      params.max_def_score = playerFilterValues[1][3]
+      params.min_off_score_1 = playerFilterValues[0][4]
+      params.max_off_score_1 = playerFilterValues[1][4]
+      params.min_off_score_2 = playerFilterValues[0][0]
+      params.max_off_score_2 = playerFilterValues[1][0]
+      params.min_off_score_3 = playerFilterValues[0][1]
+      params.max_off_score_3 = playerFilterValues[1][1]
+      params.min_reb_score = playerFilterValues[0][2]
+      params.max_reb_score = playerFilterValues[1][2]
+    }
 
     playerOverview(params).then((data) => {
       if (data !== undefined) {
-        
-        console.log("before", data);
-        data = data.filter(player => totalMinutesPlayed(player.minutes, player.games_played) >= 230);
-        console.log("after", data);
-      
+        console.log("playerOverviewData", data);
         setPlayers(data);
       }
     });
-  }, [league_id, team_id, player_name]); // add playerFilterValues here later when in same table
+  }, [player_name, season, playerFilterValues]);
 
+  
   // Handles ordering of the data
   useEffect(() => {
-    console.log({ orderValue });
-    console.log({ sortOrder });
+    console.log("orderValue", { orderValue });
+    console.log("sortOrder", { sortOrder });
     let sortedData = [...players];
     sortedData.sort((a, b) => {
       const keyA = a[orderValue];
@@ -128,6 +131,7 @@ const PlayerDashboard: React.FC = () => {
     setSortedPlayers(top100Players);
   }, [players, sortOrder, orderValue, projection]);
 
+
   const togglePlayerForComparison = (player: Player) => {
     if (
       comparisonPlayers.length < 2 &&
@@ -142,76 +146,14 @@ const PlayerDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(comparisonPlayers);
+    console.log("comparisonPlayers", comparisonPlayers);
   }, [comparisonPlayers]);
-
-  useEffect(() => {
-    if (selectedPlayer != null) {
-      const params: Partial<PlayerStatsFromIdParams> = {};
-      params.player_id = [selectedPlayer!.player_id]
-      getPlayerScore(params).then(data => {
-        if (data !== undefined) {
-          var score = data[0]
-          //console.log("player score", score);
-          setSelectedPlayerScore(score);
-        }
-      });
-    }
-  }, [selectedPlayer]);
-
-
-  useEffect(() => {
-    if (playerFilterValues != null) {
-      const params: Partial<PlayerStatsFromIdParams> = {};
-      // top, right, bottom right, left bottom, left
-      // off2, off3, reb, def, off1
-      console.log("playerFilterValues", playerFilterValues)
-      params.min_def_score = playerFilterValues[0][3]
-      params.max_def_score = playerFilterValues[1][3]
-      params.min_off_score_1 = playerFilterValues[0][4]
-      params.max_off_score_1 = playerFilterValues[1][4]
-      params.min_off_score_2 = playerFilterValues[0][0]
-      params.max_off_score_2 = playerFilterValues[1][0]
-      params.min_off_score_3 = playerFilterValues[0][1]
-      params.max_off_score_3 = playerFilterValues[1][1]
-      params.min_reb_score = playerFilterValues[0][2]
-      params.max_reb_score = playerFilterValues[1][2]
-      getPlayerScore(params).then(data => {
-        if (data !== undefined && data!.length !== 0) {
-          console.log(data)
-          const playerIds = data.map(player => player.player_id);
-          console.log("playerIds", playerIds);
-          
-          const params1: Partial<PlayerStatsFromIdParams> = { player_id: playerIds }; // Initialize params1 properly
-          
-          playerStatsFromId(params1).then(data => {
-            if (data !== undefined) {
-              const players = data;
-              console.log("players", players);
-              setPlayers(players);
-            }else {
-              console.log("here??????")
-              setPlayers([])
-            }
-          }).catch(error => {
-            console.error("Error fetching player stats:", error);
-          });
-        } else {
-          setPlayers([])
-        }
-      }).catch(error => {
-        console.error("Error fetching player scores:", error);
-      });
-    } 
-  }, [playerFilterValues]);
   
-
-
   return (
     <div className="container my-4">
       <div
         className={`row justify-content-evenly ${
-          showModal || showComparisonModal || showAdvancedFilterModal || isOpen
+          showModal || showComparisonModal || showProjectionConfig || isOpen
             ? "blur-background"
             : ""
         }`}
@@ -246,21 +188,22 @@ const PlayerDashboard: React.FC = () => {
               />
             </div>
             <div className="col-md-1"/> 
+            <div className="col-md-4">
+              <ProjectionDropdown projection={projection} setProjection={setProjection}/>
+            </div>
             <div className="col-md-2"> 
               <div className="advanced">
                   <button
                   className="btn text-center btn-secondary w-100"
                   onClick={() => {
-                      setShowAdvancedFilterModal(true);
+                    setShowProjectionConfig(true);
                   }}
                   >
-                  Config Projection
+                  Configure Projection
                   </button>
               </div>
             </div>
-            <div className="col-md-4">
-              <ProjectionDropdown projection={projection} setProjection={setProjection}/>
-            </div>
+            
           </div>
           <div className="row my-5">
             <div className="col-md-6">
@@ -297,10 +240,9 @@ const PlayerDashboard: React.FC = () => {
         </div>
         <div className="col-md-1"/>
       </div>
-      {selectedPlayer && selectedPlayerScore && (
+      {selectedPlayer && (
         <PlayerModal
           selectedPlayer={selectedPlayer}
-          selectedPlayerScore={selectedPlayerScore}
           comparisonPlayers={comparisonPlayers}
           togglePlayerForComparison={togglePlayerForComparison}
           showModal={showModal}
@@ -315,16 +257,13 @@ const PlayerDashboard: React.FC = () => {
       />
       )}
       <AdvancedFilterModal
-        showModal={showAdvancedFilterModal}
-        handleClose={() => setShowAdvancedFilterModal(false)}
+        showModal={showProjectionConfig}
+        handleClose={() => setShowProjectionConfig(false)}
       />
-
       <SidebarFilter
         setPlayer_name={setPlayer_name}
-        league_id={league_id}
-        setLeague_id={setLeague_id}
-        team_id={team_id}
-        setTeam_id={setTeam_id}
+        season={season}
+        setSeason={setSeason}
         setPlayerFilterValues={setPlayerFilterValues}
         isOpen={isOpen}
         handleClose={() => setIsOpen(false)}

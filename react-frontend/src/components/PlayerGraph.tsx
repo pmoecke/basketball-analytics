@@ -5,10 +5,9 @@ import "./PlayerGraph.css"
 
 interface PlayerGraphProps {
     player: Player;
-    playerScore: any;
 }
 
-const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
+const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
     const chartRef = useRef<Chart | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -18,11 +17,11 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
 
         const player1_name = player.player_name;
         const player1_stats = [
-            playerScore.off_score_2,
-            playerScore.off_score_3,
-            playerScore.reb_score,
-            playerScore.def_score,
-            playerScore.off_score_1,
+            player.off_score_2,
+            player.off_score_3,
+            player.reb_score,
+            player.def_score,
+            player.off_score_1,
         ];
         const player1_color = 'rgb(153, 102, 255)';
         const player1_color_transparent = 'rgba(153, 102, 255, 0.1)';
@@ -111,7 +110,7 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player, playerScore}) => {
                 chartRef.current = null;
             }
         };
-    }, [player, playerScore]);
+    }, [player]);
 
     return (
         <div className="chart-container">

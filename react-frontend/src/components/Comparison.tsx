@@ -21,17 +21,19 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
     <div className="player-comparison d-flex ">
       
       {comparisonPlayers[0] ? (
-        <div className="player-info col-md-4 box">
+        <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
           <span>{comparisonPlayers[0].player_name}</span>
           <button
-            className="btn btn-danger btn-sm btn-remove"
+            className="btn btn-danger btn-sm btn-remove ms-3"
             onClick={() => togglePlayerForComparison(comparisonPlayers[0])}
           >
             -
           </button>
         </div>
       ) : (
-        <div className="player-info col-md-4 box"></div>
+        <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
+          No Player Selected
+        </div>
       )}
 
     
@@ -46,17 +48,19 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
       </button>
 
       {comparisonPlayers[1] ? (
-        <div className="player-info col-md-4 box">
+        <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
           <span>{comparisonPlayers[1].player_name}</span>
           <button
-            className="btn btn-danger btn-sm btn-remove"
+            className="btn btn-danger btn-sm btn-remove ms-3"
             onClick={() => togglePlayerForComparison(comparisonPlayers[1])}
           >
             -
           </button>
         </div>
       ) : (
-        <div className="player-info col-md-4 box"></div>
+        <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
+          No Player Selected
+        </div>
       )}
     </div>
   );

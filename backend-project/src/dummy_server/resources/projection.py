@@ -12,9 +12,7 @@ PROJECTIONS = ["boxscore", "advanced_boxscore", "additional_field_goal_data",
 
 class ProjQuerySchema(Schema):
     player_id = fields.List(fields.Int(), required=False)
-    projections = fields.List(fields.String(
-        validate=validate.OneOf(PROJECTIONS)), required=False)
-
+    projections = fields.List(fields.String(validate=validate.OneOf(PROJECTIONS)), required=False)
 
 schema = ProjQuerySchema()
 
@@ -43,8 +41,12 @@ class Projection(Resource):
             query += f"AND player_id in ({','.join('?'*len(args['player_id']))}) "
 
         query += ";"
-        print(query, args["player_id"])
+        #print(query, args["player_id"])
         cur.execute(query, args["player_id"])
+
+        print("________PROJECTION ___________\n")
+        print("fetchall", cur.fetchall())
+
         result = [dict(zip([col[0] for col in cur.description], row)) for row
                   in cur.fetchall()]
         con.close()
