@@ -144,6 +144,8 @@ def insert_scores_data(con: sqlite3.Connection, scores_file: str):
         cur.execute("ALTER TABLE Stats ADD COLUMN def_score REAL;")
     if not column_exists(cur, "Stats", "reb_score"):
         cur.execute("ALTER TABLE Stats ADD COLUMN reb_score REAL;")
+    if not column_exists(cur, "Stats", "player_name"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN player_name TEXT;")
 
     # Insert data from df into the Scores table
     for index, row in tqdm(scores.iterrows()):
@@ -155,7 +157,7 @@ def insert_scores_data(con: sqlite3.Connection, scores_file: str):
             # Sanity check: give warning if query player_id = {pid} AND season = '{season}' returns more than one row
             if cur.execute(f"SELECT COUNT(*) FROM Stats WHERE player_id = {pid} AND season = '{season}';").fetchone()[0] > 1:
                 print(f"Player {player_name} has multiple entries for season {season}")
-            cur.execute(f"UPDATE Stats SET off_score_1 = {row['off_score_1']}, off_score_2 = {row['off_score_2']}, \
+            cur.execute(f"UPDATE Stats SET player_name = '{player_name}', off_score_1 = {row['off_score_1']}, off_score_2 = {row['off_score_2']}, \
                         off_score_3 = {row['off_score_3']}, def_score = {row['def_score']}, \
                         reb_score = {row['reb_score']} WHERE player_id = {pid} AND season = '{season}';")
         else:
