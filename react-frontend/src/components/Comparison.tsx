@@ -32,7 +32,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
         </div>
       ) : (
         <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
-          No Player Selected
+          Not Selected
         </div>
       )}
 
@@ -59,7 +59,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({
         </div>
       ) : (
         <div className="player-info col-md-4 box d-flex align-items-center justify-content-center">
-          No Player Selected
+          Not Selected
         </div>
       )}
     </div>
