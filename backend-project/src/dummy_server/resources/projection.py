@@ -40,7 +40,7 @@ class Projection(Resource):
         """
 
         if "player_id" in args and -1 not in args["player_id"]:
-            query += f"AND player_id in ({','.join('?'*len(args['player_id']))}) "
+            query += f" AND player_id in ({','.join('?'*len(args['player_id']))}) "
 
         query += ";"
         print(query, args["player_id"])
