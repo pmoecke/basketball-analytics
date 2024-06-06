@@ -1,3 +1,4 @@
+from . import definitions
 from . import players
 from . import leagues
 from . import teams
@@ -14,4 +15,5 @@ __all__ = [
     "stats"
     "overview_stats"
     "projection"
+    "definitions"
 ]
