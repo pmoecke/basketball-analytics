@@ -41,6 +41,7 @@ class OverviewStats(Resource):
             s.offensive_rating, 
             s.defensive_rating,
             s.games_played,
+            s.minutes,
             (s.points + s.rebounds + s.assists + s.steals + s.blocks - (s.field_goals_attempted - s.field_goals_made + s.free_throws_attempted - s.free_throws_made + s.turnovers)) as 'efficiency_score'
             FROM Stats s
             INNER JOIN Player p ON p.player_id = s.player_id

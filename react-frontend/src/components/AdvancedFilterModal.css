@@ -1,8 +1,6 @@
 .advanced-filter-modal-body {
   overflow-y: auto; /* Scroll only when necessary */
-  height: calc(
-    90vh - 120px
-  ); /* Example calculation considering header and footer heights */
+  height: calc(90vh - 120px); /* Example calculation considering header and footer heights */
   background-color: #222222;
   color: white;
 }
@@ -14,7 +12,20 @@
 
 .modal-footer.advanced-filter-modal-footer {
   background-color: #222222;
-  color: rgb(180, 35, 35);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #444444;
+  border-color: #555555 #555555 #222222;
+  color: white;
+}
+
+.nav-tabs .nav-link {
+  color: white;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #555555;
 }
 
 .rows {

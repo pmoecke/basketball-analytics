@@ -56,7 +56,7 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, comparisonPlayers,
             .attr("r", 5)
             .attr("fill", "dodgerblue")
             .on("click", (event, d) => {
-                const params: PlayerStatsFromIdParams = { player_id: d.player_id };
+                const params: PlayerStatsFromIdParams = { player_id: [d.player_id] };
                 playerStatsFromId(params).then((data) => {
                     if (data !== undefined) {
                         console.log(data);

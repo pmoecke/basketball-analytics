@@ -5,6 +5,7 @@ from . import stats_old
 from . import stats
 from . import overview_stats
 from . import projection
+from . import scores
 
 __all__ = [
     "players"
@@ -14,4 +15,5 @@ __all__ = [
     "stats"
     "overview_stats"
     "projection"
+    "scores"
 ]
