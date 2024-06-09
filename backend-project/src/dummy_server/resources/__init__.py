@@ -1,3 +1,4 @@
+from . import definitions
 from . import players
 from . import stats
 from . import overview_stats
@@ -8,4 +9,5 @@ __all__ = [
     "stats"
     "overview_stats"
     "projection"
+    "definitions"
 ]
