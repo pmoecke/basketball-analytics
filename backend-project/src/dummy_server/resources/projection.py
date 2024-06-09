@@ -35,16 +35,26 @@ class Projection(Resource):
         cur = con.cursor()
         # In case we're provided with player_ids from the frontend
         if "player_id" in args and -1 not in args["player_id"]:
-            cur.execute(f"SELECT name FROM Player WHERE player_id in ({
-                ", ".join(["?" for _ in range(len(args["player_id"]))])});",
-                        args["player_id"])
+            # Assuming args["player_id"] is a list of player IDs
+            player_ids = args["player_id"]
+
+            # Construct the SQL query with placeholders for parameterized query
+            query = f"SELECT name FROM Player WHERE player_id IN ({', '.join(['?' for _ in player_ids])});"
+
+            # Execute the query with the list of player IDs as parameters
+            cur.execute(query, player_ids)
 
             names = [name for name, *_ in cur.fetchall()]
             df = df[df["player name"].isin(names)]
         else:  # Else get the id's using the names in the df
-            cur.execute(f"SELECT player_id FROM Player WHERE name in ({
-                ", ".join(["?" for _ in range(len(df))])}) ORDER BY name;",
-                        df["player name"])
+            # Assuming df is a pandas DataFrame and "player name" is the column with player names
+            player_names = df["player name"].tolist()
+
+            # Construct the SQL query with placeholders for parameterized query
+            query = f"SELECT player_id FROM Player WHERE name IN ({', '.join(['?' for _ in player_names])}) ORDER BY name;"
+
+            # Execute the query with the list of player names as parameters
+            cur.execute(query, player_names)
             args["player_id"] = [idx for idx, *_ in cur.fetchall()]
         con.close()
 
