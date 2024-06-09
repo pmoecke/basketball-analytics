@@ -6,16 +6,6 @@ import sqlite3
 from .definitions import ProjQuerySchema
 import pandas as pd
 
-PROJECTIONS = ["boxscore", "advanced_boxscore", "additional_field_goal_data",
-               "play_type_combinations",
-               "defense_against_play_type_combinations",
-               "drivers", "drivers_defense"]
-
-
-class ProjQuerySchema(Schema):
-    player_id = fields.List(fields.Int(), required=False)
-    projections = fields.List(fields.String(validate=validate.OneOf(PROJECTIONS)), required=False)
-
 schema = ProjQuerySchema()
 
 
