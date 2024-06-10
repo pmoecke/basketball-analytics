@@ -61,46 +61,32 @@ class Projection(Resource):
         df = df.rename(columns={col: col.replace("-", " ").replace(",", "")
                                 for col in df.columns})
 
-        # Filter by player_id, gotta fetch the names from the database
-        # as the dataframe only includes names
-        # In case we're provided with player_ids from the frontend
-        if "player_id" in args and -1 not in args["player_id"]:
-            # Assuming args["player_id"] is a list of player IDs
-            player_ids = args["player_id"]
-
-            # Construct the SQL query with placeholders for parameterized query
-            query = f"SELECT name FROM Player WHERE player_id IN ({', '.join(['?' for _ in player_ids])});"
-
-            # Execute the query with the list of player IDs as parameters
-            cur.execute(query, player_ids)
-
-            names = [name for name, *_ in cur.fetchall()]
-            df = df[df["player name"].isin(names)]
-        else:  # Else get the id's using the names in the df
-            # Assuming df is a pandas DataFrame and "player name" is the column with player names
-            player_names = df["player name"].tolist()
-
-            # Construct the SQL query with placeholders for parameterized query
-            query = f"SELECT player_id FROM Player WHERE name IN ({', '.join(['?' for _ in player_names])}) ORDER BY name;"
-
-            # Execute the query with the list of player names as parameters
-            cur.execute(query, player_names)
-            args["player_id"] = [idx for idx, *_ in cur.fetchall()]
+        # Get all the player_ids corresponding to the players from the database
+        df.sort_values(by=["player name"], inplace=True)
+        player_names = df["player name"].tolist()
+        # Construct the SQL query with placeholders for parameterized query
+        query = f"SELECT player_id FROM Player WHERE name IN ({
+                ', '.join(['?' for _ in player_names])}) ORDER BY name;"
+        # Execute the query with the list of player names as parameters
+        cur.execute(query, player_names)
+        player_ids = [idx for idx, *_ in cur.fetchall()]
+        # If no player_id's are provided, use all of them
+        if "player_id" not in args or -1 in args["player_id"]:
+            args["player_id"] = player_ids
         con.close()
 
-        # Ensure we don't get an error when performing tSNE
-        if len(args["player_id"]) < 10:
-            abort(400, "Must include at least 10 players in the projection")
+        # Using only a single column is not sensible
         if len(args["col"]) < 2:
             abort(400, "Must choose at least 2 features to project on")
 
-        # Choose the subset of columns provided
+        # Choose the subset of columns provided and project
         df = df[[convert_name(c) for c in args["col"]]]
-        proj = pd.DataFrame(TSNE(perplexity=min(len(args["player_id"])-1, 30))
-                            .fit_transform(df)).rename({0: "x", 1: "y"},
-                                                       axis="columns")
+        proj = pd.DataFrame(TSNE().fit_transform(df)).rename({0: "x", 1: "y"},
+                                                             axis="columns")
         # Use player_id as the index
-        proj.insert(0, "player_id", args["player_id"])
+        proj.insert(0, "player_id", player_ids)
         proj.set_index("player_id", inplace=True)
-
-        return proj.to_json()
+        proj = proj.loc[args["player_id"]]
+        proj.reset_index(inplace=True)
+        proj.sort_values(by=["player_id"], inplace=True)
+        return proj.to_json(orient="records")
