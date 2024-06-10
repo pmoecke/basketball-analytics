@@ -33,48 +33,48 @@
   flex-direction: row;
   justify-content: space-between;
 }
-
-.sliding-checkbox {
-  position: relative;
-  width: 60px;
-  height: 34px;
-}
-
-.sliding-checkbox input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.sliding-checkbox::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
+/* Custom styles for small toggle switch */
+.form-switch .form-check-input {
+  width: 34px;
+  height: 24px;
+  background-color: #ddd;
+  border: none;
   border-radius: 34px;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.sliding-checkbox::after {
+.form-switch .form-check-input::before {
   content: "";
   position: absolute;
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.4s;
+  background-color: #fff;
   border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
 }
 
-.sliding-checkbox input:checked + .sliding-checkbox::before {
-  background-color: #2196F3;
+.form-switch .form-check-input:checked {
+  background-color: #007bff;
 }
 
-.sliding-checkbox input:checked + .sliding-checkbox::after {
-  transform: translateX(26px);
+.form-switch .form-check-input:checked::before {
+  transform: translateX(14px);
+}
+
+/* Additional styling for better alignment */
+.sliding-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust the gap as needed */
+}
+
+.form-check-label {
+  margin-bottom: 0; /* Align the label vertically with the switch */
 }
 

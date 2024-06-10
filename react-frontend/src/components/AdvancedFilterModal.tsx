@@ -108,15 +108,19 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
           <div className="row">
             {COLUMNS.map((attribute, index) => (
               <div className="col-md-4" key={attribute}>
-                <label className="sliding-checkbox">
+                <div className="form-switch sliding-checkbox">
                   <input
+                    className="form-check-input"
                     type="checkbox"
                     id={attribute}
                     checked={selectedAttributes.includes(attribute)}
                     onChange={handleCheckboxChange}
                   />
-                  {attribute}
-                </label>
+                  <label className="form-check-label" htmlFor={attribute}>
+                    {attribute}
+                  </label>
+                </div>
+
               </div>
             ))}
           </div>
