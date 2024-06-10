@@ -14,25 +14,6 @@
   background-color: #222222;
 }
 
-.nav-tabs .nav-link.active {
-  background-color: #444444;
-  border-color: #555555 #555555 #222222;
-  color: white;
-}
-
-.nav-tabs .nav-link {
-  color: white;
-}
-
-.nav-tabs {
-  border-bottom: 1px solid #555555;
-}
-
-.rows {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
 /* Custom styles for small toggle switch */
 .form-switch .form-check-input {
   width: 34px;
@@ -77,4 +58,3 @@
 .form-check-label {
   margin-bottom: 0; /* Align the label vertically with the switch */
 }
-

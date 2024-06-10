@@ -202,7 +202,7 @@ const PlayerDashboard: React.FC = () => {
                     setShowProjectionConfig(true);
                   }}
                   >
-                  Configure Projection
+                  Custom Projection
                   </button>
               </div>
             </div>

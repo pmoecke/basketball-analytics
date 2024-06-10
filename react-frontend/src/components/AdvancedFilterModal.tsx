@@ -108,7 +108,7 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
           <div className="row">
             {COLUMNS.map((attribute, index) => (
               <div className="col-md-4" key={attribute}>
-                <div className="form-switch sliding-checkbox">
+                <div className="form-switch sliding-checkbox mb-1">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -126,7 +126,7 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
           </div>
         </div>
       </Modal.Body>
-      <Modal.Footer className="advanced-filter-modal-footer">
+      <Modal.Footer className="advanced-filter-modal-footer d-flex justify-content-center">
         <Button variant="primary" onClick={applyCheckedValues}>Apply Configuration</Button>
       </Modal.Footer>
     </Modal>
