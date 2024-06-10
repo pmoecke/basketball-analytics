@@ -17,11 +17,44 @@ class Projection(Resource):
     def get(self):
         # Validate arguments
         arg_dict = request.args.to_dict(flat=False)
+        # Gotta make sure that we don't get a list for arguments that only
+        # take single values
+        if "projection" in arg_dict:
+            arg_dict["projection"] = arg_dict["projection"][0]
         err = schema.validate(arg_dict)
         if err:
             abort(400, str(err))
         args = schema.dump(arg_dict)
+        if "projection" not in args and "col" not in args:
+            abort(400, "Must provide either a list of columns to project on "
+                       "or a predefined projection")
 
+        con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"],
+                                           "Players.db"))
+        cur = con.cursor()
+
+        # A precomputed projection is requested
+        if "projection" in args:
+            query = f"""
+                SELECT player_id, {"x_" + args["projection"]} as x,
+                {"y_" + args["projection"]} as y
+                FROM Player
+                WHERE 1 = 1
+            """
+
+            # Filtering based on player ids
+            if "player_id" in args and -1 not in args["player_id"]:
+                query += f"AND player_id in ({','.join('?'*len(args['player_id']))});"
+                cur.execute(query, args["player_id"])
+            else:
+                query += ";"
+                cur.execute(query)
+            result = [dict(zip([col[0] for col in cur.description], row)) for
+                      row in cur.fetchall()]
+            con.close()
+            return result
+
+        # A user-defined projection is requested
         # Read data and make column headers consistent
         df = pd.read_csv(os.path.join(os.environ["DATA_PATH"],
                                       "train_data_yeo_new.csv"))
@@ -30,9 +63,6 @@ class Projection(Resource):
 
         # Filter by player_id, gotta fetch the names from the database
         # as the dataframe only includes names
-        con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"],
-                                           "Players.db"))
-        cur = con.cursor()
         # In case we're provided with player_ids from the frontend
         if "player_id" in args and -1 not in args["player_id"]:
             # Assuming args["player_id"] is a list of player IDs

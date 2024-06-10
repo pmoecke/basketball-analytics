@@ -1,5 +1,11 @@
 from marshmallow import Schema, fields, validate
 
+# Predefined projections
+PROJECTIONS = ["boxscore", "advanced_boxscore", "additional_field_goal_data",
+               "play_type_combinations",
+               "defense_against_play_type_combinations",
+               "drivers", "drivers_defense"]
+
 # Colums in the DB we can project to
 COLUMNS = ["games-played", "minutes", "points", "points-per-player-possession",
            "field-goals-made", "field-goals-attempted", "field-goals-pct",
@@ -56,5 +62,7 @@ COLUMNS = ["games-played", "minutes", "points", "points-per-player-possession",
 
 class ProjQuerySchema(Schema):
     player_id = fields.List(fields.Int(), required=False)
+    projection = fields.String(
+        validate=validate.OneOf(PROJECTIONS), required=False)
     col = fields.List(fields.String(
-        validate=validate.OneOf(COLUMNS)), required=True)
+        validate=validate.OneOf(COLUMNS)), required=False)
