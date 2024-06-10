@@ -17,7 +17,7 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
     "Defense Against Play Type Combinations" : "defense_against_play_type_combinations",
     "Drivers" : "drivers",
     "Drivers Defense" : "drivers_defense",
-
+    "Custom Projection" : "custom_projection",
   }
   const projectionToolTips: { [key: string]: string } = {
     "boxscore": "A boxscore provides the basic statistical summary of a basketball game, including points, rebounds, assists, and other key metrics.",

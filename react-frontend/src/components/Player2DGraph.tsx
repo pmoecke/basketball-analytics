@@ -48,8 +48,8 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 }) => {
   const chartRef = useRef<Chart | null>(null);
 
-  const projectedPlayers = transformPlayerData(projectedPlayersData);
-  let activePlayers = projectedPlayers;
+  //const projectedPlayers = transformPlayerData(projectedPlayersData);
+  let activePlayers = projectedPlayersData;
 
   const calculatePointRadius = (zoomLevel: number) => {
     const baseRadius = 4; // Base radius for the default zoom level
@@ -59,7 +59,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
   useEffect(() => {
     const chartElement = document.getElementById("chart2d") as HTMLCanvasElement;
     if (chartElement) {
-      activePlayers = projectedPlayers.filter(
+      activePlayers = projectedPlayersData.filter(
         p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
       );
 
@@ -256,21 +256,21 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       }
     };
 
-  }, [projectedPlayers, comparisonPlayers, players, highlightedPlayer]); // Only reinitialize chart if these arrays change
+  }, [projectedPlayersData, comparisonPlayers, players, highlightedPlayer]); // Only reinitialize chart if these arrays change
 
   useEffect(() => {
     if (chartRef.current) {
       const comparisonDataset = chartRef.current.data.datasets[1]; // Accessing the second dataset
       
       const comparisonPlayerIds = comparisonPlayers.map(player => player.player_id);
-      const comparisonProjection = projectedPlayers.filter(player => comparisonPlayerIds.includes(player.player_id));
+      const comparisonProjection = projectedPlayersData.filter(player => comparisonPlayerIds.includes(player.player_id));
       comparisonDataset.data = comparisonProjection.map((player) => ({
         x: player.x,
         y: player.y,
         player_id: player.player_id,
       }));
 
-      activePlayers = projectedPlayers.filter(
+      activePlayers = projectedPlayersData.filter(
         p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
       );
 
@@ -283,13 +283,13 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       chartRef.current.update("none"); // Update without animation
     }
     //console.log("comp, proj", comparisonPlayers, projectedPlayers)
-  }, [comparisonPlayers, projectedPlayers]); // Update the dataset whenever the comparison players change
+  }, [comparisonPlayers, projectedPlayersData]); // Update the dataset whenever the comparison players change
 
   useEffect(() => {
     if (chartRef.current) {
       const dataset = chartRef.current.data.datasets[2] as { data: ScatterDataPoint[] };
       if (highlightedPlayer != null) {
-        const highlightedProjection = projectedPlayers.find(player => player.player_id === highlightedPlayer.player_id);
+        const highlightedProjection = projectedPlayersData.find(player => player.player_id === highlightedPlayer.player_id);
         dataset.data = highlightedProjection
           ? [
               {
@@ -305,7 +305,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       chartRef.current.update("none"); // Update without animation
     }
     //console.log("proj, high", highlightedPlayer, projectedPlayers)
-  }, [highlightedPlayer, projectedPlayers]);
+  }, [highlightedPlayer, projectedPlayersData]);
    // Update the dataset whenever the highlighted player changes, even if null
 
   return (

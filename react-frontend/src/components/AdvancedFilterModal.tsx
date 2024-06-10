@@ -11,58 +11,88 @@ import { statMapping } from "./statMapping";
 interface AdvancedFilterModalProps {
   showModal: boolean;
   handleClose: () => void;
+  setProjectionCols: (value: string[]) => void;
 }
 
-const categoryNames: { [key: string]: string } = {
-  "AdditionalData": "Additional Data",
-  "Boxscore": "Boxscore",
-  "DefenseAgainstShootingCombinations": "Defense Against Shooting",
-  "Drives": "Drives",
-  "DrivesDefense": "Drives Defense",
-  "Efficiency": "Efficiency",
-  "PlayTypeCombinations": "Play Type Combinations",
-  "Stats": "Stats"
-};
+const COLUMNS = ["games-played", "minutes", "points", "points-per-player-possession",
+"field-goals-made", "field-goals-attempted", "field-goals-pct",
+"3-pt-field-goals-made", "3-pt-field-goals-attempted",
+"3-pt-field-goals-pct", "free-throws-made", "free-throws-attempted",
+"free-throws-pct", "rebounds", "offensive-rebounds",
+"defensive-rebounds", "assists", "steals", "turnovers", "blocks",
+"fouls", "fouls-drawn", "plus/minus", "2-pt-field-goals-made",
+"2-pt-field-goals-attempted", "2-pt-field-goals-pct",
+"points-off-assists", "screen-assist", "points-off-screen-assists",
+"number-of-player-possessions", "team-points-with-player",
+"offensive-rating", "opponent-possessions-played",
+"opponent-points-with-player", "defensive-rating", "net-rating",
+"assists-to-turnovers", "steals-to-turnovers", "draw-foul-rate",
+"true-shooting-percentage", "effective-field-goal-percentage",
+"uncontested-field-goals-made", "uncontested-field-goals",
+"uncontested-field-goals-pct", "contested-field-goals-made",
+"contested-field-goals", "contested-field-goals-pct",
+"opponent-field-goals-made", "opponent-field-goals-attempted",
+"opponent-field-goals-pct", "transitions-made",
+"transitions-attempted", "transition-attacks-pct",
+"catch-and-shoot-made", "catch-and-shoot-attempted",
+"catch-and-shoot-shots-made-pct", "catch-and-drive-made",
+"catch-and-drive-attempted", "catch-and-drive-shots-made-pct",
+"screens-off-made", "screens-off-attempted", "screens-off-pct",
+"posts-up-made", "posts-up-attempted", "post-up-pct",
+"isolations-made", "isolations-attempted", "isolation-pct",
+"hand-off-made", "hand-off-attempted", "hand-off-pct", "cuts-made",
+"cuts-attempted", "cuts-pct", "pnr-handlers-made",
+"pnr-handlers-attempted", "pr-handler-pct", "pnr-rollers-made",
+"pnr-rollers-attempted", "pr-roller-pct", "pnp-made",
+"pnp-attempted", "pick-n-pops-pct", "opp-transition-shots-made",
+"opp-transition-shots", "opponent-transition-shots-made-pct",
+"opp-catch-and-shoot-shots-made", "opp-catch-and-shoot-shots",
+"opp-catch-and-shoot-shots-made-pct",
+"opp-catch-and-drive-shots-made", "opp-catch-and-drive-shots",
+"opp-catch-and-drive-shots-made-pct", "opp-screens-off-shots-made",
+"opp-screens-off-shots", "opponent-screens-off-shots-made-pct",
+"opp-post-up-shots-made", "opp-post-up-shots",
+"opponent-post-up-shots-made-pct", "opp-isolations-shots-made",
+"opp-isolations-shots", "opponent-isolation-shots-made-pct",
+"opp-hand-off-shots-made", "opp-hand-off-shots",
+"opponent-hand-off-shots-made-pct", "opp-cuts-shots-made",
+"opp-cuts-shots", "opponent-cuts-shots-made-pct",
+"opp-pick-n-roll-shots-made", "opp-pick-n-roll-shots",
+"opponent-pick-n-roll-shots-made-pct", "opp-pick-n-pop-shots-made",
+"opp-pick-n-pop-shots", "opponent-pick-n-pop-shots-made-pct",
+"drives-made", "drives-with-shot", "drives-pct",
+"right-drives-made", "right-drives", "right-drives-made-pct",
+"left-drives-made", "left-drives", "left-drives-made-pct",
+"opp-drives-shots-made", "opp-drives-shots",
+"opponent-drives-shots-made-pct"]
 
 const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
   showModal,
   handleClose,
+  setProjectionCols,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>(Object.keys(statDictionary)[0]);
-  const [sliderValues, setSliderValues] = useState<{ [key: string]: { min: number, max: number } }>({});
+  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
 
-  useEffect(() => {
-    const initialSliderValues: { [key: string]: { min: number, max: number } } = {};
-    Object.keys(statDictionary).forEach(category => {
-      statDictionary[category].forEach(subCategory => {
-        initialSliderValues[subCategory] = { min: 0, max: 100 }; // Initialize with default values
-      });
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, checked } = event.target;
+    
+    setSelectedAttributes(prevSelectedAttributes => {
+      if (checked) {
+        // Add the checked category to the state
+        return [...prevSelectedAttributes, id];
+      } else {
+        // Remove the unchecked category from the state
+        return prevSelectedAttributes.filter(attribute => attribute !== id);
+      }
     });
-    setSliderValues(initialSliderValues);
-  }, []);
-
-  const handleSelect = (eventKey: string | null) => {
-    if (eventKey) {
-      setSelectedCategory(eventKey);
-    }
   };
 
-  const handleSliderChange = (id: string, min: number, max: number) => {
-    setSliderValues(prevValues => ({
-      ...prevValues,
-      [id]: { min, max }
-    }));
+  const applyCheckedValues = () => {
+    selectedAttributes.forEach(attribute => console.log(attribute));
+    setProjectionCols(selectedAttributes)
+    handleClose()
   };
-
-  const handlePrintValues = () => {
-    const lines = Object.entries(sliderValues).map(
-      ([id, values]) => `${id}:(${values.min},${values.max})`
-    );
-    console.log(lines.join('\n'));
-  };
-
-  const categories = Object.keys(statDictionary);
-
+ 
   return (
     <Modal
       show={showModal}
@@ -71,48 +101,29 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       size="xl"
     >
       <Modal.Header closeButton className="advanced-filter-modal-header">
-        <Modal.Title>Advanced Filter</Modal.Title>
+        <Modal.Title>Configure Custom Projection</Modal.Title>
       </Modal.Header>
       <Modal.Body className="advanced-filter-modal-body">
-        <Tab.Container id="left-tabs-example" activeKey={selectedCategory} onSelect={handleSelect}>
-          <Nav variant="tabs" activeKey={selectedCategory} onSelect={handleSelect} className="mb-0">
-            {categories.map((category) => (
-              <Nav.Item key={category}>
-                <Nav.Link eventKey={category}>{categoryNames[category]}</Nav.Link>
-              </Nav.Item>
+        <div className="container">
+          <div className="row">
+            {COLUMNS.map((attribute, index) => (
+              <div className="col-md-4" key={attribute}>
+                <label className="sliding-checkbox">
+                  <input
+                    type="checkbox"
+                    id={attribute}
+                    checked={selectedAttributes.includes(attribute)}
+                    onChange={handleCheckboxChange}
+                  />
+                  {attribute}
+                </label>
+              </div>
             ))}
-          </Nav>
-          <Tab.Content>
-            {categories.map((category) => (
-              <Tab.Pane eventKey={category} key={category}>
-                <div className="container">
-                  <div className="row">
-                    {statDictionary[category].map((subCategory) => (
-                      <div className="col-md-3 mt-3" key={subCategory}>
-                        <div className="text-center strong">
-                          <TooltipOverlay
-                            tooltipText={tooltipTexts[statMapping[subCategory]]}
-                            placement="top"
-                            children={statMapping[subCategory]}
-                          />
-                        </div>
-                        <MultiRangeSlider
-                          id={subCategory}
-                          min={0}
-                          max={100}
-                          onChange={handleSliderChange}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Tab.Pane>
-            ))}
-          </Tab.Content>
-        </Tab.Container>
+          </div>
+        </div>
       </Modal.Body>
       <Modal.Footer className="advanced-filter-modal-footer">
-        <Button variant="primary" onClick={handlePrintValues}>Print Slider Values</Button>
+        <Button variant="primary" onClick={applyCheckedValues}>Apply Configuration</Button>
       </Modal.Footer>
     </Modal>
   );

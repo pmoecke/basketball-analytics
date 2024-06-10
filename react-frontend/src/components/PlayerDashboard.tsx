@@ -10,8 +10,6 @@ import {
   playerOverview,
   PlayerOverviewParams,
   PlayerProjectionParams,
-  playerStatsFromId,
-  PlayerStatsFromIdParams,
 } from "../router/data";
 
 import SidebarFilter from "./SidebarFilter";
@@ -49,6 +47,7 @@ const PlayerDashboard: React.FC = () => {
   // Projections
   const [projection, setProjection] = useState<string | undefined>("boxscore");
   const [playerProjections, setPlayerProjections] = useState<ProjectedPlayer[]>([]);
+  const [projectionCols, setProjectionCols] = useState<string[]>([]);
 
   // Toggle sidebar
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +111,13 @@ const PlayerDashboard: React.FC = () => {
     const top100PlayerIds: number[] = top100Players.map(player => player.player_id);
     const params: Partial<PlayerProjectionParams> = {};
     params.player_id = top100PlayerIds;
-    params.projections = projection;
+    if (projection != "custom_projection") {
+      params.projection = projection;
+    }
+    else {
+      params.col = projectionCols;
+    }
+
     console.log("top100PlayerIds", top100PlayerIds)
     if (top100PlayerIds.length !== 0){
       // Update the state for player projections based on the filtered 100 sorted players
@@ -257,6 +262,7 @@ const PlayerDashboard: React.FC = () => {
       <AdvancedFilterModal
         showModal={showProjectionConfig}
         handleClose={() => setShowProjectionConfig(false)}
+        setProjectionCols={setProjectionCols}
       />
       <SidebarFilter
         setPlayer_name={setPlayer_name}

@@ -65,8 +65,7 @@ class Projection(Resource):
         df.sort_values(by=["player name"], inplace=True)
         player_names = df["player name"].tolist()
         # Construct the SQL query with placeholders for parameterized query
-        query = f"SELECT player_id FROM Player WHERE name IN ({
-                ', '.join(['?' for _ in player_names])}) ORDER BY name;"
+        query = f"SELECT player_id FROM Player WHERE name IN ({', '.join(['?' for _ in player_names])}) ORDER BY name;"
         # Execute the query with the list of player names as parameters
         cur.execute(query, player_names)
         player_ids = [idx for idx, *_ in cur.fetchall()]

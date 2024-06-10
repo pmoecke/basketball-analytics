@@ -58,7 +58,8 @@ export function playerOverview(params: PlayerOverviewParams): Promise<PlayerArra
 
 export interface PlayerProjectionParams {
   player_id?: number[];
-  projections?: string | undefined;
+  projection?: string | undefined;
+  col?: string[];
 }
 
 // Get the projections for multiple players
