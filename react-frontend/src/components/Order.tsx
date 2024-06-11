@@ -1,5 +1,5 @@
-import React from 'react';
-import { Player, playerKeys2 } from '../types/player';
+import React, { ChangeEvent } from 'react';
+import { Player, OrderKeyValuePair, orderKeyValues } from '../types/player';
 import { Button } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import './Order.css';
@@ -7,21 +7,32 @@ import './Order.css';
 interface OrderProps {
   sortOrder: string;
   setSortOrder: (order: string) => void;
-  orderValue: keyof Player;
-  setOrderValue: (value: keyof Player) => void;
+  orderValue: OrderKeyValuePair;
+  setOrderValue: (value: OrderKeyValuePair) => void;
 }
 
 const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
+  
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedText = e.target.options[e.target.selectedIndex].text;
+    const selectedValue = e.target.value as keyof Player;
+
+    setOrderValue({ key: selectedText, value: selectedValue });
+
+    console.log(`Selected text: ${selectedText}`);
+    console.log(`Selected value: ${selectedValue}`);
+  };
+  
   return (
     <div className="d-flex justify-content-left">
       <div className='me-0'>
         <select
           className="form-select no-right-round-corners"
-          value={orderValue}
-          onChange={(e) => setOrderValue(e.target.value as keyof Player)}
+          value={orderValue["value"]}
+          onChange={(e) => handleChange(e)}
         >
-          {playerKeys2.map(key => (
-            <option key={key} value={key}>{key.replace(/_/g, ' ').replace(/-/g, ' ').replace(/%/g, '% ')}</option>
+          {orderKeyValues.map(keyValues => (
+            <option key={keyValues["key"]} value={keyValues["value"]}>{keyValues["key"]}</option>
           ))}
         </select>
       </div>

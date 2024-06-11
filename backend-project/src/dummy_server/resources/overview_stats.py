@@ -37,7 +37,11 @@ class OverviewStats(Resource):
             player_id,
             player_name,
             season,
-            (points + rebounds + assists + steals + blocks - (field_goals_attempted - field_goals_made + free_throws_attempted - free_throws_made + turnovers)) as 'efficiency_score'
+            off_score_1,
+            off_score_2,
+            off_score_3,
+            def_score,
+            reb_score
             FROM Stats
         """
         
