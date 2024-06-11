@@ -88,4 +88,4 @@ class Projection(Resource):
         proj = proj.loc[args["player_id"]]
         proj.reset_index(inplace=True)
         proj.sort_values(by=["player_id"], inplace=True)
-        return proj.to_json(orient="records")
+        return [row.to_dict() for _, row in proj.iterrows()]
