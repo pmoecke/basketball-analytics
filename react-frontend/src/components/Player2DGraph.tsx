@@ -1,25 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration } from "chart.js/auto";
-import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
+import { Player, PlayerArray } from "../types/player";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
 
 Chart.register(zoomPlugin);
-
-function transformPlayerData(players: any[]): ProjectedPlayer[] {
-  return players.map(player => {
-    const transformed: ProjectedPlayer = { player_id: player.player_id, x: 0, y: 0 };
-
-    for (const key in player) {
-      if (key.startsWith('x_')) {
-        transformed.x = player[key];  // Assign the first found '_x' value to 'x'
-      } else if (key.startsWith('y_')) {
-        transformed.y = player[key];  // Assign the first found '_y' value to 'y'
-      }
-    }
-    return transformed;
-  });
-}
 
 interface ScatterDataPoint {
   x: number;
@@ -48,9 +33,6 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 }) => {
   const chartRef = useRef<Chart | null>(null);
 
-  //const projectedPlayers = transformPlayerData(projectedPlayersData);
-  let activePlayers = projectedPlayersData;
-
   const calculatePointRadius = (zoomLevel: number) => {
     const baseRadius = 4; // Base radius for the default zoom level
     return baseRadius * Math.sqrt(zoomLevel);
@@ -59,7 +41,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
   useEffect(() => {
     const chartElement = document.getElementById("chart2d") as HTMLCanvasElement;
     if (chartElement) {
-      activePlayers = projectedPlayersData.filter(
+      const activePlayers = projectedPlayersData.filter(
         p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
       );
 
@@ -222,7 +204,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
                 playerStatsFromId(params).then((data) => {
                   if (data !== undefined) {
                     const player = data[0];
-                    console.log("selected query", player.player_name);
+                    console.log("selected query", player);
                     setSelectedPlayer(player);
                   }
                 }); 
@@ -248,14 +230,13 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
 
       chartRef.current = new Chart(chartElement, config);
     }
-    //console.log("proj, comp, players", projectedPlayers, comparisonPlayers, players)
+
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
         chartRef.current = null;
       }
     };
-
   }, [projectedPlayersData, comparisonPlayers, players, highlightedPlayer]); // Only reinitialize chart if these arrays change
 
   useEffect(() => {
@@ -270,9 +251,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
         player_id: player.player_id,
       }));
 
-      activePlayers = projectedPlayersData.filter(
-        p => !comparisonPlayers.some(cp => cp.player_id === p.player_id)
-      );
+      const activePlayers = projectedPlayersData.filter(p => !comparisonPlayers.some(cp => cp.player_id === p.player_id));
 
       const activeDataset = chartRef.current.data.datasets[0];
       activeDataset.data = activePlayers.map((player) => ({
@@ -282,8 +261,7 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       }));
       chartRef.current.update("none"); // Update without animation
     }
-    //console.log("comp, proj", comparisonPlayers, projectedPlayers)
-  }, [comparisonPlayers, projectedPlayersData]); // Update the dataset whenever the comparison players change
+  }, [comparisonPlayers, projectedPlayersData, highlightedPlayer]); // Update the dataset whenever the comparison players change
 
   useEffect(() => {
     if (chartRef.current) {
@@ -304,7 +282,6 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
       }
       chartRef.current.update("none"); // Update without animation
     }
-    //console.log("proj, high", highlightedPlayer, projectedPlayers)
   }, [highlightedPlayer, projectedPlayersData]);
    // Update the dataset whenever the highlighted player changes, even if null
 

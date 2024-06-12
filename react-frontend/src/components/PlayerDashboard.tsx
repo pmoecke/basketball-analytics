@@ -59,10 +59,10 @@ const PlayerDashboard: React.FC = () => {
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerOverviewParams> = {};
-    if (player_name != undefined) {
+    if (player_name !== undefined) {
       params.player_name = player_name;
     }
-    if (season != undefined) {
+    if (season !== undefined) {
       params.season = season;
     }
     if (playerFilterValues != null) {
@@ -106,6 +106,9 @@ const PlayerDashboard: React.FC = () => {
       return 0;
     });
 
+    // Clear the comaprison player array to avoid bugs in plot
+    setComparisonPlayers([])
+
     // Take only the first 100 elements after sorting
     let top100Players = sortedData.slice(0, 100);
     console.log("Setting sorted players", top100Players)
@@ -116,7 +119,7 @@ const PlayerDashboard: React.FC = () => {
     const top100PlayerIds: number[] = sortedPlayers.map(player => player.player_id);
     const params: Partial<PlayerProjectionParams> = {};
     params.player_id = top100PlayerIds;
-    if (projection != "custom_projection") {
+    if (projection !== "custom_projection") {
       params.projection = projection;
       console.log("top100PlayerIds", top100PlayerIds)
       if (top100PlayerIds.length !== 0){
