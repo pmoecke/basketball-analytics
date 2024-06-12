@@ -9,9 +9,9 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = ({ label, value, onChange, options }) => {
   return (
-    <div className="my-3 row">
-      <p className="col-md-3 white">{label}</p>
-      <div className="col-md-9">  {/* Changed from col-md-4 to col-md-8 for better spacing */}
+    <div className='mt-3'>
+      <div>{label}</div>
+      <div>  {/* Changed from col-md-4 to col-md-8 for better spacing */}
       
         <select
           className="form-select"
