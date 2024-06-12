@@ -74,7 +74,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
                   options={seasonOptions}
                 />
             </div>
-            <div className="pentagon">
+            <div className="pentagon mt-4">
                 <h1 className="fs-3 text-center white">Player Filter</h1>
                 <FilterGraph 
                   min={min} 

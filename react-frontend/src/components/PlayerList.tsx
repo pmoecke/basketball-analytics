@@ -1,6 +1,6 @@
 // PlayerList.tsx
 import React from 'react';
-import { Player, PlayerArray } from '../types/player';
+import { Player, PlayerArray, OrderKeyValuePair } from '../types/player';
 import TooltipOverlay from "./TooltipOverlay";
 import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
 // Styling
@@ -10,7 +10,7 @@ interface PlayerListProps {
     players: PlayerArray;
     setSelectedPlayer: (player: Player) => void;
     setShowModal: (show: boolean) => void;
-    orderValue: keyof Player;
+    orderValue: OrderKeyValuePair;
     togglePlayerForComparison: (player: Player) => void;
     comparisonPlayers: PlayerArray;
     highlightedPlayer: Player | null;
@@ -65,10 +65,7 @@ const PlayerList: React.FC<PlayerListProps> = ({
                 }}
                 >
                 <div className='row-content'>
-                    {typeof player[orderValue] === 'number' ? Number.isInteger(player[orderValue]) ? player[orderValue]
-                        : (player[orderValue] as number).toFixed(2)
-                        : player[orderValue]} 
-                     {" "}- {player.player_name}
+                    {(player[orderValue["value"]] as number).toFixed(2)} - {player.player_name}
                 </div>
                 <div className="d-flex align-items-center">
                     <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  

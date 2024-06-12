@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Player, PlayerArray, ProjectedPlayer } from "../types/player";
+import { orderKeyValues, OrderKeyValuePair, Player, PlayerArray, ProjectedPlayer } from "../types/player";
 import PlayerList from "./PlayerList";
 import Player2DGraph from "./Player2DGraph";
 import PlayerModal from "./PlayerModal";
@@ -17,7 +17,7 @@ import Order from "./Order";
 import ComparisonView from "./Comparison";
 import ComparisonModal from "./ComparisonModal";
 
-import AdvancedFilterModal from "./AdvancedFilterModal";
+import AdvancedFilterModal from "./CustomProjectionModal";
 import TooltipOverlay from "./TooltipOverlay";
 import ProjectionDropdown from "./projectionDropdown"
 import { playerProjection } from "../router/data";
@@ -28,7 +28,7 @@ const PlayerDashboard: React.FC = () => {
   const [sortedPlayers, setSortedPlayers] = useState<PlayerArray>([]);
   // Ordering
   const [sortOrder, setSortOrder] = useState("desc");
-  const [orderValue, setOrderValue] = useState<keyof Player>("player_name");
+  const [orderValue, setOrderValue] = useState<OrderKeyValuePair>(orderKeyValues[0]);
   // View player
   const [showModal, setShowModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
@@ -47,7 +47,7 @@ const PlayerDashboard: React.FC = () => {
   // Projections
   const [projection, setProjection] = useState<string | undefined>("boxscore");
   const [playerProjections, setPlayerProjections] = useState<ProjectedPlayer[]>([]);
-  const [projectionCols, setProjectionCols] = useState<string[]>([]);
+  const [customProjectionPlayerData, setCustomProjectionPlayerData] = useState<ProjectedPlayer[]>([]);
 
   // Toggle sidebar
   const [isOpen, setIsOpen] = useState(false);
@@ -59,10 +59,10 @@ const PlayerDashboard: React.FC = () => {
   // Handles general player filtering
   useEffect(() => {
     const params: Partial<PlayerOverviewParams> = {};
-    if (player_name != undefined) {
+    if (player_name !== undefined) {
       params.player_name = player_name;
     }
-    if (season != undefined) {
+    if (season !== undefined) {
       params.season = season;
     }
     if (playerFilterValues != null) {
@@ -94,8 +94,8 @@ const PlayerDashboard: React.FC = () => {
     console.log("sortOrder", { sortOrder });
     let sortedData = [...players];
     sortedData.sort((a, b) => {
-      const keyA = a[orderValue];
-      const keyB = b[orderValue];
+      const keyA = a[orderValue["value"]];
+      const keyB = b[orderValue["value"]];
       if (typeof keyA === "number" && typeof keyB === "number") {
         return sortOrder === "asc" ? keyA - keyB : keyB - keyA;
       } else if (typeof keyA === "string" && typeof keyB === "string") {
@@ -106,34 +106,40 @@ const PlayerDashboard: React.FC = () => {
       return 0;
     });
 
+    // Clear the comaprison player array to avoid bugs in plot
+    setComparisonPlayers([])
+
     // Take only the first 100 elements after sorting
     let top100Players = sortedData.slice(0, 100);
-    const top100PlayerIds: number[] = top100Players.map(player => player.player_id);
+    console.log("Setting sorted players", top100Players)
+    setSortedPlayers(top100Players);
+  }, [players, sortOrder, orderValue]);
+
+  useEffect(() => {
+    const top100PlayerIds: number[] = sortedPlayers.map(player => player.player_id);
     const params: Partial<PlayerProjectionParams> = {};
     params.player_id = top100PlayerIds;
-    if (projection != "custom_projection") {
+    if (projection !== "custom_projection") {
       params.projection = projection;
+      console.log("top100PlayerIds", top100PlayerIds)
+      if (top100PlayerIds.length !== 0){
+        // Update the state for player projections based on the filtered 100 sorted players
+        playerProjection(params)
+        .then(data => {
+          if (data !== undefined) {
+            console.log("projectedplayers", data);
+            setPlayerProjections(data);
+          }
+        });
+      }
     }
     else {
-      params.col = projectionCols;
+      const data = customProjectionPlayerData.filter(player => top100PlayerIds.includes(player.player_id));
+      setPlayerProjections(data);
+      console.log("setting projection data for custom projection", data)
     }
-
-    console.log("top100PlayerIds", top100PlayerIds)
-    if (top100PlayerIds.length !== 0){
-      // Update the state for player projections based on the filtered 100 sorted players
-      playerProjection(params)
-      .then(data => {
-        if (data !== undefined) {
-          console.log("projectedplayers", data);
-          setPlayerProjections(data);
-        }
-      });
-    }
-    
-    // Update state with only the first 100 sorted players
-    setSortedPlayers(top100Players);
-  }, [players, sortOrder, orderValue, projection]);
-
+  }, [sortedPlayers, projection, customProjectionPlayerData]);
+  
 
   const togglePlayerForComparison = (player: Player) => {
     if (
@@ -262,7 +268,7 @@ const PlayerDashboard: React.FC = () => {
       <AdvancedFilterModal
         showModal={showProjectionConfig}
         handleClose={() => setShowProjectionConfig(false)}
-        setProjectionCols={setProjectionCols}
+        setCustomProjectionPlayerData={setCustomProjectionPlayerData}
       />
       <SidebarFilter
         setPlayer_name={setPlayer_name}

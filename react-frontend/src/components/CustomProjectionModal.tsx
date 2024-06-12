@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-bootstrap/Modal";
-import { Nav, Tab, Button } from 'react-bootstrap';
-import MultiRangeSlider from "./MultiRangeSlider";
-import { statDictionary } from "./statDictionary";
-import "./AdvancedFilterModal.css";
-import TooltipOverlay from "./TooltipOverlay";
-import { tooltipTexts } from "./tooltipTexts";
-import { statMapping } from "./statMapping";
+import {Modal, ProgressBar} from "react-bootstrap";
+import { Button } from 'react-bootstrap';
+import "./CustomProjectionModal.css";
+import { ProjectedPlayer } from "../types/player";
+import { PlayerProjectionParams, playerProjection } from "../router/data";
 
 interface AdvancedFilterModalProps {
   showModal: boolean;
   handleClose: () => void;
-  setProjectionCols: (value: string[]) => void;
+  setCustomProjectionPlayerData: (value: ProjectedPlayer[]) => void;
 }
 
 const COLUMNS = ["games-played", "minutes", "points", "points-per-player-possession",
@@ -69,14 +66,18 @@ const COLUMNS = ["games-played", "minutes", "points", "points-per-player-possess
 const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
   showModal,
   handleClose,
-  setProjectionCols,
+  setCustomProjectionPlayerData,
 }) => {
-  const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
+  const [projectionCols, setProjectionCols] = useState<string[]>([]);
+  const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
+  const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, checked } = event.target;
     
-    setSelectedAttributes(prevSelectedAttributes => {
+    setProjectionCols(prevSelectedAttributes => {
       if (checked) {
         // Add the checked category to the state
         return [...prevSelectedAttributes, id];
@@ -88,9 +89,44 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
   };
 
   const applyCheckedValues = () => {
-    selectedAttributes.forEach(attribute => console.log(attribute));
-    setProjectionCols(selectedAttributes)
-    handleClose()
+    if (projectionCols.length < 2) {
+      setShowInfoPopup(true);
+      setTimeout(() => {
+        setShowInfoPopup(false);
+      }, 5000); // Hide the popup after 5 seconds
+      return;
+    }
+  
+    setShowProgressBar(true);
+    setProgress(0);
+    setIsButtonDisabled(true);
+  
+    // Simulate progress bar
+    let progressValue = 0;
+    const interval = setInterval(() => {
+      progressValue += 1;
+      setProgress(progressValue);
+      if (progressValue >= 100) {
+        clearInterval(interval);
+      }
+    }, 300);
+  
+    // Build query here
+    const params: Partial<PlayerProjectionParams> = {};
+    params.col = projectionCols;
+    playerProjection(params)
+      .then(data => {
+        if (data !== undefined) {
+          console.log("projectedplayers", data);
+          setCustomProjectionPlayerData(data);
+        }
+      })
+      .finally(() => {
+        setShowProgressBar(false);
+        clearInterval(interval);
+        setIsButtonDisabled(false);
+        handleClose();
+      });
   };
  
   return (
@@ -101,33 +137,58 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       size="xl"
     >
       <Modal.Header closeButton className="advanced-filter-modal-header">
-        <Modal.Title>Configure Custom Projection</Modal.Title>
+      <Modal.Title>
+        Configure Custom Projection
+        {showInfoPopup && (
+          <span className="info-popup text-center text-danger d-inline" style={{ marginLeft: '4rem' }}>
+            Please select at least two attributes.
+          </span>
+        )}
+      </Modal.Title>
+
+
       </Modal.Header>
       <Modal.Body className="advanced-filter-modal-body">
         <div className="container">
+        {showProgressBar && (
+          <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: '70vh' }}>
+          <ProgressBar now={progress} striped animated label={`${progress}%`} style={{ width: '80%' }} />
+          <div className="fs-3 mt-3">Creating custom projection, please wait</div>
+        </div>
+        
+        )}
+        {!showProgressBar && (
           <div className="row">
-            {COLUMNS.map((attribute, index) => (
-              <div className="col-md-4" key={attribute}>
+            {COLUMNS.map((col, index) => (
+              <div className="col-md-4" key={col}>
                 <div className="form-switch sliding-checkbox mb-1">
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    id={attribute}
-                    checked={selectedAttributes.includes(attribute)}
+                    id={col}
+                    checked={projectionCols.includes(col)}
                     onChange={handleCheckboxChange}
                   />
-                  <label className="form-check-label" htmlFor={attribute}>
-                    {attribute}
+                  <label className="form-check-label" htmlFor={col}>
+                    {col}
                   </label>
                 </div>
 
               </div>
             ))}
           </div>
+          )}
         </div>
       </Modal.Body>
       <Modal.Footer className="advanced-filter-modal-footer d-flex justify-content-center">
-        <Button variant="primary" onClick={applyCheckedValues}>Apply Configuration</Button>
+        <Button
+          variant="primary"
+          onClick={applyCheckedValues}
+          className={isButtonDisabled ? 'disabled' : ''}
+          disabled={isButtonDisabled}
+        >
+          Apply Configuration
+        </Button>
       </Modal.Footer>
     </Modal>
   );

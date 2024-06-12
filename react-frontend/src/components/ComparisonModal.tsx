@@ -52,11 +52,11 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 
   const getTriangle = (stat1: number, stat2: number) => {
     if (stat1 > stat2) {
-      return <span style={{ color: "lightgreen" }}>{stat1} ▲</span>;
+      return <span style={{ color: "lightgreen" }}>{Number(stat1).toFixed(2)} ▲</span>;
     } else if (stat1 < stat2) {
-      return <span style={{ color: "LightCoral" }}>{stat1} ▼</span>;
+      return <span style={{ color: "LightCoral" }}>{Number(stat1).toFixed(2)} ▼</span>;
     } else {
-      return <>{stat1}</>;
+      return <span>{Number(stat1).toFixed(2)}</span>;
     }
   };
 
@@ -87,7 +87,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
               <th scope="row" className="text-center">{player1.player_name}</th>
               {filteredStats.map((stat) => (
                 <td key={stat} className="text-right">
-                  {getTriangle(player1[stat as keyof Player] as number, player2[stat as keyof Player] as number)}
+                  {getTriangle(player1[stat as keyof Player] as number, (player2[stat as keyof Player] as number))}
                 </td>
               ))}
             </tr>
@@ -110,19 +110,18 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
   };
 
   const categoryNames: { [key: string]: string } = {
-    "AdditionalData": "Additional Data",
     "Boxscore": "Boxscore",
     "DefenseAgainstShootingCombinations": "Combination Defense",
     "Drives": "Drives",
     "DrivesDefense": "Drives Defense",
     "Efficiency": "Efficiency",
     "PlayTypeCombinations": "Play Types",
-    "Stats": "Stats"
+    "AdditionalData": "Additional Data",
   };
 
   const categories = [
-    "AdditionalData", "Boxscore", "DefenseAgainstShootingCombinations", "Drives",
-    "DrivesDefense", "Efficiency", "PlayTypeCombinations", "Stats"
+    "Boxscore", "DefenseAgainstShootingCombinations", "Drives",
+    "DrivesDefense", "Efficiency", "PlayTypeCombinations", "AdditionalData", 
   ];
 
   const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
