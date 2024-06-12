@@ -172,9 +172,9 @@ def column_exists(cursor, table_name, column_name):
 
 
 if __name__ == "__main__":
-    file = "data_aggregated.csv"
+    # file = "data_aggregated.csv"
     scores = pd.read_csv("player_scores.csv")
-    df = load_data(file)
+    # df = load_data(file)
     # Connect to the database
     data_path = os.environ.get("DATA_PATH")
     if data_path:   # You are in deployment (this variable is crated only in the helm chart, not in the docker)
@@ -184,8 +184,8 @@ if __name__ == "__main__":
          os.environ["DATA_PATH"] = "./"
 
     con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
-    create_tables(con, df)
-    insert_data(con, df)
+    # create_tables(con, df)
+    # insert_data(con, df)
     insert_scores_data(con, "player_scores.csv")
     con.commit()
     con.close()
