@@ -1,36 +1,45 @@
-import React, { useEffect } from 'react';
-import Chart, { ChartConfiguration, ChartType } from 'chart.js/auto';
+import React, { useEffect, useRef } from 'react';
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { Player } from "../types/player";
+import "./PlayerGraph.css"
 
 interface PlayerGraphProps {
     player: Player;
 }
 
 const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
-    useEffect(() => {
-        var player1_name = player['player-name']
-        var player1_stats = [
-            player['drives_%'],
-            player['free_throws_%'],
-            player['isolation_%'],
-            player['pick-n-pops_%'],
-            player['transition_attacks_%']
-        ]
-        var player1_color = 'rgb(153, 102, 255)'
-        var player1_color_transparent = 'rgba(153, 102, 255, 0.1)'
+    const chartRef = useRef<Chart | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-        var text_color = '#ddd'
-        var background_color = "#222222"
-        var font_size = 16
+    useEffect(() => {
+        const chartElement = canvasRef.current;
+        if (!chartElement) return;
+
+        const player1_name = player.player_name;
+        const player1_stats = [
+            player.off_score_2,
+            player.off_score_3,
+            player.reb_score,
+            player.def_score,
+            player.off_score_1,
+        ];
+        const player1_color = 'rgb(153, 102, 255)';
+        const player1_color_transparent = 'rgba(153, 102, 255, 0.1)';
+
+        const text_color = '#ddd';
+        const background_color = "#222222";
+        const font_size = 16;
 
         const data = {
-            labels: ["Drives %", "Free Throws %", "Isolation %", "Pick-n-Pops %", "Transition Attacks %"],
+            labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
             datasets: [{
                 label: player1_name,
                 data: player1_stats,
                 backgroundColor: player1_color_transparent,
                 borderColor: player1_color,
                 pointBackgroundColor: player1_color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: player1_color,
             }],
         };
@@ -48,8 +57,6 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         radius: 4,
                         hitRadius: 10,
                         hoverRadius: 6,
-                        borderColor: '#fff',
-                        hoverBackgroundColor: '#fff',
                     }
                 },
                 scales: {
@@ -86,19 +93,28 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
                         //onClick: (e) => e.stopPropagation(),
                     },
                 },
+                maintainAspectRatio: true, // Ensure the aspect ratio is maintained
+                aspectRatio: 1.4, // Width is 1.4 times the height
             },
         };
 
-        const chartElement = document.getElementById('playerChart') as HTMLCanvasElement;
-        if (chartElement) {
-            Chart.defaults.font.size = font_size;
-            const playerChart = new Chart(chartElement, config);
+        if (chartRef.current) {
+            chartRef.current.destroy();
         }
-    }, []);
+
+        chartRef.current = new Chart(chartElement, config);
+
+        return () => {
+            if (chartRef.current) {
+                chartRef.current.destroy();
+                chartRef.current = null;
+            }
+        };
+    }, [player]);
 
     return (
         <div className="chart-container">
-            <canvas id="playerChart"></canvas>
+            <canvas id="playerChart" ref={canvasRef}></canvas>
         </div>
     );
 };

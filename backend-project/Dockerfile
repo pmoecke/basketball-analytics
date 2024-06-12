@@ -1,7 +1,11 @@
 FROM python:3.9-slim
 
-COPY ./ /srv/backend-app
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libffi-dev \        
+    && rm -rf /var/lib/apt/lists/*
 
+COPY ./ /srv/backend-app
 WORKDIR /srv/backend-app
 RUN pip3 install --no-cache-dir .
 

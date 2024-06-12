@@ -1,0 +1,31 @@
+span {
+    color: white;
+}
+
+.player-comparison {
+    height: 10vh;
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Distribute items evenly horizontally */
+}
+  
+.player-info {
+    height: 100px; /* Adjust height as needed */
+    font-size: 24px;
+    background-color:#444444;
+    border: solid;
+    border-radius: 10px;
+    border-color: orange;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0; /* Prevent shrinking */
+    justify-content: space-between; /* Center content vertically */
+    align-items: center; /* Center content vertically */
+    padding: 24px;
+}
+
+.btn-remove {
+    height: 32px;
+    width: 32px;
+}

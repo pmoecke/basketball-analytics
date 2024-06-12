@@ -20,33 +20,6 @@ a {
     text-decoration: none!important;
 }
 
-.player-list {
-    color: orange;
-    height: 65vh; /* Adjust based on your header/nav size */
-    overflow-y: auto; /* Enables vertical scrolling */
-    border-radius: 10px;
-    -webkit-overflow-scrolling: touch; /* For momentum scrolling on iOS devices */
-}
-
-.player-row {
-    font-size: 24px;
-    color: white;
-    border: solid;
-    border-color: black;
-    border-radius: 10px;
-    border-width: 2px;
-    margin-bottom: 10px;
-    margin-right: 6px;
-    padding: 6px;
-    background-color: black;
-    cursor: pointer;
-}
-
-.player-row:hover {
-    border-color: #313131;
-    background-color: #313131;
-}
-
 .box {
     border: solid;
     border-width: 2px;
@@ -57,21 +30,31 @@ a {
 }
 
 .blur-background {
-    filter: blur(10px);
+    filter: blur(10px) brightness(80%);
 }
 
-.player-modal .modal-dialog {
-    max-width: 600px; /* Set the maximum width you prefer */
-    width: 100%; /* Use 100% of the max-width */
-    margin: auto; /* Center the modal dialog horizontally */
-  }
-
-.player-modal-header {
-    background-color:#222222;   
-    color: white;
+html body .container {
+    max-width: 1800px; /* This is more specific than just .container */
 }
 
-.player-modal-body {
-    background-color:#222222;   
-    color: white;
+.box2 {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Adjusts rows size, 1fr takes the remaining space */
+    height: 100%; /* Optional: Ensure the container fills the parent height */
+}
+
+
+.sidebar-btn {
+    width: 50%; 
+    height: 100%; 
+    font-size: 48px!important; /* Adjust as needed */
+    font-weight: bold;
+    padding: 0;
+    color: #e7e7e7!important;
+    background-color: #222222!important; /* Example color, adjust as needed */
+}
+.sidebar-btn:hover {
+    color: #ffffff!important;
+    background-color: #444444!important; /* Example hover color, adjust as needed */
+    outline: none; /* Optionally remove focus outline for custom styling */
 }
