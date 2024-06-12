@@ -1,40 +1,36 @@
 import React, { useEffect } from "react";
-import Chart, { ChartConfiguration, ChartType } from "chart.js/auto";
+import Chart, { ChartConfiguration } from "chart.js/auto";
 import { Player } from "../types/player";
 
 interface ComparisonGraphProps {
   player1: Player;
   player2: Player;
-  playerScore1: any;
-  playerScore2: any;
 }
 
 const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
   player1,
   player2,
-  playerScore1,
-  playerScore2,
 }) => {
   useEffect(() => {
     var player1_name = player1.player_name;
 
     var player1_stats = [
-      playerScore1.off_score_2,
-      playerScore1.off_score_3,
-      playerScore1.reb_score,
-      playerScore1.def_score,
-      playerScore1.off_score_1,
+      player1.off_score_2,
+      player1.off_score_3,
+      player1.reb_score,
+      player1.def_score,
+      player1.off_score_1,
     ]
     var player1_color = "rgb(153, 102, 255)";
     var player1_color_transparent = "rgba(153, 102, 255, 0.1)";
 
     var player2_name = player2.player_name;
     var player2_stats = [
-      playerScore2.off_score_2,
-      playerScore2.off_score_3,
-      playerScore2.reb_score,
-      playerScore2.def_score,
-      playerScore2.off_score_1,
+      player2.off_score_2,
+      player2.off_score_3,
+      player2.reb_score,
+      player2.def_score,
+      player2.off_score_1,
     ]
     var player2_color = "rgb(255, 159, 64)";
     var player2_color_transparent = "rgba(255, 159, 64, 0.1)";
@@ -134,9 +130,10 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
     ) as HTMLCanvasElement;
     if (chartElement) {
       Chart.defaults.font.size = font_size;
-      const playerChart = new Chart(chartElement, config);
+      // Create the new chart based on the config
+      new Chart(chartElement, config);
     }
-  }, []);
+  }, [player1, player2]);
 
   return (
     <div className="chart-container">

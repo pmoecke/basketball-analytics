@@ -1,7 +1,6 @@
 // PlayerList.tsx
 import React from 'react';
-import { Player, PlayerArray } from '../types/player';
-import { FaFlag } from 'react-icons/fa';
+import { Player, PlayerArray, OrderKeyValuePair } from '../types/player';
 import TooltipOverlay from "./TooltipOverlay";
 import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
 // Styling
@@ -11,13 +10,24 @@ interface PlayerListProps {
     players: PlayerArray;
     setSelectedPlayer: (player: Player) => void;
     setShowModal: (show: boolean) => void;
+    orderValue: OrderKeyValuePair;
     togglePlayerForComparison: (player: Player) => void;
     comparisonPlayers: PlayerArray;
     highlightedPlayer: Player | null;
     setHighlightedPlayer: (player: Player | null) => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, setShowModal, togglePlayerForComparison, comparisonPlayers, highlightedPlayer, setHighlightedPlayer}) => {
+const PlayerList: React.FC<PlayerListProps> = ({ 
+    players, 
+    setSelectedPlayer, 
+    setShowModal, 
+    orderValue,
+    togglePlayerForComparison, 
+    comparisonPlayers, 
+    highlightedPlayer, 
+    setHighlightedPlayer
+}) => {
+
     // Only show the first 100 players
     return (
         <ul className="player-list">
@@ -32,7 +42,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {
                           const player = data[0]
-                          console.log("api call", player)
                           setSelectedPlayer(player);
                         }
                     }); 
@@ -44,27 +53,20 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                       };
                     playerStatsFromId(params).then((data) => {
                         if (data !== undefined) {
-                          console.log(data);
-                          const player = data[0]
+                          const player = data[0] 
                           setHighlightedPlayer(player);
-                          console.log(player);  
                         }
                     })  
                           
                 }}
                 onMouseLeave={() => {
                     setHighlightedPlayer(null);
-                    console.log(null); 
+                    // console.log(null); 
                 }}
-            >
-            
+                >
                 <div className='row-content'>
-                    <TooltipOverlay tooltipText='Eff score = (PTS + REB + AST + STL + BLK − Missed FG − Missed FT - TO) / GP' placement="left">
-                    {Math.round(player.efficiency_score).toFixed(2)} 
-                    </TooltipOverlay>
-                    : {player.player_name}
+                    {(player[orderValue["value"]] as number).toFixed(2)} - {player.player_name}
                 </div>
-              
                 <div className="d-flex align-items-center">
                     <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
                         <button 
@@ -78,7 +80,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players, setSelectedPlayer, set
                             }`}
                             style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
                         >
-                            {comparisonPlayers.find(p => p.player_id === player.player_id) ? '-' : '+'}
+                            {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove Compare' : 'Add Compare'}
                         </button>
                     </TooltipOverlay>
                  </div>

@@ -15,31 +15,10 @@ def clean_name(name: str) -> str:
             .replace("-", "_")
 
 
-def load_data() -> tuple[pd.DataFrame, list[str]]:
+def load_data(file_name) -> tuple[pd.DataFrame, list[str]]:
     # Extract League and Season information from filename
-    regex = r".+\. (.+) \- (\d{4}-\d{4}).xls$"
-    frames = []
-    s = 0
-    for file in os.listdir("Data"):
-        filename = os.fsdecode(file)
-        m = re.match(regex, filename)
-        if m is not None:
-            s += 1
-            xl = pd.ExcelFile(os.path.join("Data", filename))
-            # Select the right sheet
-            df = xl.parse("Box score")
-            # Add information contained in filename
-            df.insert(0, "Season", [m.group(2)] * len(df), False)
-            df.insert(0, "League", [m.group(1)] * len(df), False)
-            print(f"Processed {m.group(1)} - {m.group(2)}")
-            frames.append(df)
-
-    df = pd.concat(frames, ignore_index=True)
-
-    # Clean up the data
-    df = df.replace("-", "0")
-    df = df.rename(columns={"Unnamed: 0": "Jersey number", "Unnamed: 1": "Player name", "Unnamed: 2": "Team name"})
-
+    # df = df.rename(columns={"Unnamed: 0": "Jersey number", "Unnamed: 1": "Player name", "Unnamed: 2": "Team name"})
+    df = pd.read_csv(file_name)
     clean_col_names = {col: clean_name(col) for col in df.columns}
     df = df.rename(columns=clean_col_names)
 
@@ -54,14 +33,15 @@ def load_data() -> tuple[pd.DataFrame, list[str]]:
     df = df.drop(columns=percentage_cols)
 
     # Remove percentage sign so the data can be stored as an int into the database
-    percentages = [col for col in df.columns if ('%' in col) or ("percentage" in col)]
-    for p in percentages:
-        df[p] = df[p].str.replace("%", "")
+    # ALREADY DONE IN DATA AGGREGATION STEP
+    # percentages = [col for col in df.columns if ('%' in col) or ("percentage" in col)]
+    # for p in percentages:
+    #     df[p] = df[p].str.replace("%", "")
 
-    return df, percentages
+    return df
 
 
-def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: list[str]):
+def create_tables(con: sqlite3.Connection, df: pd.DataFrame):
     con = sqlite3.connect("Players.db")
     cur = con.cursor()
     con.execute("DROP TABLE IF EXISTS Player;")
@@ -77,7 +57,8 @@ def create_tables(con: sqlite3.Connection, df: pd.DataFrame, percentages: list[s
     con.execute("CREATE TABLE League (league_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     con.execute("CREATE TABLE Team (team_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT);")
     # Associate each non-real column with a datatype
-    non_real_columns = { p: "INTEGER" for p in percentages }
+    # Removed the percentage columns as they are now floats (i.e. REAL) and not INTEGERs
+    non_real_columns = {}
     non_real_columns["season"] = "TEXT"
     # TODO: Change dtype
     non_real_columns["minutes"] = "TEXT"
@@ -148,6 +129,42 @@ def insert_cluster_data(con: sqlite3.Connection, off_file: str, def_file: str):
             print(f"Player {player_name} not found in the database")
             continue
 
+
+def insert_scores_data(con: sqlite3.Connection, scores_file: str):
+    cur = con.cursor()
+    scores = pd.read_csv(scores_file)
+    # Add Scores data to Stats table by creating new columns for each score
+    if not column_exists(cur, "Stats", "off_score_1"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN off_score_1 REAL;")
+    if not column_exists(cur, "Stats", "off_score_2"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN off_score_2 REAL;")
+    if not column_exists(cur, "Stats", "off_score_3"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN off_score_3 REAL;")
+    if not column_exists(cur, "Stats", "def_score"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN def_score REAL;")
+    if not column_exists(cur, "Stats", "reb_score"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN reb_score REAL;")
+    if not column_exists(cur, "Stats", "player_name"):
+        cur.execute("ALTER TABLE Stats ADD COLUMN player_name TEXT;")
+
+    # Insert data from df into the Scores table
+    for index, row in tqdm(scores.iterrows()):
+        player_name = row['player_name'].replace("'", "''")
+        season = row['season'].replace("'", "''")
+        pid = cur.execute(f"SELECT player_id FROM Player WHERE name = '{player_name}'").fetchone()
+        if pid is not None:
+            pid = pid[0]
+            # Sanity check: give warning if query player_id = {pid} AND season = '{season}' returns more than one row
+            if cur.execute(f"SELECT COUNT(*) FROM Stats WHERE player_id = {pid} AND season = '{season}';").fetchone()[0] > 1:
+                print(f"Player {player_name} has multiple entries for season {season}")
+            cur.execute(f"UPDATE Stats SET player_name = '{player_name}', off_score_1 = {row['off_score_1']}, off_score_2 = {row['off_score_2']}, \
+                        off_score_3 = {row['off_score_3']}, def_score = {row['def_score']}, \
+                        reb_score = {row['reb_score']} WHERE player_id = {pid} AND season = '{season}';")
+        else:
+            print(f"Player {player_name} not found in the database")
+            continue
+
+
 def column_exists(cursor, table_name, column_name):
     cursor.execute(f"PRAGMA table_info({table_name})")
     columns = [row[1] for row in cursor.fetchall()]
@@ -155,9 +172,20 @@ def column_exists(cursor, table_name, column_name):
 
 
 if __name__ == "__main__":
-    df, p = load_data()
-    con = sqlite3.connect("Players.db")
-    create_tables(con, df, p)
+    file = "data_aggregated.csv"
+    scores = pd.read_csv("player_scores.csv")
+    df = load_data(file)
+    # Connect to the database
+    data_path = os.environ.get("DATA_PATH")
+    if data_path:   # You are in deployment (this variable is crated only in the helm chart, not in the docker)
+        data_path = os.environ["DATA_PATH"]
+    else: #You are in local, use local path
+         print("Local environment")
+         os.environ["DATA_PATH"] = "./"
+
+    con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
+    create_tables(con, df)
     insert_data(con, df)
+    insert_scores_data(con, "player_scores.csv")
     con.commit()
     con.close()

@@ -17,7 +17,7 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
     "Defense Against Play Type Combinations" : "defense_against_play_type_combinations",
     "Drivers" : "drivers",
     "Drivers Defense" : "drivers_defense",
-
+    "Custom Projection" : "custom_projection",
   }
   const projectionToolTips: { [key: string]: string } = {
     "boxscore": "A boxscore provides the basic statistical summary of a basketball game, including points, rebounds, assists, and other key metrics.",
@@ -26,12 +26,20 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
     "play_type_combinations": "Play type combinations describe how players perform in different play types such as pick-and-roll, isolation, and post-up plays.",
     "defense_against_play_type_combinations": "Defense against play type combinations measures how effectively a player or team defends against various offensive play types.",
     "drivers": "Drivers statistics track how often and effectively players drive to the basket, including drive frequency and success rate.",
-    "drivers_defense": "Drivers defense measures how well a player or team defends against opponents' drives to the basket, including defensive success rate and impact."
+    "drivers_defense": "Drivers defense measures how well a player or team defends against opponents' drives to the basket, including defensive success rate and impact.",
+    "custom_projection": "Custom Projection allow for the user to group players together based on similarities of specific stats"
   };
 
   return (
     <div className="d-flex justify-content-end align-items-center w-100">
-    <select
+      <TooltipOverlay
+          tooltipText={projectionToolTips[projection!]}
+          placement="left"
+          showTitle={false}
+        >
+        <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+      </TooltipOverlay>
+      <select
         className="form-select"
         value={projection}
         onChange={(e) => setProjection(e.target.value)}
@@ -39,14 +47,7 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
         {Object.entries(projectionOptions).map(([label, value]) => (
             <option key={value} value={value}>{label}</option>
         ))}
-        </select>
-      <TooltipOverlay
-        tooltipText={projectionToolTips[projection!]}
-        placement="left"
-        showTitle={false}
-      >
-        <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-      </TooltipOverlay>
+      </select>
     </div>
   );
 };

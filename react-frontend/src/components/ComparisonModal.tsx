@@ -9,7 +9,7 @@ import "./ComparisonModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
-import { PlayerStatsFromIdParams, getPlayerScore, playerStatsFromId } from "../router/data";
+import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
 import { FaInfoCircle } from "react-icons/fa";
 
 interface ComparisonModalProps {
@@ -25,8 +25,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 }) => {
   const [player1, setPlayer1] = useState<Player | null>(null);
   const [player2, setPlayer2] = useState<Player | null>(null);
-  const [playerScore1, setPlayerScore1] = useState<any | null>(null);
-  const [playerScore2, setPlayerScore2] = useState<any | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("Boxscore");
 
   useEffect(() => {
@@ -48,50 +46,17 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     }
   }, [players]);
 
-  useEffect(() => {
-    if (players.length === 2) {
-      const params1: PlayerStatsFromIdParams = { player_id: [players[0].player_id] };
-      const params2: PlayerStatsFromIdParams = { player_id: [players[1].player_id] };
-
-      playerStatsFromId(params1).then((data) => {
-        if (data !== undefined) {
-          setPlayer1(data[0]);
-        }
-      });
-
-      getPlayerScore(params1).then(data => {
-        if (data !== undefined) {
-          var score = data[0]
-          setPlayerScore1(score);
-        }
-      });
-
-      playerStatsFromId(params2).then((data) => {
-        if (data !== undefined) {
-          setPlayer2(data[0]);
-        }
-      });
-
-      getPlayerScore(params2).then(data => {
-        if (data !== undefined) {
-          var score = data[0]
-          setPlayerScore2(score);
-        }
-      });
-    }
-  }, [players]);
-
   if (players.length !== 2 || !showModal || !player1 || !player2) {
     return null;
   }
 
   const getTriangle = (stat1: number, stat2: number) => {
     if (stat1 > stat2) {
-      return <span style={{ color: "lightgreen" }}>{stat1} ▲</span>;
+      return <span style={{ color: "lightgreen" }}>{Number(stat1).toFixed(2)} ▲</span>;
     } else if (stat1 < stat2) {
-      return <span style={{ color: "LightCoral" }}>{stat1} ▼</span>;
+      return <span style={{ color: "LightCoral" }}>{Number(stat1).toFixed(2)} ▼</span>;
     } else {
-      return <>{stat1}</>;
+      return <span>{Number(stat1).toFixed(2)}</span>;
     }
   };
 
@@ -122,7 +87,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
               <th scope="row" className="text-center">{player1.player_name}</th>
               {filteredStats.map((stat) => (
                 <td key={stat} className="text-right">
-                  {getTriangle(player1[stat as keyof Player] as number, player2[stat as keyof Player] as number)}
+                  {getTriangle(player1[stat as keyof Player] as number, (player2[stat as keyof Player] as number))}
                 </td>
               ))}
             </tr>
@@ -145,19 +110,18 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
   };
 
   const categoryNames: { [key: string]: string } = {
-    "AdditionalData": "Additional Data",
     "Boxscore": "Boxscore",
     "DefenseAgainstShootingCombinations": "Combination Defense",
     "Drives": "Drives",
     "DrivesDefense": "Drives Defense",
     "Efficiency": "Efficiency",
     "PlayTypeCombinations": "Play Types",
-    "Stats": "Stats"
+    "AdditionalData": "Additional Data",
   };
 
   const categories = [
-    "AdditionalData", "Boxscore", "DefenseAgainstShootingCombinations", "Drives",
-    "DrivesDefense", "Efficiency", "PlayTypeCombinations", "Stats"
+    "Boxscore", "DefenseAgainstShootingCombinations", "Drives",
+    "DrivesDefense", "Efficiency", "PlayTypeCombinations", "AdditionalData", 
   ];
 
   const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
@@ -179,7 +143,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
           <div className="row">
           <div className="col-md-2"/>
               <div className="col-md-8">
-                <ComparisonGraph player1={player1} player2={player2} playerScore1={playerScore1} playerScore2={playerScore2}/>
+                <ComparisonGraph player1={player1} player2={player2}/>
               </div>
               <div className="col-md-2">
                 <TooltipOverlay

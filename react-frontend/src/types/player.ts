@@ -93,7 +93,7 @@ export interface Player {
   screen_assist: number;
   screens_off_attempted: number;
   screens_off_made: number;
-  season: number;
+  season: string;
   steals: number;
   steals_to_turnovers: number;
   team_points_with_player: number;
@@ -103,6 +103,11 @@ export interface Player {
   turnovers: number;
   uncontested_field_goals: number;
   uncontested_field_goals_made: number;
+  off_score_1: number;
+  off_score_2: number;
+  off_score_3: number;
+  def_score: number;
+  reb_score: number;
 }
 
 export interface ProjectedPlayer {
@@ -110,15 +115,19 @@ export interface ProjectedPlayer {
   x: number;
   y: number;
 }
+export interface OrderKeyValuePair {
+  key: string;
+  value: (keyof Player);
+}
 
-export const playerKeys2: (keyof Player)[] = [
-  "efficiency_score",
-  "player_id",
-  "player_name",
-  "offensive_rating",
-  "defensive_rating",
-  "games_played",
-]
+// Define the ordered key-value pairs
+export const orderKeyValues: OrderKeyValuePair[] = [
+  { key: "Off 1", value: "off_score_1" },
+  { key: "Off 2", value: "off_score_2" },
+  { key: "Off 3", value: "off_score_3" },
+  { key: "Defense", value: "def_score" },
+  { key: "Rebounds", value: "reb_score" },
+];
 
 export const playerKeys: (keyof Player)[] = [
   "efficiency_score",

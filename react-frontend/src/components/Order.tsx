@@ -1,43 +1,48 @@
-import React from 'react';
-import { Player, playerKeys } from '../types/player';
+import React, { ChangeEvent } from 'react';
+import { Player, OrderKeyValuePair, orderKeyValues } from '../types/player';
+import { Button } from 'react-bootstrap';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import './Order.css';
 
 interface OrderProps {
   sortOrder: string;
   setSortOrder: (order: string) => void;
-  orderValue: keyof Player;
-  setOrderValue: (value: keyof Player) => void;
+  orderValue: OrderKeyValuePair;
+  setOrderValue: (value: OrderKeyValuePair) => void;
 }
 
 const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setOrderValue }) => {
+  
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedText = e.target.options[e.target.selectedIndex].text;
+    const selectedValue = e.target.value as keyof Player;
+
+    setOrderValue({ key: selectedText, value: selectedValue });
+
+    console.log(`Selected text: ${selectedText}`);
+    console.log(`Selected value: ${selectedValue}`);
+  };
+  
   return (
-    <div>
-       <div className="row">
-       <h1 className="fs-3 white">Ordering</h1>
-        <div className='col-md-6'>
-          <select
-            className="form-select"
-            value={orderValue}
-            onChange={(e) => setOrderValue(e.target.value as keyof Player)}
-          >
-            {playerKeys.map(key => (
-              <option key={key} value={key}>{key.replace(/_/g, ' ').replace(/-/g, ' ').replace(/%/g, '% ')}</option>
-            ))}
-          </select>
-        </div>
-        <div className='col-md-6'>
-          <select
-            className="form-select"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-          >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
-        </div>
+    <div className="d-flex justify-content-left">
+      <div className='me-0'>
+        <select
+          className="form-select no-right-round-corners"
+          value={orderValue["value"]}
+          onChange={(e) => handleChange(e)}
+        >
+          {orderKeyValues.map(keyValues => (
+            <option key={keyValues["key"]} value={keyValues["value"]}>{keyValues["key"]}</option>
+          ))}
+        </select>
       </div>
-      <div className="my-3 row">
-        
-      </div>
+      <Button
+        variant="secondary"
+        className="no-left-round-corners"
+        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+      >
+        {sortOrder === 'asc' ? <FaArrowUp /> : <FaArrowDown />}
+      </Button>
     </div>
   );
 };

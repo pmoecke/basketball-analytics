@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Chart, { ChartConfiguration, ChartType, PluginOptionsByType } from 'chart.js/auto';
+import Chart from 'chart.js/auto';
 import 'chartjs-plugin-dragdata';
 
 declare module 'chart.js' {
@@ -12,14 +12,15 @@ declare module 'chart.js' {
 
 let filterChart : Chart | null = null;
 
-interface PlayerFilterProps {
+interface FilterGraphProps {
   min: number[];
   max: number[];
-  setPlayerFilterValues: ((value: [number[], number[]]) => void)
-  handleClose: any;
+  setTempPlayerFilterValues: ((value: [number[], number[]]) => void)
+  handleApplyFilters: () => void
+  handleClose: () => void
 }
 
-const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValues, handleClose}) => {
+const FilterGraph: React.FC<FilterGraphProps> = ({min, max, setTempPlayerFilterValues, handleApplyFilters, handleClose}) => {
     useEffect(() => {
         const ctx = document.getElementById('filterChart') as HTMLCanvasElement;
         if (ctx) {
@@ -107,8 +108,8 @@ const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValu
                                     ctx.style.cursor = 'default';
                                 }
                                 if (max[index] <= min[index]) {
-                                    if (datasetIndex == 0) max[index] = min[index] + 1;
-                                    if (datasetIndex == 1) min[index] = max[index] - 1;
+                                    if (datasetIndex === 0) max[index] = min[index] + 1;
+                                    if (datasetIndex === 1) min[index] = max[index] - 1;
                                     filterChart?.update();
                                 }
                                 console.log(min, max);
@@ -137,7 +138,8 @@ const FilterGraph: React.FC<PlayerFilterProps> = ({min, max, setPlayerFilterValu
                 onClick={() => {
                     // top, right, bottom right, left bottom, left
                     // off2, off3, reb, def, off1
-                    setPlayerFilterValues([min, max])
+                    setTempPlayerFilterValues([min, max])
+                    handleApplyFilters()
                     handleClose()
                 }}>
                 Apply Filter
