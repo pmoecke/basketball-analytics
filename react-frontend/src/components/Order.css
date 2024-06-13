@@ -1,6 +1,7 @@
 .no-left-round-corners {
     border-top-left-radius: 0!important;
     border-bottom-left-radius: 0!important;
+    height: 38px;
   }
   
 .no-right-round-corners {

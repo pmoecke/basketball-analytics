@@ -127,15 +127,6 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
               <div className="col-md-8">
                <PlayerGraph player={selectedPlayer}/>
               </div>
-              <div className="col-md-2">
-                <TooltipOverlay
-                  tooltipText={pentagonTooltips}
-                  placement="right"
-                  showTitle={false}
-                >
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-                </TooltipOverlay>  
-              </div>
             </div>
             
             

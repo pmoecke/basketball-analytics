@@ -124,8 +124,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     "DrivesDefense", "Efficiency", "PlayTypeCombinations", "AdditionalData", 
   ];
 
-  const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
-
   return (
     <Modal
       show={showModal}
@@ -144,15 +142,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
           <div className="col-md-2"/>
               <div className="col-md-8">
                 <ComparisonGraph player1={player1} player2={player2}/>
-              </div>
-              <div className="col-md-2">
-                <TooltipOverlay
-                  tooltipText={pentagonTooltips}
-                  placement="right"
-                  showTitle={false}
-                >
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-                </TooltipOverlay>  
               </div>
             <div className="col-md-12">
               <div className="table-container">
