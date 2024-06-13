@@ -1,12 +1,13 @@
 import { PlayerArray, ProjectedPlayer } from '../types/player';
 import axiosClient from './apiClient'
 
-export interface PlayerStatsFromIdParams {
+export interface PlayerStatsFromIdAndSeasonParams {
   player_id?: number[];
+  season?: string;
 }
 
 // Gets all the player stats for multiple players
-export function playerStatsFromId(params: PlayerStatsFromIdParams): Promise<PlayerArray | undefined> {
+export function playerStatsFromIdAndSeason(params: PlayerStatsFromIdAndSeasonParams): Promise<PlayerArray | undefined> {
   const url = 'stats'; // Endpoint relative to the BASE_URL
   console.log("Params being sent to stats: ", params)
   return axiosClient.get<PlayerArray>(url, { params })

@@ -27,7 +27,7 @@ const FilterGraph: React.FC<FilterGraphProps> = ({min, max, setTempPlayerFilterV
             filterChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
+                    labels: ["Perimeter Offense", "Driving Offense", "Rebounding", "DPI", "Playing in the Paint"],
                     datasets: [{
                             label: "Maximum",
                             data: max,

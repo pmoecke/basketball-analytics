@@ -20,14 +20,14 @@ const ProjectionDropdown: React.FC<ProjectionProps> = ({ projection, setProjecti
     "Custom Projection" : "custom_projection",
   }
   const projectionToolTips: { [key: string]: string } = {
-    "boxscore": "A boxscore provides the basic statistical summary of a basketball game, including points, rebounds, assists, and other key metrics.",
-    "advanced_boxscore": "Advanced boxscore statistics include metrics like Player Efficiency Rating (PER), True Shooting Percentage (TS%), and other advanced analytics.",
-    "additional_field_goal_data": "Additional field goal data includes detailed statistics on shot types, locations, and shooting efficiency.",
-    "play_type_combinations": "Play type combinations describe how players perform in different play types such as pick-and-roll, isolation, and post-up plays.",
-    "defense_against_play_type_combinations": "Defense against play type combinations measures how effectively a player or team defends against various offensive play types.",
-    "drivers": "Drivers statistics track how often and effectively players drive to the basket, including drive frequency and success rate.",
-    "drivers_defense": "Drivers defense measures how well a player or team defends against opponents' drives to the basket, including defensive success rate and impact.",
-    "custom_projection": "Custom Projection allow for the user to group players together based on similarities of specific stats"
+    "boxscore": "'Boxscore' provides the basic statistical summary of a basketball game, including points, rebounds, assists, and other key metrics.",
+    "advanced_boxscore": "'Advanced boxscore statistics' include metrics like Player Efficiency Rating (PER), True Shooting Percentage (TS%), and other advanced analytics.",
+    "additional_field_goal_data": "'Additional field goal data' includes detailed statistics on shot types, locations, and shooting efficiency.",
+    "play_type_combinations": "'Play type combinations' describe how players perform in different play types such as pick-and-roll, isolation, and post-up plays.",
+    "defense_against_play_type_combinations": "'Defense against play type combinations' measures how effectively a player or team defends against various offensive play types.",
+    "drivers": "'Drivers' tracks how often and effectively players drive to the basket, including drive frequency and success rate.",
+    "drivers_defense": "'Drivers defense' measures how well a player or team defends against opponents' drives to the basket, including defensive success rate and impact.",
+    "custom_projection": "'Custom Projection' allow for the user to group players together based on similarities of specific stats"
   };
 
   return (

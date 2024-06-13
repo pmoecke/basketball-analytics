@@ -28,10 +28,10 @@ const PlayerGraph: React.FC<PlayerGraphProps> = ({player}) => {
 
         const text_color = '#ddd';
         const background_color = "#222222";
-        const font_size = 16;
+        const font_size = 10;
 
         const data = {
-            labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
+            labels: ["Perimeter Offense", "Driving Offense", "Rebounding", "DPI", "Playing in the Paint"],
             datasets: [{
                 label: player1_name,
                 data: player1_stats,

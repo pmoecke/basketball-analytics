@@ -9,7 +9,7 @@ import "./ComparisonModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
-import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
+import { PlayerStatsFromIdAndSeasonParams, playerStatsFromIdAndSeason } from "../router/data";
 import { FaInfoCircle } from "react-icons/fa";
 
 interface ComparisonModalProps {
@@ -29,16 +29,16 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
 
   useEffect(() => {
     if (players.length === 2) {
-      const params1: PlayerStatsFromIdParams = { player_id: [players[0].player_id] };
-      const params2: PlayerStatsFromIdParams = { player_id: [players[1].player_id] };
+      const params1: PlayerStatsFromIdAndSeasonParams = { player_id: [players[0].player_id], season: players[0].season};
+      const params2: PlayerStatsFromIdAndSeasonParams = { player_id: [players[1].player_id], season: players[1].season };
 
-      playerStatsFromId(params1).then((data) => {
+      playerStatsFromIdAndSeason(params1).then((data) => {
         if (data !== undefined) {
           setPlayer1(data[0]);
         }
       });
 
-      playerStatsFromId(params2).then((data) => {
+      playerStatsFromIdAndSeason(params2).then((data) => {
         if (data !== undefined) {
           setPlayer2(data[0]);
         }
@@ -124,8 +124,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     "DrivesDefense", "Efficiency", "PlayTypeCombinations", "AdditionalData", 
   ];
 
-  const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
-
   return (
     <Modal
       show={showModal}
@@ -135,7 +133,7 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     >
       <Modal.Header closeButton className="comparison-modal-header">
         <Modal.Title>
-          {player1.player_name} vs {player2.player_name}
+          {player1.player_name} - {player1.season} vs {player2.player_name} - {player2.season}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="comparison-modal-body">
@@ -144,15 +142,6 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
           <div className="col-md-2"/>
               <div className="col-md-8">
                 <ComparisonGraph player1={player1} player2={player2}/>
-              </div>
-              <div className="col-md-2">
-                <TooltipOverlay
-                  tooltipText={pentagonTooltips}
-                  placement="right"
-                  showTitle={false}
-                >
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-                </TooltipOverlay>  
               </div>
             <div className="col-md-12">
               <div className="table-container">
