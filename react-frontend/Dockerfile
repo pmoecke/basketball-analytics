@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:17.8-alpine
 
 WORKDIR /srv
 
@@ -11,11 +11,7 @@ RUN npm install
 
 RUN npm install -g serve
 
-# Ensure the environment is set to production
-ENV NODE_ENV=production
-
 # Build the application
-RUN npm run build --verbose
+RUN npm run build
 
-# Serve the application
-CMD ["serve", "-s", "build"]
+CMD ["serve", "-s", "build", "-l", "3000"]
