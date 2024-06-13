@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME: $ci_registry/$CI_PROJECT_PATH
+  IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH
 
 default:
   before_script:
@@ -51,11 +51,19 @@ build_frontend:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   script:
+    - echo "Checking disk space and memory..."
+    - df -h # Check disk space
+    - free -m # Check memory
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}/react-frontend"
       --dockerfile "${CI_PROJECT_DIR}/react-frontend/Dockerfile"
       --destination "${IMAGE_NAME}-frontend:${CI_COMMIT_REF_NAME}"
+    - echo "Running npm install..."
+    - npm config set engine-strict false
+    - npm install
+    - echo "Running npm build..."
+    - CI=true npm run build --verbose > build-log.txt 2>&1 || (cat build-log.txt && exit 1)
 
 deploy_app:
   stage: deploy
@@ -69,16 +77,16 @@ deploy_app:
     name: alpine/helm:3.11.1
     entrypoint: [""]
   script:
-  - >-
-    helm --namespace $k8s_namespace
-    --kube-context $k8s_context
-    upgrade ${CI_PROJECT_NAME} ${CI_PROJECT_DIR}/helm
-    --install
-    --history-max 5
-    --set image.host=${ci_registry}
-    --set image.name=${IMAGE_NAME}
-    --set image.tag=${CI_COMMIT_REF_NAME}
-    --set build.job_id=${CI_JOB_ID}
-    --set build.commit=${CI_COMMIT_SHA}
-  - >-
-    echo "frontend URL: http://$(echo ${CI_PROJECT_NAME} | tr _ -).course-xai-iml24.isginf.ch"
+    - >-
+      helm --namespace $k8s_namespace
+      --kube-context $k8s_context
+      upgrade ${CI_PROJECT_NAME} ${CI_PROJECT_DIR}/helm
+      --install
+      --history-max 5
+      --set image.host=${CI_REGISTRY}
+      --set image.name=${IMAGE_NAME}
+      --set image.tag=${CI_COMMIT_REF_NAME}
+      --set build.job_id=${CI_JOB_ID}
+      --set build.commit=${CI_COMMIT_SHA}
+    - >-
+      echo "frontend URL: http://$(echo ${CI_PROJECT_NAME} | tr _ -).course-xai-iml24.isginf.ch"
