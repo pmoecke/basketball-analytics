@@ -71,7 +71,6 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
   const [projectionCols, setProjectionCols] = useState<string[]>([]);
   const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
   const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,19 +97,8 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
     }
     const startTime = performance.now(); // Capture the start time
 
-    setShowProgressBar(true);
-    setProgress(0);
-    setIsButtonDisabled(true);
-  
-    // Simulate progress bar
-    let progressValue = 0;
-    const interval = setInterval(() => {
-      progressValue += 1;
-      setProgress(progressValue);
-      if (progressValue >= 100) {
-        clearInterval(interval);
-      }
-    }, 300);
+    setShowProgressBar(true)
+    setIsButtonDisabled(true)
   
     // Build query here
     const params: Partial<PlayerProjectionParams> = {};
@@ -127,8 +115,7 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
         const duration = endTime - startTime; // Calculate the duration
         console.log(`Request duration: ${duration} milliseconds`); 
 
-        setShowProgressBar(false);
-        clearInterval(interval);
+        setShowProgressBar(false)
         setIsButtonDisabled(false);
         handleClose();
       });
@@ -156,11 +143,9 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       <Modal.Body className="advanced-filter-modal-body">
         <div className="container">
         {showProgressBar && (
-          <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: '70vh' }}>
-          <ProgressBar now={progress} striped animated label={`${progress}%`} style={{ width: '80%' }} />
-          <div className="fs-3 mt-3">Creating custom projection, please wait</div>
-        </div>
-        
+          <div className="d-flex flex-column justify-content-center align-items-center fs-3" style={{ height: '70vh' }}>
+            Creating custom projection, please wait a few seconds...
+          </div>
         )}
         {!showProgressBar && (
           <div className="row">
@@ -186,6 +171,14 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
         </div>
       </Modal.Body>
       <Modal.Footer className="advanced-filter-modal-footer d-flex justify-content-center">
+        <Button
+          variant="secondary"
+          onClick={() => setProjectionCols([])}
+          className={isButtonDisabled ? 'disabled' : ''}
+          disabled={isButtonDisabled}
+        >
+          Reset Configuration
+        </Button>
         <Button
           variant="primary"
           onClick={applyCheckedValues}
