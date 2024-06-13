@@ -9,7 +9,6 @@ import "./PlayerModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
-import { FaInfoCircle } from "react-icons/fa";
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
@@ -84,8 +83,6 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
     "AdditionalData", "Boxscore", "DefenseAgainstShootingCombinations", "Drives",
     "DrivesDefense", "Efficiency", "PlayTypeCombinations", "Stats"
   ];
-
-  const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
 
   const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season)
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {Modal, ProgressBar} from "react-bootstrap";
+import React, { useState } from "react";
+import {Modal} from "react-bootstrap";
 import { Button } from 'react-bootstrap';
 import "./CustomProjectionModal.css";
 import { ProjectedPlayer } from "../types/player";

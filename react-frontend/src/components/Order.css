@@ -7,4 +7,5 @@
 .no-right-round-corners {
   border-top-right-radius: 0!important;
   border-bottom-right-radius: 0!important;
+  width: 200px!important;
 }

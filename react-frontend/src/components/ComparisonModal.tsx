@@ -10,7 +10,6 @@ import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
 import { PlayerStatsFromIdAndSeasonParams, playerStatsFromIdAndSeason } from "../router/data";
-import { FaInfoCircle } from "react-icons/fa";
 
 interface ComparisonModalProps {
   players: Player[];
