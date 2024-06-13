@@ -122,11 +122,11 @@ export interface OrderKeyValuePair {
 
 // Define the ordered key-value pairs
 export const orderKeyValues: OrderKeyValuePair[] = [
-  { key: "Off 1", value: "off_score_1" },
-  { key: "Off 2", value: "off_score_2" },
-  { key: "Off 3", value: "off_score_3" },
-  { key: "Defense", value: "def_score" },
-  { key: "Rebounds", value: "reb_score" },
+  { key: "Playing in the Paint", value: "off_score_1" },
+  { key: "Perimeter Offense", value: "off_score_2" },
+  { key: "Driving Offense", value: "off_score_3" },
+  { key: "DPI", value: "def_score" },
+  { key: "Rebounding", value: "reb_score" },
 ];
 
 export const playerKeys: (keyof Player)[] = [
