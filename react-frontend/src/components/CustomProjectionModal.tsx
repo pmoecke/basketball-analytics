@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {Modal, ProgressBar} from "react-bootstrap";
+import React, { useState } from "react";
+import {Modal} from "react-bootstrap";
 import { Button } from 'react-bootstrap';
 import "./CustomProjectionModal.css";
 import { ProjectedPlayer } from "../types/player";
@@ -71,7 +71,6 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
   const [projectionCols, setProjectionCols] = useState<string[]>([]);
   const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
   const [showProgressBar, setShowProgressBar] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,20 +95,10 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       }, 5000); // Hide the popup after 5 seconds
       return;
     }
-  
-    setShowProgressBar(true);
-    setProgress(0);
-    setIsButtonDisabled(true);
-  
-    // Simulate progress bar
-    let progressValue = 0;
-    const interval = setInterval(() => {
-      progressValue += 1;
-      setProgress(progressValue);
-      if (progressValue >= 100) {
-        clearInterval(interval);
-      }
-    }, 300);
+    const startTime = performance.now(); // Capture the start time
+
+    setShowProgressBar(true)
+    setIsButtonDisabled(true)
   
     // Build query here
     const params: Partial<PlayerProjectionParams> = {};
@@ -122,8 +111,11 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
         }
       })
       .finally(() => {
-        setShowProgressBar(false);
-        clearInterval(interval);
+        const endTime = performance.now(); // Capture the end time
+        const duration = endTime - startTime; // Calculate the duration
+        console.log(`Request duration: ${duration} milliseconds`); 
+
+        setShowProgressBar(false)
         setIsButtonDisabled(false);
         handleClose();
       });
@@ -151,11 +143,9 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       <Modal.Body className="advanced-filter-modal-body">
         <div className="container">
         {showProgressBar && (
-          <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: '70vh' }}>
-          <ProgressBar now={progress} striped animated label={`${progress}%`} style={{ width: '80%' }} />
-          <div className="fs-3 mt-3">Creating custom projection, please wait</div>
-        </div>
-        
+          <div className="d-flex flex-column justify-content-center align-items-center fs-3" style={{ height: '70vh' }}>
+            Creating custom projection, please wait a few seconds...
+          </div>
         )}
         {!showProgressBar && (
           <div className="row">
@@ -181,6 +171,14 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
         </div>
       </Modal.Body>
       <Modal.Footer className="advanced-filter-modal-footer d-flex justify-content-center">
+        <Button
+          variant="secondary"
+          onClick={() => setProjectionCols([])}
+          className={isButtonDisabled ? 'disabled' : ''}
+          disabled={isButtonDisabled}
+        >
+          Reset Configuration
+        </Button>
         <Button
           variant="primary"
           onClick={applyCheckedValues}

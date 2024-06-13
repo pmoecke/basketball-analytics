@@ -37,10 +37,10 @@ const ComparisonGraph: React.FC<ComparisonGraphProps> = ({
 
     var text_color = "#ddd";
     var background_color = "#222222";
-    var font_size = 16;
+    var font_size = 10;
 
     const data = {
-      labels: ["off_score_2", "off_score_3", "reb_score", "def_score", "off_score_1"],
+      labels: ["Perimeter Offense", "Driving Offense", "Rebounding", "DPI", "Playing in the Paint"],
       datasets: [
         {
           label: player1_name,

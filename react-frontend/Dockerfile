@@ -1,12 +1,17 @@
 FROM node:17.8-alpine
 
-COPY . /srv
-
 WORKDIR /srv
 
+COPY . /srv
+
+# Set npm to ignore engine strict
+RUN npm config set engine-strict false
+
 RUN npm install
+
 RUN npm install -g serve
 
+# Build the application
 RUN npm run build
 
 CMD ["serve", "-s", "build", "-l", "3000"]

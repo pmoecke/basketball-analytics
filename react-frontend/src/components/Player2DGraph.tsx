@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration } from "chart.js/auto";
 import { Player, PlayerArray } from "../types/player";
 import zoomPlugin from "chartjs-plugin-zoom";
-import { PlayerStatsFromIdParams, playerStatsFromId } from "../router/data";
+import { PlayerStatsFromIdAndSeasonParams, playerStatsFromIdAndSeason } from "../router/data";
 
 Chart.register(zoomPlugin);
 
@@ -198,10 +198,11 @@ const Player2DGraph: React.FC<Player2DGraphProps> = ({
               const selectedPlayer = players.find(p => p.player_id === selectedPlayerId) || comparisonPlayers.find(p => p.player_id === selectedPlayerId);
 
               if (selectedPlayer) {
-                const params: PlayerStatsFromIdParams = {
-                  player_id: [selectedPlayer.player_id]
+                const params: PlayerStatsFromIdAndSeasonParams = {
+                  player_id: [selectedPlayer.player_id],
+                  season: selectedPlayer.season
                 };
-                playerStatsFromId(params).then((data) => {
+                playerStatsFromIdAndSeason(params).then((data) => {
                   if (data !== undefined) {
                     const player = data[0];
                     console.log("selected query", player);
