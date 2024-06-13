@@ -96,7 +96,8 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
       }, 5000); // Hide the popup after 5 seconds
       return;
     }
-  
+    const startTime = performance.now(); // Capture the start time
+
     setShowProgressBar(true);
     setProgress(0);
     setIsButtonDisabled(true);
@@ -122,6 +123,10 @@ const AdvancedFilterModal: React.FC<AdvancedFilterModalProps> = ({
         }
       })
       .finally(() => {
+        const endTime = performance.now(); // Capture the end time
+        const duration = endTime - startTime; // Calculate the duration
+        console.log(`Request duration: ${duration} milliseconds`); 
+
         setShowProgressBar(false);
         clearInterval(interval);
         setIsButtonDisabled(false);
