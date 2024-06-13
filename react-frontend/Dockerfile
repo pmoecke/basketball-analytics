@@ -1,4 +1,4 @@
-FROM node:17.8-alpine
+FROM node:18-alpine
 
 COPY . /srv
 
