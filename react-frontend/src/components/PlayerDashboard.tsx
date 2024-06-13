@@ -144,12 +144,12 @@ const PlayerDashboard: React.FC = () => {
   const togglePlayerForComparison = (player: Player) => {
     if (
       comparisonPlayers.length < 2 &&
-      !comparisonPlayers.find((p) => p.player_id === player.player_id)
+      !comparisonPlayers.find((p) => p.player_id === player.player_id && p.season === player.season)
     ) {
       setComparisonPlayers([...comparisonPlayers, player]);
     } else {
       setComparisonPlayers(
-        comparisonPlayers.filter((p) => p.player_id !== player.player_id)
+        comparisonPlayers.filter((p) => !(p.player_id === player.player_id && p.season === player.season))
       );
     }
   };

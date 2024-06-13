@@ -2,7 +2,7 @@
 import React from 'react';
 import { Player, PlayerArray, OrderKeyValuePair } from '../types/player';
 import TooltipOverlay from "./TooltipOverlay";
-import { playerStatsFromId, PlayerStatsFromIdParams } from '../router/data';
+import { playerStatsFromIdAndSeason, PlayerStatsFromIdAndSeasonParams } from '../router/data';
 // Styling
 import "./PlayerList.css";
 
@@ -36,10 +36,11 @@ const PlayerList: React.FC<PlayerListProps> = ({
                 className="player-row d-flex justify-content-between"
                 key={`${player.player_id}-${index}`}
                 onClick={() => {
-                    const params: PlayerStatsFromIdParams = {
-                        player_id: [player.player_id]
+                    const params: PlayerStatsFromIdAndSeasonParams = {
+                        player_id: [player.player_id],
+                        season: player.season
                       };
-                    playerStatsFromId(params).then((data) => {
+                    playerStatsFromIdAndSeason(params).then((data) => {
                         if (data !== undefined) {
                           const player = data[0]
                           setSelectedPlayer(player);
@@ -48,10 +49,11 @@ const PlayerList: React.FC<PlayerListProps> = ({
                     setShowModal(true);
                 }}
                 onMouseEnter={() => {
-                    const params: PlayerStatsFromIdParams = {
-                        player_id: [player.player_id]
+                    const params: PlayerStatsFromIdAndSeasonParams = {
+                        player_id: [player.player_id],
+                        season: player.season
                       };
-                    playerStatsFromId(params).then((data) => {
+                    playerStatsFromIdAndSeason(params).then((data) => {
                         if (data !== undefined) {
                           const player = data[0] 
                           setHighlightedPlayer(player);
@@ -75,12 +77,12 @@ const PlayerList: React.FC<PlayerListProps> = ({
                                 togglePlayerForComparison(player);
                             }}
                             className={`btn ${
-                                comparisonPlayers.find(p => p.player_id === player.player_id) ? 'btn-danger' : 
+                                comparisonPlayers.find(p => p.player_id === player.player_id && p.season === player.season) ? 'btn-danger' : 
                                 comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                             }`}
-                            style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
+                            style={{ display: comparisonPlayers.find(p => p.player_id === player.player_id && p.season === player.season) ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
                         >
-                            {comparisonPlayers.find(p => p.player_id === player.player_id) ? 'Remove Compare' : 'Add Compare'}
+                            {comparisonPlayers.find(p => p.player_id === player.player_id && p.season === player.season) ? 'Remove Compare' : 'Add Compare'}
                         </button>
                     </TooltipOverlay>
                  </div>

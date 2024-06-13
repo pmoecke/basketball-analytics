@@ -87,7 +87,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
 
   const pentagonTooltips = "def_score: \noff_score_1: \noff_score_2: \noff_score_3: \nreb_score: "
 
-  const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id)
+  const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season)
 
   //console.log("selectedplayer", selectedPlayer)
 
@@ -100,7 +100,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
     >
       <Modal.Header closeButton className="player-modal-header">
         <Modal.Title>
-          {selectedPlayer ? selectedPlayer.player_name : "Player Details"}
+          {selectedPlayer && selectedPlayer.player_name} - {selectedPlayer && selectedPlayer.season}
         </Modal.Title>
         {selectedPlayer && 
         <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
@@ -114,7 +114,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                 }`}
                 style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
             >
-                {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id) ? 'Remove Compare' : 'Add Compare'}
+                {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season) ? 'Remove Compare' : 'Add Compare'}
             </button>
         </TooltipOverlay>
         }

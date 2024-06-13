@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { playerStatsFromId, PlayerStatsFromIdParams } from "../router/data";
+import { playerStatsFromIdAndSeason, PlayerStatsFromIdAndSeasonParams } from "../router/data";
 import { Player, PlayerArray } from '../types/player';
 
 interface Player2DViewProps {
@@ -56,8 +56,8 @@ const Player2DView: React.FC<Player2DViewProps> = ({ players, comparisonPlayers,
             .attr("r", 5)
             .attr("fill", "dodgerblue")
             .on("click", (event, d) => {
-                const params: PlayerStatsFromIdParams = { player_id: [d.player_id] };
-                playerStatsFromId(params).then((data) => {
+                const params: PlayerStatsFromIdAndSeasonParams = { player_id: [d.player_id], season: d.season };
+                playerStatsFromIdAndSeason(params).then((data) => {
                     if (data !== undefined) {
                         console.log(data);
                         setSelectedPlayer(data[0]);
