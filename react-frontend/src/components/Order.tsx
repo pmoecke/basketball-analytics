@@ -40,7 +40,7 @@ const Order: React.FC<OrderProps> = ({ sortOrder, setSortOrder, orderValue, setO
             showTitle={false}
           >
           <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
-        </TooltipOverlay>
+      </TooltipOverlay>
       <div className="justify-content-left">
         <div>
           <select

@@ -9,6 +9,7 @@ import "./PlayerModal.css";
 import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
+import { FaInfoCircle } from "react-icons/fa";
 
 interface PlayerModalProps {
   selectedPlayer: Player | null;
@@ -86,7 +87,13 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
 
   const isComparisonPlayer = selectedPlayer && comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season)
 
-  //console.log("selectedplayer", selectedPlayer)
+  const toolTips: { [key: string]: string } = {
+    "off_score_1": "'Playing in the Paint' considers the following features: posts up made and attempted, cuts made and attempted, 2-pt field goals made and attempted and screen assists",
+    "off_score_2": "'Perimeter Offense' considers the following features: 3-pt field goals made and attempted, assists, isolations made and attempted, catch and shoot made and attempted",
+    "off_score_3": "'Driving Offense' considers the following features: catch and drive made and attempted, PnR handlers made and attempted, drives made and drives with shot",
+    "def_score": "'Defensive Performance Indicator (DPI)' is calculated according to: DPI = blocks + fouls drawn - fouls + steals - turnovers + points off screen assists + assists to turnover ratio",
+    "reb_score": "'Reboudning' is simply the rebounding score of a player",
+  };
 
   return (
     <Modal
@@ -99,7 +106,61 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
         <Modal.Title>
           {selectedPlayer && selectedPlayer.player_name} - {selectedPlayer && selectedPlayer.season}
         </Modal.Title>
-        {selectedPlayer && 
+      </Modal.Header>
+      <Modal.Body className="player-modal-body">
+        {selectedPlayer && (
+          <div className="container">
+            <div className="row">
+              <div className="col-md-1"/>
+              <div className="col-md-8">
+               <PlayerGraph player={selectedPlayer}/>
+              </div>
+              <div className="col-md-3">
+                <TooltipOverlay
+                      tooltipText={toolTips["off_score_1"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Playing in the paint
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>
+                <br/>
+                <TooltipOverlay
+                      tooltipText={toolTips["off_score_2"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Perimeter Offense
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>
+                <br/>
+                <TooltipOverlay
+                      tooltipText={toolTips["off_score_3"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Driving Offense
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>
+                <br/>
+                <TooltipOverlay
+                      tooltipText={toolTips["reb_score"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Rebounding
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>
+                <br/>
+                <TooltipOverlay
+                      tooltipText={toolTips["def_score"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  DPI
+                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+                </TooltipOverlay>
+                {selectedPlayer && 
         <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
             <button 
                 onClick={(e) => {
@@ -107,7 +168,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
                     togglePlayerForComparison(selectedPlayer);
                     handleClose();
                 }}
-                className={`btn ms-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
+                className={`btn mt-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
                 }`}
                 style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
             >
@@ -115,18 +176,8 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
             </button>
         </TooltipOverlay>
         }
-      </Modal.Header>
-      <Modal.Body className="player-modal-body">
-        {selectedPlayer && (
-          <div className="container">
-            <div className="row">
-              <div className="col-md-2"/>
-              <div className="col-md-8">
-               <PlayerGraph player={selectedPlayer}/>
               </div>
             </div>
-            
-            
             <div className="row">
                 <div className="col-md-12">
                   <div className="table-container">
