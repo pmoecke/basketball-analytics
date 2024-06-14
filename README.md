@@ -22,22 +22,20 @@ The target group of our project consists of general managers, coaches, and scout
 Our hope is that this tool can give users a competitive edge by improving their scouting process.
 
 ### Datasets
-We will work with boxscore data from the two most recent seasons. To make this high-dimensional dataset easier to visualize and work with, we will train a machine-learning model to project the data into a lower-dimensional space while trying to conform to the scout’s mental model.
+We will work with boxscore data from the three most recent seasons. To make this high-dimensional dataset easier to visualize and work with, we will train a machine-learning model to project the data into a lower-dimensional space while trying to conform to the scout’s mental model.
 
-### Tasks
-TODO: Define all the tasks you want your dashboard solve.
-
-- - -
 ## Folder Structure
 Specify here the structure of you code and comment what the most important files contain
 
 ``` bash
 ├── backend-project
 │   ├── data
-│   │   ├── dataset_blobs.csv
-│   │   ├── dataset_circles.csv
-│   │   ├── dataset_moons.csv
-│   │   └── generate_data.py
+│   │   ├── data_raw
+│   │   ├── aggregrate_data.py
+│   │   ├── data_import.py
+│   │   ├── generate_data.py
+│   │   ├── import_scores.py
+│   │   └── Players.db
 │   ├── Dockerfile
 │   ├── MANIFEST.in
 │   ├── pyproject.toml
@@ -48,7 +46,11 @@ Specify here the structure of you code and comment what the most important files
 │           ├── __init__.py
 │           ├── resources
 │           │   ├── __init__.py
-│           │   └── scatter_data.py
+│           │   ├── definitions.py
+│           │   ├── overview_stats.py
+│           │   ├── players.py
+│           │   ├── projection_new.py
+│           │   └── stats.py
 │           └── router
 │               ├── app.py
 │               ├── __init__.py
@@ -80,10 +82,23 @@ Specify here the structure of you code and comment what the most important files
 │   │   ├── App.test.tsx
 │   │   ├── App.tsx
 │   │   ├── components
-│   │   │   ├── DataChoice.tsx
-│   │   │   ├── ScatterPlot.css
-│   │   │   ├── ScatterPlot.tsx
-│   │   │   └── utils.ts
+│   │   │   ├── Comparison.tsx
+│   │   │   ├── ComparisonGraph.tsx
+│   │   │   ├── ComparisonModal.tsx
+│   │   │   ├── CustomProjectionModal.tsx
+│   │   │   ├── Filter.tsx
+│   │   │   ├── FilterGraph.tsx
+│   │   │   ├── Order.tsx
+│   │   │   ├── Player2DGraph.tsx
+│   │   │   ├── Player2DView.tsx
+│   │   │   ├── PlayerDashboard.tsx
+│   │   │   ├── PlayerGraph.tsx
+│   │   │   ├── PlayerList.tsx
+│   │   │   ├── PlayerModal.tsx
+│   │   │   ├── PlayerSearch.tsx
+│   │   │   ├── ProjectionDropdown.tsx
+│   │   │   ├── SidebarFilter.tsx
+│   │   │   └── TooltipOverlay.tsx
 │   │   ├── index.css
 │   │   ├── index.tsx
 │   │   ├── logo.svg
@@ -91,12 +106,10 @@ Specify here the structure of you code and comment what the most important files
 │   │   ├── reportWebVitals.ts
 │   │   ├── router
 │   │   │   ├── apiClient.ts
-│   │   │   └── resources
-│   │   │       └── data.ts
+│   │   │   └── data.ts
 │   │   ├── setupTests.ts
 │   │   └── types
-│   │       ├── data.ts
-│   │       └── margin.ts
+│   │       └── player.ts
 │   └── tsconfig.json
 └── README.md
 ```
@@ -138,30 +151,10 @@ Document here the major milestones of your code and future planned steps. Create
   - [ ] Sub-task: [Script to read data from excel to database](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/1)
   - [ ] Sub-task: [Create own dummy react component](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/2)
   - [ ] Sub-task: [Use figma and export test css files](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/issues/3)
-- [ ] Week 7
 
-
-
-This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.
 
 ## Contributions
 * Dario: Created, edited and voiced pitch video, which used sketches that were created by Fredrik and me. Created and edited dashboard layout together with Fredrik. Created radar charts and added functionality for dragging data points. Also help redo scatterplot with Chart.js and added pan, zoom, and highlight on hover functionality. Added tabbed, scrollable stat tables to player and comparison screens. In general, helped steer layout and design of frontend. While I often created individual parts for the frontend myself (e.g., radar chart, tables), most of my work was implemented together or with the help of Fredrik.
 * Fredrik: I created sketches for the visuals of the app together with Dario. Wrote the code on the frontend that takes care of application logic such as current state of the app and requesting data from the api endpoints. Set up branch for the ci-cd-pipeline and pushed to production. 
 * Yanik: I was in charge of setting up the backend, including merging the data from csv's into a SQLite databse which I set up and created the schema for. Also wrote the vast majority of the API endpoints with some inputs and small changes from other group members. Futhermore, I used the data preprocessed by Patrik to create the downprojections using t-SNE from the high-dimensional space, first only based on fixed features and later extending it to allow users to choose which features should be used for the projections.
 * Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also used for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database which included adding scores to the table and replacing the original, somehwat raw data, with the aggregated data (see report for aggregated data). My work in the backend was largely based off what Yanik already set up at the start of the project.
-
-## Weekly Summary 
-Write here a short summary with weekly progress, including challanges and open questions.\
-We will use this to understand what your struggles and where did the weekly effort go to.
-
-
-## Versioning
-Create stable versions of your code each week by using gitlab tags. Take a look at [Gitlab Tags](https://docs.gitlab.com/ee/topics/git/tags.html) for more details and naming conventions at [Name your tag](https://git-scm.com/docs/git-check-ref-format).
-
-We will evaluate your code every week, based on the corresponding version. Then list weekly tags here.
-
-Tags:
-- Week 5: [v0.0.1](https://gitlab.inf.ethz.ch/course-xai-iml24/b-12-sign-player-basketball/-/tags/v0.0.1)
-- Week 6: 
-
-
