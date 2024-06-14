@@ -4,7 +4,7 @@
 
 ## Team Members
 1. Fredrik Nyström
-1. Patrick Möcke
+1. Patrik Möcke
 1. Dario Tenore
 1. Yanik Künzi
 
@@ -140,7 +140,13 @@ Document here the major milestones of your code and future planned steps. Create
 
 
 
-This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.  
+This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.
+
+## Contributions
+* Dario:
+* Fredrik:
+* Yanik:
+* Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database by adding scores to the table and using the aggregated data (i.e. not raw data, see report). My work in the backend was largely based off what Yanik already set up at the start of the project.
 
 ## Weekly Summary 
 Write here a short summary with weekly progress, including challanges and open questions.\
