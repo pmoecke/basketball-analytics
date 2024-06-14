@@ -143,7 +143,7 @@ Document here the major milestones of your code and future planned steps. Create
 This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.
 
 ## Contributions
-* Dario:
+* Dario: Created, edited and voiced pitch video, which used sketches that were created by Fredrik and me. Created and edited dashboard layout together with Fredrik. Created radar charts and added functionality for dragging data points. Also help redo scatterplot with Chart.js and added pan, zoom, and highlight on hover functionality. Added tabbed, scrollable stat tables to player and comparison screens. In general, helped steer layout and design of frontend. While I often created individual parts for the frontend myself (e.g., radar chart, tables), most of my work was implemented together or with the help of Fredrik.
 * Fredrik:
 * Yanik:
 * Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also used for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database which included adding scores to the table and replacing the original, somehwat raw data, with the aggregated data (see report for aggregated data). My work in the backend was largely based off what Yanik already set up at the start of the project.
