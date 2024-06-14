@@ -146,7 +146,7 @@ This will help you have a clearer overview of what you are currently doing, trac
 * Dario:
 * Fredrik:
 * Yanik:
-* Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database by adding scores to the table and using the aggregated data (i.e. not raw data, see report). My work in the backend was largely based off what Yanik already set up at the start of the project.
+* Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also used for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database which included adding scores to the table and replacing the original, somehwat raw data, with the aggregated data (see report for aggregated data). My work in the backend was largely based off what Yanik already set up at the start of the project.
 
 ## Weekly Summary 
 Write here a short summary with weekly progress, including challanges and open questions.\
