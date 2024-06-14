@@ -10,6 +10,7 @@ import { statDictionary } from "./statDictionary";
 import { statMapping } from "./statMapping";
 import { tooltipTexts } from "./tooltipTexts";
 import { PlayerStatsFromIdAndSeasonParams, playerStatsFromIdAndSeason } from "../router/data";
+import { FaInfoCircle } from "react-icons/fa";
 
 interface ComparisonModalProps {
   players: Player[];
@@ -123,6 +124,14 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     "DrivesDefense", "Efficiency", "PlayTypeCombinations", "AdditionalData", 
   ];
 
+  const toolTips: { [key: string]: string } = {
+    "off_score_1": "'Playing in the Paint' considers the following features: posts up made and attempted, cuts made and attempted, 2-pt field goals made and attempted and screen assists",
+    "off_score_2": "'Perimeter Offense' considers the following features: 3-pt field goals made and attempted, assists, isolations made and attempted, catch and shoot made and attempted",
+    "off_score_3": "'Driving Offense' considers the following features: catch and drive made and attempted, PnR handlers made and attempted, drives made and drives with shot",
+    "def_score": "'Defensive Performance Indicator (DPI)' is calculated according to: DPI = blocks + fouls drawn - fouls + steals - turnovers + points off screen assists + assists to turnover ratio",
+    "reb_score": "'Reboudning' is simply the rebounding score of a player",
+  };
+
   return (
     <Modal
       show={showModal}
@@ -132,16 +141,64 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({
     >
       <Modal.Header closeButton className="comparison-modal-header">
         <Modal.Title>
-          {player1.player_name} - {player1.season} vs {player2.player_name} - {player2.season}
+          {player1.player_name} - {player1.season}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{player2.player_name} - {player2.season}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="comparison-modal-body">
         <div className="container">
           <div className="row">
-          <div className="col-md-2"/>
-              <div className="col-md-8">
-                <ComparisonGraph player1={player1} player2={player2}/>
-              </div>
+            <div className="col-md-2"/>
+            <div className="col-md-8">
+              <ComparisonGraph player1={player1} player2={player2}/>
+            </div>
+            <div className="col-md-2">
+            <FaInfoCircle className="ms-5 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+            <br/>
+            <div className="mb-2"/>
+            <TooltipOverlay
+                      tooltipText={toolTips["off_score_1"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Playing in the paint
+                </TooltipOverlay>
+                <br/>
+                <div className="mb-2"/>
+                <TooltipOverlay
+                      tooltipText={toolTips["off_score_2"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Perimeter Offense
+                </TooltipOverlay>
+                <br/>
+                <div className="mb-2"/>
+                <TooltipOverlay
+                      tooltipText={toolTips["off_score_3"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Driving Offense
+                </TooltipOverlay>
+                <br/>
+                <div className="mb-2"/>
+                <TooltipOverlay
+                      tooltipText={toolTips["reb_score"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  Rebounding
+                </TooltipOverlay>
+                <br/>
+                <div className="mb-2"/>
+                <TooltipOverlay
+                      tooltipText={toolTips["def_score"]}
+                      placement="left"
+                      showTitle={false}
+                >
+                  DPI
+                </TooltipOverlay>
+            </div>
             <div className="col-md-12">
               <div className="table-container">
                 <Nav variant="tabs" activeKey={selectedCategory} onSelect={handleSelect} className="mb-0">

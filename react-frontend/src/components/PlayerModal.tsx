@@ -111,71 +111,73 @@ const PlayerModal: React.FC<PlayerModalProps> = ({
         {selectedPlayer && (
           <div className="container">
             <div className="row">
-              <div className="col-md-1"/>
+              <div className="col-md-2"/>
               <div className="col-md-8">
                <PlayerGraph player={selectedPlayer}/>
               </div>
-              <div className="col-md-3">
-                <TooltipOverlay
+              <div className="col-md-2">
+            <FaInfoCircle className="ms-5 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
+            <br/>
+            <div className="mb-2"/>
+            <TooltipOverlay
                       tooltipText={toolTips["off_score_1"]}
                       placement="left"
                       showTitle={false}
                 >
                   Playing in the paint
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>
                 <br/>
+                <div className="mb-2"/>
                 <TooltipOverlay
                       tooltipText={toolTips["off_score_2"]}
                       placement="left"
                       showTitle={false}
                 >
                   Perimeter Offense
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>
                 <br/>
+                <div className="mb-2"/>
                 <TooltipOverlay
                       tooltipText={toolTips["off_score_3"]}
                       placement="left"
                       showTitle={false}
                 >
                   Driving Offense
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>
                 <br/>
+                <div className="mb-2"/>
                 <TooltipOverlay
                       tooltipText={toolTips["reb_score"]}
                       placement="left"
                       showTitle={false}
                 >
                   Rebounding
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>
                 <br/>
+                <div className="mb-2"/>
                 <TooltipOverlay
                       tooltipText={toolTips["def_score"]}
                       placement="left"
                       showTitle={false}
                 >
                   DPI
-                  <FaInfoCircle className="ms-2 larger-icon padded-icon" style={{ cursor: 'pointer' }} />
                 </TooltipOverlay>
                 {selectedPlayer && 
-        <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation(); 
-                    togglePlayerForComparison(selectedPlayer);
-                    handleClose();
-                }}
-                className={`btn mt-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
-                }`}
-                style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
-            >
-                {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season) ? 'Remove Compare' : 'Add Compare'}
-            </button>
-        </TooltipOverlay>
-        }
+                <TooltipOverlay tooltipText='Add/remove from comparison' placement="left" showTitle={false}>  
+                    <button 
+                        onClick={(e) => {
+                            e.stopPropagation(); 
+                            togglePlayerForComparison(selectedPlayer);
+                            handleClose();
+                        }}
+                        className={`btn mt-5 ${isComparisonPlayer ? 'btn-danger' : comparisonPlayers.length >= 2 ? 'btn-tertary' : 'btn-success'
+                        }`}
+                        style={{ display : isComparisonPlayer ? 'block' : comparisonPlayers.length >= 2 ? 'none' : 'block' }}
+                    >
+                        {comparisonPlayers.find(p => p.player_id === selectedPlayer.player_id && p.season === selectedPlayer.season) ? 'Remove Compare' : 'Add Compare'}
+                    </button>
+                </TooltipOverlay>
+                }
               </div>
             </div>
             <div className="row">
