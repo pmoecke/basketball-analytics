@@ -102,32 +102,34 @@ Specify here the structure of you code and comment what the most important files
 ```
 
 ## Requirements
-Write here all intructions to build the environment and run your code.\
-**NOTE:** If we cannot run your code following these requirements we will not be able to evaluate it.
+All requirements and dependencies are handled by the docker images so docker must be installed and running.
 
 ## How to Run
-Write here **DETAILED** intructions on how to run your code.\
-**NOTE:** If we cannot run your code following these instructions we will not be able to evaluate it.
+Both the backend and frontend runs in docker environments
+- Start docker
+- Clone the repository: b-12-sign-player-basketball
 
-As an example here are the instructions to run the Dummy Project:
-To run the Dummy project you have to:
-- clone the repository;
-- open a terminal instance and using the command ```cd``` move to the folder where the project has been downloaded;
+### Run backend
+First open a terminal in the project root and run
+```cd backend-project```
 
-To run the backend
-- open the backend folder called "backend-project"
-- to start the backend first you need to create a virtual environment using conda
-    ```conda create -n nameOfTheEnvironment```
-  - to activate the virtual environment run the command ```conda activate nameOfTheEnvironment```
-  - install the requirements using the command ```pip3 install .```
-  - If you want to make changes and test them in real time, you can install the package in editable mode using the command```pip install -e .```
-  - to start the backend use the command ```python3 -m gamut_server.router.app``` or use the ```start-server``` command directly on your terminal
+Then simply build the image with 
+```docker build . -t backend```
 
-To run the frontend
-- Open a new terminal window and go to the project folder
-- Enter the frontend folder called "react-frontend"
-- Do the following command to start the front end ```npm install```, ```npm start```
-If all the steps have been successfully executed a new browser window witht he dummy project loaded will open automatically.
+Lastly run the server on port 8000 with
+```docker run -it -p 8000:8000 backend```
+
+### Run frontend
+First open second terminal in the project root and run
+```cd react-frontend ```
+
+Then simply build the image with 
+```docker build -t frontend -f Dockerfile_local . ```
+
+Then run the app on port 3000 with
+```docker run -it -p 3000:3000 frontend```
+
+Finally interact with the app on http://localhost:3000/
 
 ## Milestones
 Document here the major milestones of your code and future planned steps. Create a list of subtasks here and open an issue in git for each subtask and link the corresponding issue. Create a merge request (with corresponding branch) from each issue. Finally accept the merge request once issue is resolved. Once you complete a task, link the corresponding merge commit. Take a look at [Issues and Branches](https://www.youtube.com/watch?v=DSuSBuVYpys) for more details. 
@@ -144,15 +146,13 @@ This will help you have a clearer overview of what you are currently doing, trac
 
 ## Contributions
 * Dario: Created, edited and voiced pitch video, which used sketches that were created by Fredrik and me. Created and edited dashboard layout together with Fredrik. Created radar charts and added functionality for dragging data points. Also help redo scatterplot with Chart.js and added pan, zoom, and highlight on hover functionality. Added tabbed, scrollable stat tables to player and comparison screens. In general, helped steer layout and design of frontend. While I often created individual parts for the frontend myself (e.g., radar chart, tables), most of my work was implemented together or with the help of Fredrik.
-* Fredrik:
+* Fredrik: I created sketches for the visuals of the app together with Dario. Wrote the code on the frontend that takes care of application logic such as current state of the app and requesting data from the api endpoints. Set up branch for the ci-cd-pipeline and pushed to production. 
 * Yanik: I was in charge of setting up the backend, including merging the data from csv's into a SQLite databse which I set up and created the schema for. Also wrote the vast majority of the API endpoints with some inputs and small changes from other group members. Futhermore, I used the data preprocessed by Patrik to create the downprojections using t-SNE from the high-dimensional space, first only based on fixed features and later extending it to allow users to choose which features should be used for the projections.
 * Patrik: Created the data pre-processing pipeline as described in the report, preparing the data to be used for the ML models. Developed the scoring metric (via clustering and and some cluster analysis) which is used in the Radar chart in the dashboard, and also used for filtering and sorting players. Did some stuff in the backend, e.g. creating the final "Stats" table for the database which included adding scores to the table and replacing the original, somehwat raw data, with the aggregated data (see report for aggregated data). My work in the backend was largely based off what Yanik already set up at the start of the project.
 
 ## Weekly Summary 
 Write here a short summary with weekly progress, including challanges and open questions.\
 We will use this to understand what your struggles and where did the weekly effort go to.
-
-#### W6
 
 
 ## Versioning
