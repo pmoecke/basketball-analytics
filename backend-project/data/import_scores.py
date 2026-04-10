@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 import os
+from pathlib import Path
 from tqdm import tqdm
 
 def column_exists(cursor, table_name, column_name):
@@ -58,7 +59,13 @@ if __name__ == "__main__":
          os.environ["DATA_PATH"] = "./"
 
     # Load the data
-    scores = pd.read_csv("player_scores.csv")
+    scores_file = (
+        Path(__file__).resolve().parents[2]
+        / "ml-models"
+        / "reports"
+        / "player_scores.csv"
+    )
+    scores = pd.read_csv(scores_file)
     con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
     create_scores_table(con, scores)
     con.commit()

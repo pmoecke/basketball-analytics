@@ -4,6 +4,7 @@ import pandas as pd
 import sqlite3
 import os
 import re
+from pathlib import Path
 from tqdm import tqdm
 
 
@@ -173,7 +174,13 @@ def column_exists(cursor, table_name, column_name):
 
 if __name__ == "__main__":
     # file = "data_aggregated.csv"
-    scores = pd.read_csv("player_scores.csv")
+    scores_file = (
+        Path(__file__).resolve().parents[2]
+        / "ml-models"
+        / "reports"
+        / "player_scores.csv"
+    )
+    scores = pd.read_csv(scores_file)
     # df = load_data(file)
     # Connect to the database
     data_path = os.environ.get("DATA_PATH")
@@ -186,6 +193,6 @@ if __name__ == "__main__":
     con = sqlite3.connect(os.path.join(os.environ["DATA_PATH"], "Players.db"))
     # create_tables(con, df)
     # insert_data(con, df)
-    insert_scores_data(con, "player_scores.csv")
+    insert_scores_data(con, str(scores_file))
     con.commit()
     con.close()

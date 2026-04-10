@@ -3,10 +3,18 @@ from flask import request, abort
 from flask_restful import Resource
 import os
 import sqlite3
+from pathlib import Path
 from .definitions import ProjQuerySchema
 import pandas as pd
 
 schema = ProjQuerySchema()
+TRAINING_DATA_FILE = (
+    Path(__file__).resolve().parents[3]
+    / "ml-models"
+    / "data"
+    / "training"
+    / "train_data_yeo_new.csv"
+)
 
 
 def convert_name(name: str) -> str:
@@ -56,8 +64,11 @@ class Projection(Resource):
 
         # A user-defined projection is requested
         # Read data and make column headers consistent
-        df = pd.read_csv(os.path.join(os.environ["DATA_PATH"],
-                                      "train_data_yeo_new.csv"))
+        if TRAINING_DATA_FILE.exists():
+            df = pd.read_csv(TRAINING_DATA_FILE)
+        else:
+            df = pd.read_csv(os.path.join(os.environ["DATA_PATH"],
+                                          "train_data_yeo_new.csv"))
         df = df.rename(columns={col: col.replace("-", " ").replace(",", "")
                                 for col in df.columns})
 
