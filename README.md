@@ -1,10 +1,4 @@
-# Basketball Scouting
-
-## Team Members
-1. Fredrik Nyström
-1. Patrik Möcke
-1. Dario Tenore
-1. Yanik Künzi
+# Basketball Scouting Tool
 
 ## Project Description 
 You can see our pitch video [here](https://polybox.ethz.ch/index.php/s/ALvekl35WUd7mhX)
